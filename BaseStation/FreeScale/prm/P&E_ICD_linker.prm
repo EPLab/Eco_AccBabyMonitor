@@ -1,0 +1,39 @@
+/* This is a linker parameter file for the MC9S12NE64 */
+
+NAMES END /* CodeWarrior will pass all the needed files to the linker by command line. But here you may add your own files too. */
+
+SEGMENTS  /* Here all RAM/ROM areas of the device are listed. Used in PLACEMENT below. */
+    RAM = READ_WRITE 0x0400 TO 0x1FFF;
+
+    /* unbanked FLASH ROM */
+    ROM_4000 = READ_ONLY  0x4000 TO 0x7FFF;
+    ROM_C000 = READ_ONLY  0xC000 TO 0xF77F;
+
+    /* banked FLASH ROM */
+    PAGE_3C = READ_ONLY  0x3C8000 TO 0x3CBFFF;
+    PAGE_3D = READ_ONLY  0x3D8000 TO 0x3DBFFF;
+/*  PAGE_3E = READ_ONLY  0x3E8000 TO 0x3EBFFF; not used: equivalent to ROM_4000 */
+/*  PAGE_3F = READ_ONLY  0x3F8000 TO 0x3FBFFF; not used: equivalent to ROM_C000 */
+END
+
+PLACEMENT  /* Here all predefined and user segments are placed into the SEGMENTS defined above. */
+    _PRESTART,                   /* Used in HIWARE format: jump to _Startup at the code start */
+    STARTUP,                     /* startup data structures */
+    ROM_VAR,                     /* constant variables */
+    STRINGS,                     /* string literals */
+    VIRTUAL_TABLE_SEGMENT,       /* C++ virtual table segment */
+    NON_BANKED,                  /* runtime routines which must not be banked */
+    COPY                         /* copy down information: how to initialize variables */
+                                 /* in case you want to use ROM_4000 here as well, make sure
+                                    that all files (incl. library files) are compiled with the
+                                    option: -OnB=b */
+                                 INTO  ROM_C000/*, ROM_4000*/;
+    DEFAULT_ROM                  INTO  PAGE_3D, PAGE_3C;
+    DEFAULT_RAM                  INTO  RAM;
+END
+
+STACKSIZE 0x100
+
+VECTOR 0 _Startup /* Reset vector: this is the default entry point for a C/C++ application. */
+//VECTOR 0 Entry  /* Reset vector: this is the default entry point for an Assembly application. */
+//INIT Entry      /* For assembly applications: that this is as well the initialisation entry point */

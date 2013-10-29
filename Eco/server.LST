@@ -1,0 +1,332 @@
+C51 COMPILER V8.05a   SERVER                                                               03/05/2013 12:57:02 PAGE 1   
+
+
+C51 COMPILER V8.05a, COMPILATION OF MODULE SERVER
+OBJECT MODULE PLACED IN server.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE server.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          // $Id: server.c,v 1.3 2007/05/15 03:13:23 yoos Exp $
+   2          /*
+   3           * (C) 2007 The Regents of the University of California. All Rights Reserved.
+   4           * Created by Seung-mok Yoo, Department of Electrical Engineering & Computer
+   5           * Science
+   6           *
+   7           * Copyright (C) 2007 The Regents of the University of California. All Rights
+   8           * Reserved. Permission to use, copy, modify, and distribute this software and
+   9           * its documentation for educational, research and non-profit purposes, without
+  10           * fee, and without a written agreement is hereby granted, provided that the
+  11           * above copyright notice, this paragraph and the following two paragraphs
+  12           * appear in all copies. This software program and documentation are
+  13           * copyrighted by The Regents of the University of California ("The University
+  14           * of California").
+  15           *
+  16           * THE SOFTWARE PROGRAM AND DOCUMENTATION ARE SUPPLIED "AS IS," WITHOUT ANY
+  17           * ACCOMPANYING SERVICES FROM THE UNIVERSITY OF CALFORNIA. FURTHERMORE, THE
+  18           * UNIVERSITY OF CALIFORNIA DOES NOT WARRANT THAT THE OPERATION OF THE PROGRAM
+  19           * WILL BE UNINTERRUPTED OR ERROR-FREE. THE END-USER UNDERSTANDS THAT THE
+  20           * PROGRAM WAS DEVELOPED FOR RESEARCH PURPOSES AND IS ADVISED NOT TO RELY
+  21           * EXCLUSIVELY ON THE PROGRAM FOR ANY REASON.
+  22           *
+  23           * IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR
+  24           * DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING
+  25           * LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION,
+  26           * EVEN IF THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
+  27           * SUCH DAMAGES. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY
+  28           * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+  29           * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE PROVIDED
+  30           * HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF CALIFORNIA HAS NO
+  31           * OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR
+  32           * MODIFICATIONS. 
+  33           */
+  34          #include "io.h"
+  35          #include "spi.h"
+  36          #include "rf.h"
+  37          //#include "msp_if.h"
+  38          #include "commands.h"
+  39          #include "rf_packet.h"
+  40          #include "misc.h"                               // delay2us()
+  41          #include "adc.h"
+  42          #include "reg24e1.h"
+  43          
+  44          #include "timer0.h"
+  45                  
+  46          #define MYID                    4
+  47          
+  48          #define MSP                             'M'
+  49          #define BASESTATION             0x20
+  50          
+  51          #define BURST_TX                1
+  52          
+  53          #define init_ioport()   {P0_DIR = 0; P0_ALT = 0;}
+  54          
+  55          
+C51 COMPILER V8.05a   SERVER                                                               03/05/2013 12:57:02 PAGE 2   
+
+  56          const int MyID _at_ 0x65;
+  57          MyID = MYID;
+  58          
+  59          static char                             Mode = 0;
+  60          static char                             DAQ_mode = 0;
+  61          static int                              BufferStatus;           // buffer status on MSP
+  62          static volatile char    Rf_flag = 1;
+  63          //static uchar                  Timer0h, Timer0l;
+  64          //timer_t               *Timer0;
+  65          
+  66          //static volatile char  Rf_flag = 1;
+  67          //static volatile char  port0;
+  68          static unsigned char    Buffer[PAYLOAD_SZ+2];
+  69          //static unsigned char  adcvalue[20];
+  70          
+  71          #define bufferLength 9//24
+  72          static unsigned char    adcvalue[bufferLength];
+  73          //static int *ptr16 = (int *)&adcvalue[0];
+  74          //static char *ptr16 = (char *)&adcvalue[0];
+  75          //static int adcvalue[12];
+  76          static unsigned char index = 0;
+  77          
+  78          /* =
+  79          {
+  80                   0,  0,
+  81                   0,  1,  2,  3,  4,  5,  6,  7,  8,  9,
+  82                  10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+  83                  20, 21, 22, 23, 24
+  84          };
+  85          */
+  86          
+  87          /*
+  88          static void warning(unsigned char num)
+  89          {
+  90                  unsigned char   i;
+  91                  unsigned char   maxblink;
+  92                  
+  93                  maxblink = num << 1;
+  94                  for (i = 0; i < maxblink; i++)
+  95                  {
+  96                          int             count = 0xffff;
+  97                          while (count--);
+  98                          led_toggle();
+  99                  } // for
+ 100          } // warning
+ 101          */
+ 102          
+ 103          static void sendto(char *packet)
+ 104          {
+ 105   1              connectSPITo(SPI_RF_CH1, SCK_2MHz);
+ 106   1              rf_config(TX);
+ 107   1                              //BUF_RDY = 1;/**/
+ 108   1              rf_txPacket(packet);
+ 109   1                              //BUF_RDY = 0;/**/
+ 110   1      
+ 111   1      } // sendto
+ 112          
+ 113          
+ 114          static char readfrom(char dev, char *packet)
+ 115          {
+ 116   1              if (dev == MSP)
+ 117   1              {
+C51 COMPILER V8.05a   SERVER                                                               03/05/2013 12:57:02 PAGE 3   
+
+ 118   2                      // read data from the MSP
+ 119   2                      connectSPITo(SPI_EXT_PORT, SCK_1MHz);
+ 120   2                      //if (msp_rxPacket(packet) != 1)
+ 121   2                              return 0;
+ 122   2              }
+ 123   1              else            // dev == BASESTATION
+ 124   1              {
+ 125   2                      rf_rxOn();
+ 126   2                      rf_rxPacket(packet);
+ 127   2              } // if-else
+ 128   1              
+ 129   1              return 1;
+ 130   1      } // readfrom
+ 131          
+ 132          
+ 133          static unsigned char getCommandType(unsigned char *packet)
+ 134          {
+ 135   1              char            cmdtype;
+ 136   1      
+ 137   1              cmdtype = packet[0] & (unsigned char)((1 << PACKET_DEST) | (1 << REPLY_REQUEST));
+ 138   1              //cmdtype = packet[0] & (unsigned char)0xc0;
+ 139   1              
+ 140   1              return cmdtype;
+ 141   1      } // getCommandType
+ 142          
+ 143          
+ 144          
+ 145          void xmitdata()
+ 146          {
+ 147   1              char i;
+ 148   1              Buffer[2] = MyID;
+ 149   1              if (index < 0) index = 0;
+ 150   1              for (i = 0; i < bufferLength; i++) {
+ 151   2                      Buffer[i+3] = adcvalue[(i + index) % bufferLength];
+ 152   2      //              adcvalue[(i + index) % bufferLength] = 0; //to see if sampling frequency is enough.
+ 153   2              }
+ 154   1              sendto(Buffer);
+ 155   1      } // xmitdata
+ 156          
+ 157          
+ 158          /*
+ 159          void xmitdata()
+ 160          {
+ 161                  char i;
+ 162                  Buffer[2] = MyID;
+ 163                  Buffer[3] = adcvalue[0];
+ 164                  Buffer[4] = adcvalue[1];
+ 165                  Buffer[5] = adcvalue[2];
+ 166                  sendto(Buffer);
+ 167          } // xmitdata
+ 168          */
+ 169          
+ 170          void main (void)
+ 171          {
+ 172   1              //unsigned char i;
+ 173   1              unsigned char my_order;
+ 174   1              //static char           count_burst;
+ 175   1              init_ioport();
+ 176   1              spi_init();
+ 177   1              rf_init();
+ 178   1              //msp_init();
+ 179   1              //timer0_init();
+C51 COMPILER V8.05a   SERVER                                                               03/05/2013 12:57:02 PAGE 4   
+
+ 180   1              adc_init();
+ 181   1              timer0_init();
+ 182   1              timer0_start();
+ 183   1      
+ 184   1      
+ 185   1              //regCallbackFunc();
+ 186   1      
+ 187   1              //led_turnOn();
+ 188   1              BUF_RDY = 0;
+ 189   1      
+ 190   1              rf_config(RX);
+ 191   1              rf_rxOn();
+ 192   1      
+ 193   1      /* initial blinking */
+ 194   1              //for(my_order=0; my_order<=MyID; my_order++)
+ 195   1              for(my_order=0; my_order<=1; my_order++)
+ 196   1              {
+ 197   2                      led_turnOn();                                           
+ 198   2                      delayms(10);
+ 199   2                      led_turnOff();                                          
+ 200   2                      delayms(1000);
+ 201   2              }
+ 202   1      /**/
+ 203   1      
+ 204   1      
+ 205   1              for(;;)
+ 206   1              {
+ 207   2                      rf_rxPacket(Buffer);
+ 208   2      
+ 209   2                      if (Buffer[0] != MyID && Buffer[1] != MyID && Buffer[2] != MyID)
+ 210   2                      {
+ 211   3                              rf_rxOn();
+ 212   3                              continue;
+ 213   3                      }
+ 214   2                      
+ 215   2                      if(Buffer[0] == MyID)
+ 216   2                              my_order = 0;
+ 217   2                      else if(Buffer[1] == MyID)
+ 218   2                              my_order = 1;
+ 219   2                      else
+ 220   2                              my_order = 2;
+ 221   2      
+ 222   2                      Buffer[0] = Buffer[1] = Buffer[2] = -1; // xmitdata() uses 'Buffer' to send data --> reset!
+ 223   2      
+ 224   2                      //PWR_UP = 0;
+ 225   2                      MSP_CS = 1;
+ 226   2      
+ 227   2                      switch(my_order)
+ 228   2                      {
+ 229   3                              case 0:
+ 230   3                                      //_delay2us(150);
+ 231   3                                      _delay2us(170); //350 us
+ 232   3                                      break;
+ 233   3                              case 1:
+ 234   3                                      delayms(1);
+ 235   3                                      _delay2us(245); //500 us
+ 236   3                                      //_delay2us(185);
+ 237   3                                      _delay2us(195); //400
+ 238   3                                      break;
+ 239   3                              case 2:
+ 240   3                                      delayms(2);
+ 241   3                                      _delay2us(245); // 5oo us
+C51 COMPILER V8.05a   SERVER                                                               03/05/2013 12:57:02 PAGE 5   
+
+ 242   3                                      //_delay2us(185);
+ 243   3                                      _delay2us(205); // 420 us
+ 244   3                                      break;
+ 245   3                      }
+ 246   2      
+ 247   2                      timer0_stop();
+ 248   2                      MSP_CS = 0;
+ 249   2                      xmitdata();
+ 250   2                      MSP_CS = 1;
+ 251   2                      led_toggle();
+ 252   2                      rf_config(RX);
+ 253   2                      rf_rxOn();
+ 254   2                      timer0_start();
+ 255   2                      MSP_CS = 0;
+ 256   2              } // for
+ 257   1      } // main
+ 258          
+ 259          
+ 260          void timer0_ISR (void) interrupt 1
+ 261          {
+ 262   1              //static unsigned int   index = 0;
+ 263   1              //static unsigned char  index = 0;
+ 264   1              //static unsigned int   index_count =0;
+ 265   1              // counting 1333  clocks takes 1 ms
+ 266   1              // counting 6665  (0x1A09) take 5 ms 
+ 267   1              // counting 13333 (0x3415) takes 10 ms
+ 268   1              // counting 1333 * 50 = 66650 = (0x1045A) takes 50ms
+ 269   1              
+ 270   1              // 0x10000 - 0x3415 = 0x cbeb
+ 271   1              // 0x10000 - 0x1A09 = 0x E5F7
+ 272   1              // -> 50 ms
+ 273   1                      
+ 274   1      //MSP_CS = 1; /**/
+ 275   1              
+ 276   1              //TH0 = TIMER0_5MS_HIGH;
+ 277   1              //TL0 = TIMER0_5MS_LOW;
+ 278   1      
+ 279   1              TH0 = TIMER0_3MS_HIGH;
+ 280   1              TL0 = TIMER0_3MS_LOW;
+ 281   1      
+ 282   1              //if ( index_count == 0){
+ 283   1              //ptr16[index] =  adc_read(Y_AXIS);
+ 284   1      
+ 285   1              //ptr16[index] =  adc_read(X_AXIS);               //for 12 bits ADC
+ 286   1      
+ 287   1              adcvalue[index] =  adc_read(X_AXIS);              //for 8 bits ADC
+ 288   1              index = (index + 1) % bufferLength;     
+ 289   1      /*
+ 290   1              adcvalue[0] =  adc_read(X_AXIS);
+ 291   1              adcvalue[1] =  adc_read(Y_AXIS);
+ 292   1              adcvalue[2] =  adc_read(Z_AXIS);
+ 293   1      */
+ 294   1      //MSP_CS = 0; /**/
+ 295   1              //}
+ 296   1      
+ 297   1              //index_count = (index_count+1) % 5 ;
+ 298   1      
+ 299   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    403    ----
+C51 COMPILER V8.05a   SERVER                                                               03/05/2013 12:57:02 PAGE 6   
+
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     44       4
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

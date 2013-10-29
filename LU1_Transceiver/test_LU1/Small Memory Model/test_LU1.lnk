@@ -1,0 +1,23 @@
+-myuxi
+-Y
+-v 0x0800
+-w 0x4000
+-b HOME = 0x0000
+-b XSEG = 0x8000
+-b PSEG = 0x8000
+-b ISEG = 0x0000
+-b BSEG = 0x0000
+-k C:\Program Files\EPL_LIB\LU1_LIB\lib
+-k C:\Program Files\SDCC\bin\..\lib\large
+-l ECO_LU1_large.lib
+-l mcs51
+-l libsdcc
+-l libint
+-l liblong
+-l libfloat
+./epl_rf_en.rel
+./main.rel
+./usb_api.rel
+./usb_standard_desc.rel
+
+-e

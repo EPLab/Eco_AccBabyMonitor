@@ -1,0 +1,7 @@
+"server.obj",
+"rf.obj",
+"delay.obj",
+"adc.obj",
+"timer0.obj" 
+TO "server" 
+RAMSIZE(256) 

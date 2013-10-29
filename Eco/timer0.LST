@@ -1,0 +1,135 @@
+C51 COMPILER V8.05a   TIMER0                                                               10/13/2011 15:47:29 PAGE 1   
+
+
+C51 COMPILER V8.05a, COMPILATION OF MODULE TIMER0
+OBJECT MODULE PLACED IN timer0.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE timer0.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          // $Id: $
+   2          /*
+   3           * (C) 2007 The Regents of the University of California. All Rights Reserved.
+   4           * Created by Seung-mok Yoo, Department of Electrical Engineering & Computer
+   5           * Science
+   6           *
+   7           * Copyright (C) 2007 The Regents of the University of California. All Rights
+   8           * Reserved. Permission to use, copy, modify, and distribute this software and
+   9           * its documentation for educational, research and non-profit purposes, without
+  10           * fee, and without a written agreement is hereby granted, provided that the
+  11           * above copyright notice, this paragraph and the following two paragraphs
+  12           * appear in all copies. This software program and documentation are
+  13           * copyrighted by The Regents of the University of California ("The University
+  14           * of California").
+  15           *
+  16           * THE SOFTWARE PROGRAM AND DOCUMENTATION ARE SUPPLIED "AS IS," WITHOUT ANY
+  17           * ACCOMPANYING SERVICES FROM THE UNIVERSITY OF CALFORNIA. FURTHERMORE, THE
+  18           * UNIVERSITY OF CALIFORNIA DOES NOT WARRANT THAT THE OPERATION OF THE PROGRAM
+  19           * WILL BE UNINTERRUPTED OR ERROR-FREE. THE END-USER UNDERSTANDS THAT THE
+  20           * PROGRAM WAS DEVELOPED FOR RESEARCH PURPOSES AND IS ADVISED NOT TO RELY
+  21           * EXCLUSIVELY ON THE PROGRAM FOR ANY REASON.
+  22           *
+  23           * IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR
+  24           * DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING
+  25           * LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION,
+  26           * EVEN IF THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
+  27           * SUCH DAMAGES. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY
+  28           * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+  29           * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE PROVIDED
+  30           * HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF CALIFORNIA HAS NO
+  31           * OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR
+  32           * MODIFICATIONS. 
+  33           */
+  34          #include "reg24e1.h"
+  35          #include "rf.h"
+  36          #include "timer0.h"
+  37          
+  38          /*
+  39          static const unsigned int       const1ms = TIMER0_1MS;
+  40          static const unsigned int       const2ms = TIMER0_2MS;
+  41          static const unsigned int       const3ms = TIMER0_3MS;
+  42          static const unsigned int       const4ms = TIMER0_4MS;
+  43          static const unsigned int       const5ms = TIMER0_5MS;
+  44          static const unsigned int       const10ms = TIMER0_10MS;
+  45          */
+  46          
+  47          static const timer_t const500us = {TIMER0_500US_LOW, TIMER0_500US_HIGH};
+  48          static const timer_t const1500us = {TIMER0_1500US_LOW, TIMER0_1500US_HIGH};
+  49          static const timer_t const1ms = {TIMER0_1MS_LOW, TIMER0_1MS_HIGH};
+  50          static const timer_t const2ms = {TIMER0_2MS_LOW, TIMER0_2MS_HIGH};
+  51          static const timer_t const3ms = {TIMER0_3MS_LOW, TIMER0_3MS_HIGH};
+  52          static const timer_t const4ms = {TIMER0_4MS_LOW, TIMER0_4MS_HIGH};
+  53          static const timer_t const5ms = {TIMER0_5MS_LOW, TIMER0_5MS_HIGH};
+  54          static const timer_t const10ms = {TIMER0_10MS_LOW, TIMER0_10MS_HIGH};
+  55          
+C51 COMPILER V8.05a   TIMER0                                                               10/13/2011 15:47:29 PAGE 2   
+
+  56          //      Set Timer0 for 16-bit timer mode.  The
+  57          //      timer counts to 65535, overflows, and
+  58          //      generates an interrupt.
+  59          //      Set the Timer0 Run control bit.
+  60          void timer0_init(void)
+  61          {
+  62   1              TMOD = (TMOD & 0xF0) | 0x01;    // Set T/C0 Mode
+  63   1              //CKCON &= 0xF7;                                        // T0M=0 (/12 timer clock)
+  64   1              CKCON |= 0x0F;                                  // T0M=1 (/4 timer clock)
+  65   1              PT0 = 1;                                                // raise intr0 high
+  66   1              ET0 = 1;                                                // Enable Timer 0 Interrupts
+  67   1              EA = 1;                                                 // Global Interrupt Enable
+  68   1      } // timer0_init
+  69          
+  70          void timer0_start(void)
+  71          {
+  72   1              // initial value
+  73   1              //TH0 = TIMER0_5MS_HIGH;
+  74   1              //TL0 = TIMER0_5MS_LOW;
+  75   1      
+  76   1              TH0 = TIMER0_2MS_HIGH;
+  77   1              TL0 = TIMER0_2MS_LOW;
+  78   1      
+  79   1              TR0 = 1;                                                // start timer0
+  80   1      } // timer0_start
+  81          
+  82          
+  83          timer_t *timer0_getRegVal(uchar unit)
+  84          {
+  85   1              switch (unit)
+  86   1              {
+  87   2              case 1:
+  88   2                      return &const1ms;
+  89   2              case 2:
+  90   2                      return &const2ms;
+  91   2              case 3:
+  92   2                      return &const3ms;
+  93   2              case 4:
+  94   2                      return &const4ms;
+  95   2              case 5:
+  96   2                      return &const5ms;
+  97   2              case 10:
+  98   2                      return &const10ms;
+  99   2              case 11:
+ 100   2                      return &const500us;
+ 101   2              case 15:
+ 102   2                      return &const1500us;
+ 103   2              default:
+ 104   2                      return 0;
+ 105   2              } // switch
+ 106   1      } // timer0_getRegVal
+ 107          
+ 108          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    119    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     16    ----
+   IDATA SIZE       =   ----    ----
+C51 COMPILER V8.05a   TIMER0                                                               10/13/2011 15:47:29 PAGE 3   
+
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

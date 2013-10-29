@@ -1,0 +1,2681 @@
+                              1 ;--------------------------------------------------------
+                              2 ; File Created by SDCC : free open source ANSI-C Compiler
+                              3 ; Version 2.9.0 #5416 (Mar 22 2009) (MINGW32)
+                              4 ; This file was generated Mon Oct 14 23:38:20 2013
+                              5 ;--------------------------------------------------------
+                              6 	.module main
+                              7 	.optsdcc -mmcs51 --model-large
+                              8 	
+                              9 ;--------------------------------------------------------
+                             10 ; Public variables in this module
+                             11 ;--------------------------------------------------------
+                             12 	.globl _main
+                             13 	.globl _DECR
+                             14 	.globl _GO
+                             15 	.globl _BD
+                             16 	.globl _RFCKEN
+                             17 	.globl _RFCSN
+                             18 	.globl _RFCE
+                             19 	.globl _P05
+                             20 	.globl _P04
+                             21 	.globl _SCSN
+                             22 	.globl _MCSN
+                             23 	.globl _P03
+                             24 	.globl _P02
+                             25 	.globl _P01
+                             26 	.globl _P00
+                             27 	.globl _IV0
+                             28 	.globl _IV1
+                             29 	.globl _IV2
+                             30 	.globl _IV3
+                             31 	.globl _IV4
+                             32 	.globl _SUSPEND
+                             33 	.globl _WU
+                             34 	.globl _SWRST
+                             35 	.globl _RFSPIF
+                             36 	.globl _RFF
+                             37 	.globl _SPIF
+                             38 	.globl _USBWUF
+                             39 	.globl _USBF
+                             40 	.globl _WUF
+                             41 	.globl _TF2
+                             42 	.globl _EXF2
+                             43 	.globl _RFSPI
+                             44 	.globl _RF
+                             45 	.globl _SPI
+                             46 	.globl _USBWU
+                             47 	.globl _USB
+                             48 	.globl _WUIRQ
+                             49 	.globl _EXEN2
+                             50 	.globl _EX0
+                             51 	.globl _ET0
+                             52 	.globl _EX1
+                             53 	.globl _ET1
+                             54 	.globl _ES0
+                             55 	.globl _ET2
+                             56 	.globl _EA
+                             57 	.globl _T2I0
+                             58 	.globl _T2I1
+                             59 	.globl _T2CM
+                             60 	.globl _T2R0
+                             61 	.globl _T2R1
+                             62 	.globl _I2FR
+                             63 	.globl _I3FR
+                             64 	.globl _T2PS
+                             65 	.globl _RI0
+                             66 	.globl _TI0
+                             67 	.globl _RB80
+                             68 	.globl _TB80
+                             69 	.globl _REN0
+                             70 	.globl _SM20
+                             71 	.globl _SM1
+                             72 	.globl _SM0
+                             73 	.globl _IT0
+                             74 	.globl _IE0
+                             75 	.globl _IT1
+                             76 	.globl _IE1
+                             77 	.globl _TR0
+                             78 	.globl _TF0
+                             79 	.globl _TR1
+                             80 	.globl _TF1
+                             81 	.globl _P
+                             82 	.globl _F1
+                             83 	.globl _OV
+                             84 	.globl _RS0
+                             85 	.globl _RS1
+                             86 	.globl _F0
+                             87 	.globl _AC
+                             88 	.globl _CY
+                             89 	.globl _WPEN
+                             90 	.globl _RDEND
+                             91 	.globl _RDIS
+                             92 	.globl _INFEN
+                             93 	.globl _RDYN
+                             94 	.globl _WEN
+                             95 	.globl _STP
+                             96 	.globl _MCDIS
+                             97 	.globl _T2
+                             98 	.globl _CRC
+                             99 	.globl _CC3
+                            100 	.globl _CC2
+                            101 	.globl _CC1
+                            102 	.globl _FCR
+                            103 	.globl _FPCR
+                            104 	.globl _FSR
+                            105 	.globl _AESIA2
+                            106 	.globl _AESIA1
+                            107 	.globl _AESD
+                            108 	.globl _AESIV
+                            109 	.globl _AESKIN
+                            110 	.globl _B
+                            111 	.globl _ARCON
+                            112 	.globl _MD5
+                            113 	.globl _MD4
+                            114 	.globl _MD3
+                            115 	.globl _MD2
+                            116 	.globl _MD1
+                            117 	.globl _MD0
+                            118 	.globl _AESCS
+                            119 	.globl _RFCTL
+                            120 	.globl _RFDAT
+                            121 	.globl _ACC
+                            122 	.globl _USBSLP
+                            123 	.globl _WDCON
+                            124 	.globl _PSW
+                            125 	.globl _TH2
+                            126 	.globl _TL2
+                            127 	.globl _CRCH
+                            128 	.globl _CRCL
+                            129 	.globl _P0EXP
+                            130 	.globl _T2CON
+                            131 	.globl _CCH3
+                            132 	.globl _CCL3
+                            133 	.globl _CCH2
+                            134 	.globl _CCL2
+                            135 	.globl _CCH1
+                            136 	.globl _CCL1
+                            137 	.globl _CCEN
+                            138 	.globl _IRCON
+                            139 	.globl _SSSTAT
+                            140 	.globl _SSDATA
+                            141 	.globl _SSCONF
+                            142 	.globl _S0RELH
+                            143 	.globl _IP1
+                            144 	.globl _IEN1
+                            145 	.globl _TICKDV
+                            146 	.globl _SMCTL
+                            147 	.globl _SMDAT
+                            148 	.globl _RSTRES
+                            149 	.globl _REGXC
+                            150 	.globl _REGXL
+                            151 	.globl _REGXH
+                            152 	.globl _S0RELL
+                            153 	.globl _IP0
+                            154 	.globl _IEN0
+                            155 	.globl _INTEXP
+                            156 	.globl _WUCONF
+                            157 	.globl _PWRDWN
+                            158 	.globl _CLKCTL
+                            159 	.globl _USBCON
+                            160 	.globl _IEN2
+                            161 	.globl _S0BUF
+                            162 	.globl _S0CON
+                            163 	.globl _P0ALT
+                            164 	.globl _P0DIR
+                            165 	.globl _DPS
+                            166 	.globl _RFCON
+                            167 	.globl _CKCON
+                            168 	.globl _TH1
+                            169 	.globl _TH0
+                            170 	.globl _TL1
+                            171 	.globl _TL0
+                            172 	.globl _TMOD
+                            173 	.globl _TCON
+                            174 	.globl _PCON
+                            175 	.globl _DPH1
+                            176 	.globl _DPL1
+                            177 	.globl _DPH
+                            178 	.globl _DPL
+                            179 	.globl _SP
+                            180 	.globl _P0
+                            181 	.globl _array_cp_PARM_3
+                            182 	.globl _array_cp_PARM_2
+                            183 	.globl _packet
+                            184 	.globl _usize
+                            185 	.globl _ubuf
+                            186 	.globl _cfg
+                            187 	.globl _rf_cfg_data
+                            188 	.globl _array_cp
+                            189 ;--------------------------------------------------------
+                            190 ; special function registers
+                            191 ;--------------------------------------------------------
+                            192 	.area RSEG    (DATA)
+                    0080    193 _P0	=	0x0080
+                    0081    194 _SP	=	0x0081
+                    0082    195 _DPL	=	0x0082
+                    0083    196 _DPH	=	0x0083
+                    0084    197 _DPL1	=	0x0084
+                    0085    198 _DPH1	=	0x0085
+                    0087    199 _PCON	=	0x0087
+                    0088    200 _TCON	=	0x0088
+                    0089    201 _TMOD	=	0x0089
+                    008A    202 _TL0	=	0x008a
+                    008B    203 _TL1	=	0x008b
+                    008C    204 _TH0	=	0x008c
+                    008D    205 _TH1	=	0x008d
+                    008E    206 _CKCON	=	0x008e
+                    0090    207 _RFCON	=	0x0090
+                    0092    208 _DPS	=	0x0092
+                    0094    209 _P0DIR	=	0x0094
+                    0095    210 _P0ALT	=	0x0095
+                    0098    211 _S0CON	=	0x0098
+                    0099    212 _S0BUF	=	0x0099
+                    009A    213 _IEN2	=	0x009a
+                    00A0    214 _USBCON	=	0x00a0
+                    00A3    215 _CLKCTL	=	0x00a3
+                    00A4    216 _PWRDWN	=	0x00a4
+                    00A5    217 _WUCONF	=	0x00a5
+                    00A6    218 _INTEXP	=	0x00a6
+                    00A8    219 _IEN0	=	0x00a8
+                    00A9    220 _IP0	=	0x00a9
+                    00AA    221 _S0RELL	=	0x00aa
+                    00AB    222 _REGXH	=	0x00ab
+                    00AC    223 _REGXL	=	0x00ac
+                    00AD    224 _REGXC	=	0x00ad
+                    00B1    225 _RSTRES	=	0x00b1
+                    00B2    226 _SMDAT	=	0x00b2
+                    00B3    227 _SMCTL	=	0x00b3
+                    00B5    228 _TICKDV	=	0x00b5
+                    00B8    229 _IEN1	=	0x00b8
+                    00B9    230 _IP1	=	0x00b9
+                    00BA    231 _S0RELH	=	0x00ba
+                    00BC    232 _SSCONF	=	0x00bc
+                    00BD    233 _SSDATA	=	0x00bd
+                    00BE    234 _SSSTAT	=	0x00be
+                    00C0    235 _IRCON	=	0x00c0
+                    00C1    236 _CCEN	=	0x00c1
+                    00C2    237 _CCL1	=	0x00c2
+                    00C3    238 _CCH1	=	0x00c3
+                    00C4    239 _CCL2	=	0x00c4
+                    00C5    240 _CCH2	=	0x00c5
+                    00C6    241 _CCL3	=	0x00c6
+                    00C7    242 _CCH3	=	0x00c7
+                    00C8    243 _T2CON	=	0x00c8
+                    00C9    244 _P0EXP	=	0x00c9
+                    00CA    245 _CRCL	=	0x00ca
+                    00CB    246 _CRCH	=	0x00cb
+                    00CC    247 _TL2	=	0x00cc
+                    00CD    248 _TH2	=	0x00cd
+                    00D0    249 _PSW	=	0x00d0
+                    00D8    250 _WDCON	=	0x00d8
+                    00D9    251 _USBSLP	=	0x00d9
+                    00E0    252 _ACC	=	0x00e0
+                    00E5    253 _RFDAT	=	0x00e5
+                    00E6    254 _RFCTL	=	0x00e6
+                    00E8    255 _AESCS	=	0x00e8
+                    00E9    256 _MD0	=	0x00e9
+                    00EA    257 _MD1	=	0x00ea
+                    00EB    258 _MD2	=	0x00eb
+                    00EC    259 _MD3	=	0x00ec
+                    00ED    260 _MD4	=	0x00ed
+                    00EE    261 _MD5	=	0x00ee
+                    00EF    262 _ARCON	=	0x00ef
+                    00F0    263 _B	=	0x00f0
+                    00F1    264 _AESKIN	=	0x00f1
+                    00F2    265 _AESIV	=	0x00f2
+                    00F3    266 _AESD	=	0x00f3
+                    00F5    267 _AESIA1	=	0x00f5
+                    00F6    268 _AESIA2	=	0x00f6
+                    00F8    269 _FSR	=	0x00f8
+                    00F9    270 _FPCR	=	0x00f9
+                    00FA    271 _FCR	=	0x00fa
+                    FFFFC3C2    272 _CC1	=	0xffffc3c2
+                    FFFFC5C4    273 _CC2	=	0xffffc5c4
+                    FFFFC7C6    274 _CC3	=	0xffffc7c6
+                    FFFFCBCA    275 _CRC	=	0xffffcbca
+                    FFFFCDCC    276 _T2	=	0xffffcdcc
+                            277 ;--------------------------------------------------------
+                            278 ; special function bits
+                            279 ;--------------------------------------------------------
+                            280 	.area RSEG    (DATA)
+                    00FF    281 _MCDIS	=	0x00ff
+                    00FE    282 _STP	=	0x00fe
+                    00FD    283 _WEN	=	0x00fd
+                    00FC    284 _RDYN	=	0x00fc
+                    00FB    285 _INFEN	=	0x00fb
+                    00FA    286 _RDIS	=	0x00fa
+                    00F9    287 _RDEND	=	0x00f9
+                    00F8    288 _WPEN	=	0x00f8
+                    00D7    289 _CY	=	0x00d7
+                    00D6    290 _AC	=	0x00d6
+                    00D5    291 _F0	=	0x00d5
+                    00D4    292 _RS1	=	0x00d4
+                    00D3    293 _RS0	=	0x00d3
+                    00D2    294 _OV	=	0x00d2
+                    00D1    295 _F1	=	0x00d1
+                    00D0    296 _P	=	0x00d0
+                    008F    297 _TF1	=	0x008f
+                    008E    298 _TR1	=	0x008e
+                    008D    299 _TF0	=	0x008d
+                    008C    300 _TR0	=	0x008c
+                    008B    301 _IE1	=	0x008b
+                    008A    302 _IT1	=	0x008a
+                    0089    303 _IE0	=	0x0089
+                    0088    304 _IT0	=	0x0088
+                    009F    305 _SM0	=	0x009f
+                    009E    306 _SM1	=	0x009e
+                    009D    307 _SM20	=	0x009d
+                    009C    308 _REN0	=	0x009c
+                    009B    309 _TB80	=	0x009b
+                    009A    310 _RB80	=	0x009a
+                    0099    311 _TI0	=	0x0099
+                    0098    312 _RI0	=	0x0098
+                    00CF    313 _T2PS	=	0x00cf
+                    00CE    314 _I3FR	=	0x00ce
+                    00CD    315 _I2FR	=	0x00cd
+                    00CC    316 _T2R1	=	0x00cc
+                    00CB    317 _T2R0	=	0x00cb
+                    00CA    318 _T2CM	=	0x00ca
+                    00C9    319 _T2I1	=	0x00c9
+                    00C8    320 _T2I0	=	0x00c8
+                    00AF    321 _EA	=	0x00af
+                    00AD    322 _ET2	=	0x00ad
+                    00AC    323 _ES0	=	0x00ac
+                    00AB    324 _ET1	=	0x00ab
+                    00AA    325 _EX1	=	0x00aa
+                    00A9    326 _ET0	=	0x00a9
+                    00A8    327 _EX0	=	0x00a8
+                    00BF    328 _EXEN2	=	0x00bf
+                    00BD    329 _WUIRQ	=	0x00bd
+                    00BC    330 _USB	=	0x00bc
+                    00BB    331 _USBWU	=	0x00bb
+                    00BA    332 _SPI	=	0x00ba
+                    00B9    333 _RF	=	0x00b9
+                    00B8    334 _RFSPI	=	0x00b8
+                    00C7    335 _EXF2	=	0x00c7
+                    00C6    336 _TF2	=	0x00c6
+                    00C5    337 _WUF	=	0x00c5
+                    00C4    338 _USBF	=	0x00c4
+                    00C3    339 _USBWUF	=	0x00c3
+                    00C2    340 _SPIF	=	0x00c2
+                    00C1    341 _RFF	=	0x00c1
+                    00C0    342 _RFSPIF	=	0x00c0
+                    00A7    343 _SWRST	=	0x00a7
+                    00A6    344 _WU	=	0x00a6
+                    00A5    345 _SUSPEND	=	0x00a5
+                    00A4    346 _IV4	=	0x00a4
+                    00A3    347 _IV3	=	0x00a3
+                    00A2    348 _IV2	=	0x00a2
+                    00A1    349 _IV1	=	0x00a1
+                    00A0    350 _IV0	=	0x00a0
+                    0080    351 _P00	=	0x0080
+                    0081    352 _P01	=	0x0081
+                    0082    353 _P02	=	0x0082
+                    0083    354 _P03	=	0x0083
+                    0083    355 _MCSN	=	0x0083
+                    0083    356 _SCSN	=	0x0083
+                    0084    357 _P04	=	0x0084
+                    0085    358 _P05	=	0x0085
+                    0090    359 _RFCE	=	0x0090
+                    0091    360 _RFCSN	=	0x0091
+                    0092    361 _RFCKEN	=	0x0092
+                    00DF    362 _BD	=	0x00df
+                    00E8    363 _GO	=	0x00e8
+                    00E9    364 _DECR	=	0x00e9
+                            365 ;--------------------------------------------------------
+                            366 ; overlayable register banks
+                            367 ;--------------------------------------------------------
+                            368 	.area REG_BANK_0	(REL,OVR,DATA)
+   0000                     369 	.ds 8
+                            370 ;--------------------------------------------------------
+                            371 ; internal ram data
+                            372 ;--------------------------------------------------------
+                            373 	.area DSEG    (DATA)
+                            374 ;--------------------------------------------------------
+                            375 ; overlayable items in internal ram 
+                            376 ;--------------------------------------------------------
+                            377 	.area	OSEG    (OVR,DATA)
+   0000                     378 _array_cp_sloc0_1_0::
+   0000                     379 	.ds 2
+   0002                     380 _array_cp_sloc1_1_0::
+   0002                     381 	.ds 3
+   0005                     382 _array_cp_sloc2_1_0::
+   0005                     383 	.ds 3
+                            384 ;--------------------------------------------------------
+                            385 ; Stack segment in internal ram 
+                            386 ;--------------------------------------------------------
+                            387 	.area	SSEG	(DATA)
+   0000                     388 __start__stack:
+   0000                     389 	.ds	1
+                            390 
+                            391 ;--------------------------------------------------------
+                            392 ; indirectly addressable internal ram data
+                            393 ;--------------------------------------------------------
+                            394 	.area ISEG    (DATA)
+   0000                     395 _rf_cfg_data::
+   0000                     396 	.ds 19
+   0013                     397 _cfg::
+   0013                     398 	.ds 1
+                            399 ;--------------------------------------------------------
+                            400 ; absolute internal ram data
+                            401 ;--------------------------------------------------------
+                            402 	.area IABS    (ABS,DATA)
+                            403 	.area IABS    (ABS,DATA)
+                            404 ;--------------------------------------------------------
+                            405 ; bit data
+                            406 ;--------------------------------------------------------
+                            407 	.area BSEG    (BIT)
+                            408 ;--------------------------------------------------------
+                            409 ; paged external ram data
+                            410 ;--------------------------------------------------------
+                            411 	.area PSEG    (PAG,XDATA)
+                            412 ;--------------------------------------------------------
+                            413 ; external ram data
+                            414 ;--------------------------------------------------------
+                            415 	.area XSEG    (XDATA)
+   0000                     416 _ubuf::
+   0000                     417 	.ds 65
+   0041                     418 _usize::
+   0041                     419 	.ds 1
+   0042                     420 _packet::
+   0042                     421 	.ds 32
+   0062                     422 _main_total_pkt_count_1_1:
+   0062                     423 	.ds 2
+   0064                     424 _main_addr_width_1_1:
+   0064                     425 	.ds 2
+   0066                     426 _main_customized_plen_1_1:
+   0066                     427 	.ds 2
+   0068                     428 _main_auto_ack_1_1:
+   0068                     429 	.ds 1
+   0069                     430 _main_ACKbuf_1_1:
+   0069                     431 	.ds 4
+   006D                     432 _main_temp_buf_1_1:
+   006D                     433 	.ds 34
+   008F                     434 _main_temp_addr_1_1:
+   008F                     435 	.ds 5
+   0094                     436 _main_data_length_1_1:
+   0094                     437 	.ds 1
+   0095                     438 _main_addr_buf_1_1:
+   0095                     439 	.ds 5
+   009A                     440 _array_cp_PARM_2:
+   009A                     441 	.ds 3
+   009D                     442 _array_cp_PARM_3:
+   009D                     443 	.ds 2
+   009F                     444 _array_cp_dst_array_1_1:
+   009F                     445 	.ds 3
+                            446 ;--------------------------------------------------------
+                            447 ; absolute external ram data
+                            448 ;--------------------------------------------------------
+                            449 	.area XABS    (ABS,XDATA)
+                            450 ;--------------------------------------------------------
+                            451 ; external initialized ram data
+                            452 ;--------------------------------------------------------
+                            453 	.area XISEG   (XDATA)
+                            454 	.area HOME    (CODE)
+                            455 	.area GSINIT0 (CODE)
+                            456 	.area GSINIT1 (CODE)
+                            457 	.area GSINIT2 (CODE)
+                            458 	.area GSINIT3 (CODE)
+                            459 	.area GSINIT4 (CODE)
+                            460 	.area GSINIT5 (CODE)
+                            461 	.area GSINIT  (CODE)
+                            462 	.area GSFINAL (CODE)
+                            463 	.area CSEG    (CODE)
+                            464 ;--------------------------------------------------------
+                            465 ; interrupt vector 
+                            466 ;--------------------------------------------------------
+                            467 	.area HOME    (CODE)
+   0000                     468 __interrupt_vect:
+   0000 02s00r00            469 	ljmp	__sdcc_gsinit_startup
+   0003 32                  470 	reti
+   0004                     471 	.ds	7
+   000B 32                  472 	reti
+   000C                     473 	.ds	7
+   0013 32                  474 	reti
+   0014                     475 	.ds	7
+   001B 32                  476 	reti
+   001C                     477 	.ds	7
+   0023 32                  478 	reti
+   0024                     479 	.ds	7
+   002B 32                  480 	reti
+   002C                     481 	.ds	7
+   0033 32                  482 	reti
+   0034                     483 	.ds	7
+   003B 32                  484 	reti
+   003C                     485 	.ds	7
+   0043 32                  486 	reti
+   0044                     487 	.ds	7
+   004B 32                  488 	reti
+   004C                     489 	.ds	7
+   0053 32                  490 	reti
+   0054                     491 	.ds	7
+   005B 02s00r00            492 	ljmp	_usb_wu
+   005E                     493 	.ds	5
+   0063 02s00r00            494 	ljmp	_usb_irq
+                            495 ;--------------------------------------------------------
+                            496 ; global & static initialisations
+                            497 ;--------------------------------------------------------
+                            498 	.area HOME    (CODE)
+                            499 	.area GSINIT  (CODE)
+                            500 	.area GSFINAL (CODE)
+                            501 	.area GSINIT  (CODE)
+                            502 	.globl __sdcc_gsinit_startup
+                            503 	.globl __sdcc_program_startup
+                            504 	.globl __start__stack
+                            505 	.globl __mcs51_genXINIT
+                            506 	.globl __mcs51_genXRAMCLEAR
+                            507 	.globl __mcs51_genRAMCLEAR
+                            508 ;	../main.c:42: idata struct epl_lu1_rf_en_config rf_cfg_data = { { 118 }, //-- RF channel --//
+   0000 78r00               509 	mov	r0,#_rf_cfg_data
+   0002 76 76               510 	mov	@r0,#0x76
+   0004 78r01               511 	mov	r0,#(_rf_cfg_data + 0x0001)
+   0006 76 05               512 	mov	@r0,#0x05
+   0008 78r02               513 	mov	r0,#(_rf_cfg_data + 0x0002)
+   000A 76 65               514 	mov	@r0,#0x65
+   000C 78r03               515 	mov	r0,#(_rf_cfg_data + 0x0003)
+   000E 76 65               516 	mov	@r0,#0x65
+   0010 78r04               517 	mov	r0,#(_rf_cfg_data + 0x0004)
+   0012 76 65               518 	mov	@r0,#0x65
+   0014 78r05               519 	mov	r0,#(_rf_cfg_data + 0x0005)
+   0016 76 65               520 	mov	@r0,#0x65
+   0018 78r06               521 	mov	r0,#(_rf_cfg_data + 0x0006)
+   001A 76 65               522 	mov	@r0,#0x65
+   001C 78r07               523 	mov	r0,#(_rf_cfg_data + 0x0007)
+   001E 76 65               524 	mov	@r0,#0x65
+   0020 78r08               525 	mov	r0,#(_rf_cfg_data + 0x0008)
+   0022 76 65               526 	mov	@r0,#0x65
+   0024 78r09               527 	mov	r0,#(_rf_cfg_data + 0x0009)
+   0026 76 65               528 	mov	@r0,#0x65
+   0028 78r0A               529 	mov	r0,#(_rf_cfg_data + 0x000a)
+   002A 76 65               530 	mov	@r0,#0x65
+   002C 78r0B               531 	mov	r0,#(_rf_cfg_data + 0x000b)
+   002E 76 65               532 	mov	@r0,#0x65
+   0030 78r0C               533 	mov	r0,#(_rf_cfg_data + 0x000c)
+   0032 76 20               534 	mov	@r0,#0x20
+   0034 78r0D               535 	mov	r0,#(_rf_cfg_data + 0x000d)
+   0036 76 00               536 	mov	@r0,#0x00
+   0038 78r0E               537 	mov	r0,#(_rf_cfg_data + 0x000e)
+   003A 76 03               538 	mov	@r0,#0x03
+   003C 78r0F               539 	mov	r0,#(_rf_cfg_data + 0x000f)
+   003E 76 01               540 	mov	@r0,#0x01
+   0040 78r10               541 	mov	r0,#(_rf_cfg_data + 0x0010)
+   0042 76 0F               542 	mov	@r0,#0x0F
+   0044 78r11               543 	mov	r0,#(_rf_cfg_data + 0x0011)
+   0046 76 FA               544 	mov	@r0,#0xFA
+   0048 08                  545 	inc	r0
+   0049 76 00               546 	mov	@r0,#0x00
+                            547 ;	../main.c:54: idata struct epl_lu1_rf_en_config * idata cfg = &rf_cfg_data;
+   004B 78r13               548 	mov	r0,#_cfg
+   004D 76r00               549 	mov	@r0,#_rf_cfg_data
+                            550 	.area GSFINAL (CODE)
+   0000 02s00r66            551 	ljmp	__sdcc_program_startup
+                            552 ;--------------------------------------------------------
+                            553 ; Home
+                            554 ;--------------------------------------------------------
+                            555 	.area HOME    (CODE)
+                            556 	.area HOME    (CODE)
+   0066                     557 __sdcc_program_startup:
+   0066 12s00r00            558 	lcall	_main
+                            559 ;	return from main will lock up
+   0069 80 FE               560 	sjmp .
+                            561 ;--------------------------------------------------------
+                            562 ; code
+                            563 ;--------------------------------------------------------
+                            564 	.area CSEG    (CODE)
+                            565 ;------------------------------------------------------------
+                            566 ;Allocation info for local variables in function 'main'
+                            567 ;------------------------------------------------------------
+                            568 ;i                         Allocated with name '_main_i_1_1'
+                            569 ;total_pkt_count           Allocated with name '_main_total_pkt_count_1_1'
+                            570 ;addr_width                Allocated with name '_main_addr_width_1_1'
+                            571 ;customized_plen           Allocated with name '_main_customized_plen_1_1'
+                            572 ;pipe_num                  Allocated with name '_main_pipe_num_1_1'
+                            573 ;auto_ack                  Allocated with name '_main_auto_ack_1_1'
+                            574 ;pipe_source               Allocated with name '_main_pipe_source_1_1'
+                            575 ;ACKbuf                    Allocated with name '_main_ACKbuf_1_1'
+                            576 ;temp_buf                  Allocated with name '_main_temp_buf_1_1'
+                            577 ;temp_addr                 Allocated with name '_main_temp_addr_1_1'
+                            578 ;data_length               Allocated with name '_main_data_length_1_1'
+                            579 ;dynpd_pipe                Allocated with name '_main_dynpd_pipe_1_1'
+                            580 ;addr_buf                  Allocated with name '_main_addr_buf_1_1'
+                            581 ;------------------------------------------------------------
+                            582 ;	../main.c:58: void main(void) {
+                            583 ;	-----------------------------------------
+                            584 ;	 function main
+                            585 ;	-----------------------------------------
+   0000                     586 _main:
+                    0002    587 	ar2 = 0x02
+                    0003    588 	ar3 = 0x03
+                    0004    589 	ar4 = 0x04
+                    0005    590 	ar5 = 0x05
+                    0006    591 	ar6 = 0x06
+                    0007    592 	ar7 = 0x07
+                    0000    593 	ar0 = 0x00
+                    0001    594 	ar1 = 0x01
+                            595 ;	../main.c:60: int total_pkt_count = 1;
+   0000 90s00r62            596 	mov	dptr,#_main_total_pkt_count_1_1
+   0003 74 01               597 	mov	a,#0x01
+   0005 F0                  598 	movx	@dptr,a
+   0006 E4                  599 	clr	a
+   0007 A3                  600 	inc	dptr
+   0008 F0                  601 	movx	@dptr,a
+                            602 ;	../main.c:61: int addr_width = 5;
+   0009 90s00r64            603 	mov	dptr,#_main_addr_width_1_1
+   000C 74 05               604 	mov	a,#0x05
+   000E F0                  605 	movx	@dptr,a
+   000F E4                  606 	clr	a
+   0010 A3                  607 	inc	dptr
+   0011 F0                  608 	movx	@dptr,a
+                            609 ;	../main.c:62: int customized_plen = 0;
+   0012 90s00r66            610 	mov	dptr,#_main_customized_plen_1_1
+   0015 E4                  611 	clr	a
+   0016 F0                  612 	movx	@dptr,a
+   0017 A3                  613 	inc	dptr
+   0018 F0                  614 	movx	@dptr,a
+                            615 ;	../main.c:64: epl_rf_en_auto_ack_t auto_ack = 0;
+   0019 90s00r68            616 	mov	dptr,#_main_auto_ack_1_1
+   001C E4                  617 	clr	a
+   001D F0                  618 	movx	@dptr,a
+                            619 ;	../main.c:69: unsigned char ACKbuf[] = "ACK";
+   001E 90s00r69            620 	mov	dptr,#_main_ACKbuf_1_1
+   0021 74 41               621 	mov	a,#0x41
+   0023 F0                  622 	movx	@dptr,a
+   0024 90s00r6A            623 	mov	dptr,#(_main_ACKbuf_1_1 + 0x0001)
+   0027 74 43               624 	mov	a,#0x43
+   0029 F0                  625 	movx	@dptr,a
+   002A 90s00r6B            626 	mov	dptr,#(_main_ACKbuf_1_1 + 0x0002)
+   002D 74 4B               627 	mov	a,#0x4B
+   002F F0                  628 	movx	@dptr,a
+   0030 90s00r6C            629 	mov	dptr,#(_main_ACKbuf_1_1 + 0x0003)
+                            630 ;	../main.c:72: unsigned char data_length = 0;
+   0033 E4                  631 	clr	a
+   0034 F0                  632 	movx	@dptr,a
+   0035 90s00r94            633 	mov	dptr,#_main_data_length_1_1
+   0038 F0                  634 	movx	@dptr,a
+                            635 ;	../main.c:76: P0EXP = 0x00;
+   0039 75 C9 00            636 	mov	_P0EXP,#0x00
+                            637 ;	../main.c:77: P0ALT = 0x00;
+   003C 75 95 00            638 	mov	_P0ALT,#0x00
+                            639 ;	../main.c:78: P0DIR = 0x00;
+   003F 75 94 00            640 	mov	_P0DIR,#0x00
+                            641 ;	../main.c:81: epl_uart_init(UART_BAUD_57K6);
+   0042 75 82 03            642 	mov	dpl,#0x03
+   0045 12s00r00            643 	lcall	_epl_uart_init
+                            644 ;	../main.c:83: usb_init(); // Initialize USB
+   0048 12s00r00            645 	lcall	_usb_init
+                            646 ;	../main.c:84: EA = 1; // Enable global IRQ
+   004B D2 AF               647 	setb	_EA
+                            648 ;	../main.c:86: epl_rf_en_quick_init(cfg);
+   004D 78r13               649 	mov	r0,#_cfg
+   004F 86 02               650 	mov	ar2,@r0
+   0051 7B 00               651 	mov	r3,#0x00
+   0053 7C 40               652 	mov	r4,#0x40
+   0055 8A 82               653 	mov	dpl,r2
+   0057 8B 83               654 	mov	dph,r3
+   0059 8C F0               655 	mov	b,r4
+   005B 12s00r00            656 	lcall	_epl_rf_en_quick_init
+                            657 ;	../main.c:89: hal_nrf_write_reg(FLUSH_TX, 0);
+   005E 90s00r00            658 	mov	dptr,#_hal_nrf_write_reg_PARM_2
+   0061 E4                  659 	clr	a
+   0062 F0                  660 	movx	@dptr,a
+   0063 75 82 E1            661 	mov	dpl,#0xE1
+   0066 12s00r00            662 	lcall	_hal_nrf_write_reg
+                            663 ;	../main.c:90: hal_nrf_write_reg(FLUSH_RX, 0);
+   0069 90s00r00            664 	mov	dptr,#_hal_nrf_write_reg_PARM_2
+   006C E4                  665 	clr	a
+   006D F0                  666 	movx	@dptr,a
+   006E 75 82 E2            667 	mov	dpl,#0xE2
+   0071 12s00r00            668 	lcall	_hal_nrf_write_reg
+                            669 ;	../main.c:92: hal_nrf_lock_unlock();
+   0074 12s00r00            670 	lcall	_hal_nrf_lock_unlock
+                            671 ;	../main.c:93: hal_nrf_enable_dynamic_pl();
+   0077 12s00r00            672 	lcall	_hal_nrf_enable_dynamic_pl
+                            673 ;	../main.c:95: LED_Blink(20);
+   007A 63 80 30            674 	xrl	_P0,#0x30
+   007D 90 00 14            675 	mov	dptr,#0x0014
+   0080 12s00r00            676 	lcall	_mdelay
+   0083 63 80 30            677 	xrl	_P0,#0x30
+   0086 90 00 14            678 	mov	dptr,#0x0014
+   0089 12s00r00            679 	lcall	_mdelay
+                            680 ;	../main.c:96: epl_uart_putstr("start!");
+   008C 90s00r00            681 	mov	dptr,#__str_1
+   008F 75 F0 80            682 	mov	b,#0x80
+   0092 12s00r00            683 	lcall	_epl_uart_putstr
+                            684 ;	../main.c:97: while (1) {
+   0095                     685 00192$:
+                            686 ;	../main.c:98: usb_recv_packet();
+   0095 12s00r00            687 	lcall	_usb_recv_packet
+                            688 ;	../main.c:99: switch (ubuf[1]) {
+   0098 90s00r01            689 	mov	dptr,#(_ubuf + 0x0001)
+   009B E0                  690 	movx	a,@dptr
+   009C FA                  691 	mov	r2,a
+   009D BA 01 03            692 	cjne	r2,#0x01,00302$
+   00A0 02s01rCE            693 	ljmp	00112$
+   00A3                     694 00302$:
+   00A3 BA 02 03            695 	cjne	r2,#0x02,00303$
+   00A6 02s01rFB            696 	ljmp	00113$
+   00A9                     697 00303$:
+   00A9 BA 03 03            698 	cjne	r2,#0x03,00304$
+   00AC 02s02r16            699 	ljmp	00114$
+   00AF                     700 00304$:
+   00AF BA 04 03            701 	cjne	r2,#0x04,00305$
+   00B2 02s02r31            702 	ljmp	00115$
+   00B5                     703 00305$:
+   00B5 BA 05 03            704 	cjne	r2,#0x05,00306$
+   00B8 02s04r5E            705 	ljmp	00128$
+   00BB                     706 00306$:
+   00BB BA 10 03            707 	cjne	r2,#0x10,00307$
+   00BE 02s04r92            708 	ljmp	00269$
+   00C1                     709 00307$:
+   00C1 BA 11 03            710 	cjne	r2,#0x11,00308$
+   00C4 02s05r07            711 	ljmp	00271$
+   00C7                     712 00308$:
+   00C7 BA 12 03            713 	cjne	r2,#0x12,00309$
+   00CA 02s05r60            714 	ljmp	00273$
+   00CD                     715 00309$:
+   00CD BA 13 03            716 	cjne	r2,#0x13,00310$
+   00D0 02s05rB9            717 	ljmp	00275$
+   00D3                     718 00310$:
+   00D3 BA 14 03            719 	cjne	r2,#0x14,00311$
+   00D6 02s06r12            720 	ljmp	00277$
+   00D9                     721 00311$:
+   00D9 BA 15 03            722 	cjne	r2,#0x15,00312$
+   00DC 02s06r6B            723 	ljmp	00279$
+   00DF                     724 00312$:
+   00DF BA 30 03            725 	cjne	r2,#0x30,00313$
+   00E2 02s02r54            726 	ljmp	00116$
+   00E5                     727 00313$:
+   00E5 BA 31 03            728 	cjne	r2,#0x31,00314$
+   00E8 02s02r6E            729 	ljmp	00117$
+   00EB                     730 00314$:
+   00EB BA 32 03            731 	cjne	r2,#0x32,00315$
+   00EE 02s02r88            732 	ljmp	00118$
+   00F1                     733 00315$:
+   00F1 BA 33 03            734 	cjne	r2,#0x33,00316$
+   00F4 02s02rA2            735 	ljmp	00119$
+   00F7                     736 00316$:
+   00F7 BA 34 03            737 	cjne	r2,#0x34,00317$
+   00FA 02s02rBC            738 	ljmp	00120$
+   00FD                     739 00317$:
+   00FD BA 35 03            740 	cjne	r2,#0x35,00318$
+   0100 02s02rD6            741 	ljmp	00121$
+   0103                     742 00318$:
+   0103 BA 40 03            743 	cjne	r2,#0x40,00319$
+   0106 02s02rF0            744 	ljmp	00122$
+   0109                     745 00319$:
+   0109 BA 41 03            746 	cjne	r2,#0x41,00320$
+   010C 02s03r2D            747 	ljmp	00123$
+   010F                     748 00320$:
+   010F BA 42 03            749 	cjne	r2,#0x42,00321$
+   0112 02s03r6A            750 	ljmp	00124$
+   0115                     751 00321$:
+   0115 BA 43 03            752 	cjne	r2,#0x43,00322$
+   0118 02s03rA7            753 	ljmp	00125$
+   011B                     754 00322$:
+   011B BA 44 03            755 	cjne	r2,#0x44,00323$
+   011E 02s03rE4            756 	ljmp	00126$
+   0121                     757 00323$:
+   0121 BA 45 03            758 	cjne	r2,#0x45,00324$
+   0124 02s04r21            759 	ljmp	00127$
+   0127                     760 00324$:
+   0127 BA F2 03            761 	cjne	r2,#0xF2,00325$
+   012A 02s09r2A            762 	ljmp	00188$
+   012D                     763 00325$:
+   012D BA F3 02            764 	cjne	r2,#0xF3,00326$
+   0130 80 26               765 	sjmp	00105$
+   0132                     766 00326$:
+   0132 BA F4 02            767 	cjne	r2,#0xF4,00327$
+   0135 80 73               768 	sjmp	00109$
+   0137                     769 00327$:
+   0137 BA F6 03            770 	cjne	r2,#0xF6,00328$
+   013A 02s07rE6            771 	ljmp	00153$
+   013D                     772 00328$:
+   013D BA F7 03            773 	cjne	r2,#0xF7,00329$
+   0140 02s08r85            774 	ljmp	00162$
+   0143                     775 00329$:
+   0143 BA F8 03            776 	cjne	r2,#0xF8,00330$
+   0146 02s07r58            777 	ljmp	00147$
+   0149                     778 00330$:
+   0149 BA F9 03            779 	cjne	r2,#0xF9,00331$
+   014C 02s06rC4            780 	ljmp	00143$
+   014F                     781 00331$:
+   014F BA FA 03            782 	cjne	r2,#0xFA,00332$
+   0152 02s07r73            783 	ljmp	00148$
+   0155                     784 00332$:
+   0155 02s0BrDC            785 	ljmp	00190$
+                            786 ;	../main.c:102: LED_Off();
+   0158                     787 00105$:
+   0158 43 80 30            788 	orl	_P0,#0x30
+                            789 ;	../main.c:103: customized_plen = 0;
+   015B 90s00r66            790 	mov	dptr,#_main_customized_plen_1_1
+   015E E4                  791 	clr	a
+   015F F0                  792 	movx	@dptr,a
+   0160 A3                  793 	inc	dptr
+   0161 F0                  794 	movx	@dptr,a
+                            795 ;	../main.c:104: for (i = 0; i < PLOAD_LEN; i++)
+   0162 7A 00               796 	mov	r2,#0x00
+   0164 7B 00               797 	mov	r3,#0x00
+   0166                     798 00194$:
+   0166 C3                  799 	clr	c
+   0167 EA                  800 	mov	a,r2
+   0168 94 20               801 	subb	a,#0x20
+   016A EB                  802 	mov	a,r3
+   016B 64 80               803 	xrl	a,#0x80
+   016D 94 80               804 	subb	a,#0x80
+   016F 50 18               805 	jnc	00197$
+                            806 ;	../main.c:105: packet[i] = i + 9;
+   0171 EA                  807 	mov	a,r2
+   0172 24r42               808 	add	a,#_packet
+   0174 F5 82               809 	mov	dpl,a
+   0176 EB                  810 	mov	a,r3
+   0177 34s00               811 	addc	a,#(_packet >> 8)
+   0179 F5 83               812 	mov	dph,a
+   017B 8A 04               813 	mov	ar4,r2
+   017D 74 09               814 	mov	a,#0x09
+   017F 2C                  815 	add	a,r4
+   0180 FC                  816 	mov	r4,a
+   0181 F0                  817 	movx	@dptr,a
+                            818 ;	../main.c:104: for (i = 0; i < PLOAD_LEN; i++)
+   0182 0A                  819 	inc	r2
+   0183 BA 00 E0            820 	cjne	r2,#0x00,00194$
+   0186 0B                  821 	inc	r3
+   0187 80 DD               822 	sjmp	00194$
+   0189                     823 00197$:
+                            824 ;	../main.c:106: hal_nrf_close_pipe(HAL_NRF_PIPE1);
+   0189 75 82 01            825 	mov	dpl,#0x01
+   018C 12s00r00            826 	lcall	_hal_nrf_close_pipe
+                            827 ;	../main.c:107: hal_nrf_close_pipe(HAL_NRF_PIPE2);
+   018F 75 82 02            828 	mov	dpl,#0x02
+   0192 12s00r00            829 	lcall	_hal_nrf_close_pipe
+                            830 ;	../main.c:108: hal_nrf_close_pipe(HAL_NRF_PIPE3);
+   0195 75 82 03            831 	mov	dpl,#0x03
+   0198 12s00r00            832 	lcall	_hal_nrf_close_pipe
+                            833 ;	../main.c:109: hal_nrf_close_pipe(HAL_NRF_PIPE4);
+   019B 75 82 04            834 	mov	dpl,#0x04
+   019E 12s00r00            835 	lcall	_hal_nrf_close_pipe
+                            836 ;	../main.c:110: hal_nrf_close_pipe(HAL_NRF_PIPE5);
+   01A1 75 82 05            837 	mov	dpl,#0x05
+   01A4 12s00r00            838 	lcall	_hal_nrf_close_pipe
+                            839 ;	../main.c:111: break;
+   01A7 02s0BrDC            840 	ljmp	00190$
+                            841 ;	../main.c:114: LED_Off();
+   01AA                     842 00109$:
+   01AA 43 80 30            843 	orl	_P0,#0x30
+                            844 ;	../main.c:115: hal_nrf_close_pipe(HAL_NRF_PIPE1);
+   01AD 75 82 01            845 	mov	dpl,#0x01
+   01B0 12s00r00            846 	lcall	_hal_nrf_close_pipe
+                            847 ;	../main.c:116: hal_nrf_close_pipe(HAL_NRF_PIPE2);
+   01B3 75 82 02            848 	mov	dpl,#0x02
+   01B6 12s00r00            849 	lcall	_hal_nrf_close_pipe
+                            850 ;	../main.c:117: hal_nrf_close_pipe(HAL_NRF_PIPE3);
+   01B9 75 82 03            851 	mov	dpl,#0x03
+   01BC 12s00r00            852 	lcall	_hal_nrf_close_pipe
+                            853 ;	../main.c:118: hal_nrf_close_pipe(HAL_NRF_PIPE4);
+   01BF 75 82 04            854 	mov	dpl,#0x04
+   01C2 12s00r00            855 	lcall	_hal_nrf_close_pipe
+                            856 ;	../main.c:119: hal_nrf_close_pipe(HAL_NRF_PIPE5);
+   01C5 75 82 05            857 	mov	dpl,#0x05
+   01C8 12s00r00            858 	lcall	_hal_nrf_close_pipe
+                            859 ;	../main.c:120: break;
+   01CB 02s0BrDC            860 	ljmp	00190$
+                            861 ;	../main.c:122: case EPL_OUTPUT_POWER: 			//Host:set_output_power
+   01CE                     862 00112$:
+                            863 ;	../main.c:123: hal_nrf_set_output_power(ubuf[2]);
+   01CE 90s00r02            864 	mov	dptr,#(_ubuf + 0x0002)
+   01D1 E0                  865 	movx	a,@dptr
+   01D2 F5 82               866 	mov	dpl,a
+   01D4 12s00r00            867 	lcall	_hal_nrf_set_output_power
+                            868 ;	../main.c:124: epl_uart_putstr("EPL_OUTPUT_POWER\n");
+   01D7 90s00r07            869 	mov	dptr,#__str_2
+   01DA 75 F0 80            870 	mov	b,#0x80
+   01DD 12s00r00            871 	lcall	_epl_uart_putstr
+                            872 ;	../main.c:125: usb_send_packet(ACKbuf, 3);
+   01E0 90s00r00            873 	mov	dptr,#_usb_send_packet_PARM_2
+   01E3 74 03               874 	mov	a,#0x03
+   01E5 F0                  875 	movx	@dptr,a
+   01E6 90s00r69            876 	mov	dptr,#_main_ACKbuf_1_1
+   01E9 75 F0 00            877 	mov	b,#0x00
+   01EC 12s00r00            878 	lcall	_usb_send_packet
+                            879 ;	../main.c:126: epl_uart_putstr("EPL_OUTPUT_POWER     END\n");
+   01EF 90s00r19            880 	mov	dptr,#__str_3
+   01F2 75 F0 80            881 	mov	b,#0x80
+   01F5 12s00r00            882 	lcall	_epl_uart_putstr
+                            883 ;	../main.c:127: break;
+   01F8 02s0BrDC            884 	ljmp	00190$
+                            885 ;	../main.c:129: case EPL_CHANNEL:
+   01FB                     886 00113$:
+                            887 ;	../main.c:130: hal_nrf_set_rf_channel(ubuf[2]);
+   01FB 90s00r02            888 	mov	dptr,#(_ubuf + 0x0002)
+   01FE E0                  889 	movx	a,@dptr
+   01FF F5 82               890 	mov	dpl,a
+   0201 12s00r00            891 	lcall	_hal_nrf_set_rf_channel
+                            892 ;	../main.c:131: usb_send_packet(ACKbuf, 3);
+   0204 90s00r00            893 	mov	dptr,#_usb_send_packet_PARM_2
+   0207 74 03               894 	mov	a,#0x03
+   0209 F0                  895 	movx	@dptr,a
+   020A 90s00r69            896 	mov	dptr,#_main_ACKbuf_1_1
+   020D 75 F0 00            897 	mov	b,#0x00
+   0210 12s00r00            898 	lcall	_usb_send_packet
+                            899 ;	../main.c:132: break;
+   0213 02s0BrDC            900 	ljmp	00190$
+                            901 ;	../main.c:134: case EPL_DATARATE:
+   0216                     902 00114$:
+                            903 ;	../main.c:135: hal_nrf_set_datarate(ubuf[2]);
+   0216 90s00r02            904 	mov	dptr,#(_ubuf + 0x0002)
+   0219 E0                  905 	movx	a,@dptr
+   021A F5 82               906 	mov	dpl,a
+   021C 12s00r00            907 	lcall	_hal_nrf_set_datarate
+                            908 ;	../main.c:136: usb_send_packet(ACKbuf, 3);
+   021F 90s00r00            909 	mov	dptr,#_usb_send_packet_PARM_2
+   0222 74 03               910 	mov	a,#0x03
+   0224 F0                  911 	movx	@dptr,a
+   0225 90s00r69            912 	mov	dptr,#_main_ACKbuf_1_1
+   0228 75 F0 00            913 	mov	b,#0x00
+   022B 12s00r00            914 	lcall	_usb_send_packet
+                            915 ;	../main.c:137: break;
+   022E 02s0BrDC            916 	ljmp	00190$
+                            917 ;	../main.c:139: case EPL_ADDR_WIDTH:
+   0231                     918 00115$:
+                            919 ;	../main.c:140: addr_width = (int) ubuf[2];
+   0231 90s00r02            920 	mov	dptr,#(_ubuf + 0x0002)
+   0234 E0                  921 	movx	a,@dptr
+   0235 FA                  922 	mov	r2,a
+   0236 90s00r64            923 	mov	dptr,#_main_addr_width_1_1
+   0239 F0                  924 	movx	@dptr,a
+   023A A3                  925 	inc	dptr
+   023B E4                  926 	clr	a
+   023C F0                  927 	movx	@dptr,a
+                            928 ;	../main.c:141: hal_nrf_set_address_width(ubuf[2]);
+   023D 8A 82               929 	mov	dpl,r2
+   023F 12s00r00            930 	lcall	_hal_nrf_set_address_width
+                            931 ;	../main.c:142: usb_send_packet(ACKbuf, 3);
+   0242 90s00r00            932 	mov	dptr,#_usb_send_packet_PARM_2
+   0245 74 03               933 	mov	a,#0x03
+   0247 F0                  934 	movx	@dptr,a
+   0248 90s00r69            935 	mov	dptr,#_main_ACKbuf_1_1
+   024B 75 F0 00            936 	mov	b,#0x00
+   024E 12s00r00            937 	lcall	_usb_send_packet
+                            938 ;	../main.c:143: break;
+   0251 02s0BrDC            939 	ljmp	00190$
+                            940 ;	../main.c:145: case EPL_AUTOACK_P0:
+   0254                     941 00116$:
+                            942 ;	../main.c:146: auto_ack = ubuf[2];
+   0254 90s00r02            943 	mov	dptr,#(_ubuf + 0x0002)
+   0257 E0                  944 	movx	a,@dptr
+   0258 90s00r68            945 	mov	dptr,#_main_auto_ack_1_1
+   025B F0                  946 	movx	@dptr,a
+                            947 ;	../main.c:147: usb_send_packet(ACKbuf, 3);
+   025C 90s00r00            948 	mov	dptr,#_usb_send_packet_PARM_2
+   025F 74 03               949 	mov	a,#0x03
+   0261 F0                  950 	movx	@dptr,a
+   0262 90s00r69            951 	mov	dptr,#_main_ACKbuf_1_1
+   0265 75 F0 00            952 	mov	b,#0x00
+   0268 12s00r00            953 	lcall	_usb_send_packet
+                            954 ;	../main.c:148: break;
+   026B 02s0BrDC            955 	ljmp	00190$
+                            956 ;	../main.c:150: case EPL_AUTOACK_P1:
+   026E                     957 00117$:
+                            958 ;	../main.c:151: auto_ack = ubuf[2];
+   026E 90s00r02            959 	mov	dptr,#(_ubuf + 0x0002)
+   0271 E0                  960 	movx	a,@dptr
+   0272 90s00r68            961 	mov	dptr,#_main_auto_ack_1_1
+   0275 F0                  962 	movx	@dptr,a
+                            963 ;	../main.c:152: usb_send_packet(ACKbuf, 3);
+   0276 90s00r00            964 	mov	dptr,#_usb_send_packet_PARM_2
+   0279 74 03               965 	mov	a,#0x03
+   027B F0                  966 	movx	@dptr,a
+   027C 90s00r69            967 	mov	dptr,#_main_ACKbuf_1_1
+   027F 75 F0 00            968 	mov	b,#0x00
+   0282 12s00r00            969 	lcall	_usb_send_packet
+                            970 ;	../main.c:153: break;
+   0285 02s0BrDC            971 	ljmp	00190$
+                            972 ;	../main.c:155: case EPL_AUTOACK_P2:
+   0288                     973 00118$:
+                            974 ;	../main.c:156: auto_ack = ubuf[2];
+   0288 90s00r02            975 	mov	dptr,#(_ubuf + 0x0002)
+   028B E0                  976 	movx	a,@dptr
+   028C 90s00r68            977 	mov	dptr,#_main_auto_ack_1_1
+   028F F0                  978 	movx	@dptr,a
+                            979 ;	../main.c:157: usb_send_packet(ACKbuf, 3);
+   0290 90s00r00            980 	mov	dptr,#_usb_send_packet_PARM_2
+   0293 74 03               981 	mov	a,#0x03
+   0295 F0                  982 	movx	@dptr,a
+   0296 90s00r69            983 	mov	dptr,#_main_ACKbuf_1_1
+   0299 75 F0 00            984 	mov	b,#0x00
+   029C 12s00r00            985 	lcall	_usb_send_packet
+                            986 ;	../main.c:158: break;
+   029F 02s0BrDC            987 	ljmp	00190$
+                            988 ;	../main.c:160: case EPL_AUTOACK_P3:
+   02A2                     989 00119$:
+                            990 ;	../main.c:161: auto_ack = ubuf[2];
+   02A2 90s00r02            991 	mov	dptr,#(_ubuf + 0x0002)
+   02A5 E0                  992 	movx	a,@dptr
+   02A6 90s00r68            993 	mov	dptr,#_main_auto_ack_1_1
+   02A9 F0                  994 	movx	@dptr,a
+                            995 ;	../main.c:162: usb_send_packet(ACKbuf, 3);
+   02AA 90s00r00            996 	mov	dptr,#_usb_send_packet_PARM_2
+   02AD 74 03               997 	mov	a,#0x03
+   02AF F0                  998 	movx	@dptr,a
+   02B0 90s00r69            999 	mov	dptr,#_main_ACKbuf_1_1
+   02B3 75 F0 00           1000 	mov	b,#0x00
+   02B6 12s00r00           1001 	lcall	_usb_send_packet
+                           1002 ;	../main.c:163: break;
+   02B9 02s0BrDC           1003 	ljmp	00190$
+                           1004 ;	../main.c:165: case EPL_AUTOACK_P4:
+   02BC                    1005 00120$:
+                           1006 ;	../main.c:166: auto_ack = ubuf[2];
+   02BC 90s00r02           1007 	mov	dptr,#(_ubuf + 0x0002)
+   02BF E0                 1008 	movx	a,@dptr
+   02C0 90s00r68           1009 	mov	dptr,#_main_auto_ack_1_1
+   02C3 F0                 1010 	movx	@dptr,a
+                           1011 ;	../main.c:167: usb_send_packet(ACKbuf, 3);
+   02C4 90s00r00           1012 	mov	dptr,#_usb_send_packet_PARM_2
+   02C7 74 03              1013 	mov	a,#0x03
+   02C9 F0                 1014 	movx	@dptr,a
+   02CA 90s00r69           1015 	mov	dptr,#_main_ACKbuf_1_1
+   02CD 75 F0 00           1016 	mov	b,#0x00
+   02D0 12s00r00           1017 	lcall	_usb_send_packet
+                           1018 ;	../main.c:168: break;
+   02D3 02s0BrDC           1019 	ljmp	00190$
+                           1020 ;	../main.c:170: case EPL_AUTOACK_P5:
+   02D6                    1021 00121$:
+                           1022 ;	../main.c:171: auto_ack = ubuf[2];
+   02D6 90s00r02           1023 	mov	dptr,#(_ubuf + 0x0002)
+   02D9 E0                 1024 	movx	a,@dptr
+   02DA 90s00r68           1025 	mov	dptr,#_main_auto_ack_1_1
+   02DD F0                 1026 	movx	@dptr,a
+                           1027 ;	../main.c:172: usb_send_packet(ACKbuf, 3);
+   02DE 90s00r00           1028 	mov	dptr,#_usb_send_packet_PARM_2
+   02E1 74 03              1029 	mov	a,#0x03
+   02E3 F0                 1030 	movx	@dptr,a
+   02E4 90s00r69           1031 	mov	dptr,#_main_ACKbuf_1_1
+   02E7 75 F0 00           1032 	mov	b,#0x00
+   02EA 12s00r00           1033 	lcall	_usb_send_packet
+                           1034 ;	../main.c:173: break;
+   02ED 02s0BrDC           1035 	ljmp	00190$
+                           1036 ;	../main.c:175: case EPL_DATA_LENGTH_P0:
+   02F0                    1037 00122$:
+                           1038 ;	../main.c:176: data_length = (int) ubuf[2];
+   02F0 90s00r02           1039 	mov	dptr,#(_ubuf + 0x0002)
+   02F3 E0                 1040 	movx	a,@dptr
+   02F4 FA                 1041 	mov	r2,a
+   02F5 90s00r94           1042 	mov	dptr,#_main_data_length_1_1
+   02F8 F0                 1043 	movx	@dptr,a
+                           1044 ;	../main.c:177: epl_rf_en_rcv_pipe_config(HAL_NRF_PIPE0, temp_addr, data_length, auto_ack);
+   02F9 90s00r68           1045 	mov	dptr,#_main_auto_ack_1_1
+   02FC E0                 1046 	movx	a,@dptr
+   02FD FB                 1047 	mov	r3,a
+   02FE 90s00r00           1048 	mov	dptr,#_epl_rf_en_rcv_pipe_config_PARM_2
+   0301 74r8F              1049 	mov	a,#_main_temp_addr_1_1
+   0303 F0                 1050 	movx	@dptr,a
+   0304 A3                 1051 	inc	dptr
+   0305 74s00              1052 	mov	a,#(_main_temp_addr_1_1 >> 8)
+   0307 F0                 1053 	movx	@dptr,a
+   0308 A3                 1054 	inc	dptr
+   0309 E4                 1055 	clr	a
+   030A F0                 1056 	movx	@dptr,a
+   030B 90s00r00           1057 	mov	dptr,#_epl_rf_en_rcv_pipe_config_PARM_3
+   030E EA                 1058 	mov	a,r2
+   030F F0                 1059 	movx	@dptr,a
+   0310 90s00r00           1060 	mov	dptr,#_epl_rf_en_rcv_pipe_config_PARM_4
+   0313 EB                 1061 	mov	a,r3
+   0314 F0                 1062 	movx	@dptr,a
+   0315 75 82 00           1063 	mov	dpl,#0x00
+   0318 12s00r00           1064 	lcall	_epl_rf_en_rcv_pipe_config
+                           1065 ;	../main.c:178: usb_send_packet(ACKbuf, 3);
+   031B 90s00r00           1066 	mov	dptr,#_usb_send_packet_PARM_2
+   031E 74 03              1067 	mov	a,#0x03
+   0320 F0                 1068 	movx	@dptr,a
+   0321 90s00r69           1069 	mov	dptr,#_main_ACKbuf_1_1
+   0324 75 F0 00           1070 	mov	b,#0x00
+   0327 12s00r00           1071 	lcall	_usb_send_packet
+                           1072 ;	../main.c:179: break;
+   032A 02s0BrDC           1073 	ljmp	00190$
+                           1074 ;	../main.c:181: case EPL_DATA_LENGTH_P1:
+   032D                    1075 00123$:
+                           1076 ;	../main.c:182: data_length = (int) ubuf[2];
+   032D 90s00r02           1077 	mov	dptr,#(_ubuf + 0x0002)
+   0330 E0                 1078 	movx	a,@dptr
+   0331 FA                 1079 	mov	r2,a
+   0332 90s00r94           1080 	mov	dptr,#_main_data_length_1_1
+   0335 F0                 1081 	movx	@dptr,a
+                           1082 ;	../main.c:183: epl_rf_en_rcv_pipe_config(HAL_NRF_PIPE1, temp_addr, data_length, auto_ack);
+   0336 90s00r68           1083 	mov	dptr,#_main_auto_ack_1_1
+   0339 E0                 1084 	movx	a,@dptr
+   033A FB                 1085 	mov	r3,a
+   033B 90s00r00           1086 	mov	dptr,#_epl_rf_en_rcv_pipe_config_PARM_2
+   033E 74r8F              1087 	mov	a,#_main_temp_addr_1_1
+   0340 F0                 1088 	movx	@dptr,a
+   0341 A3                 1089 	inc	dptr
+   0342 74s00              1090 	mov	a,#(_main_temp_addr_1_1 >> 8)
+   0344 F0                 1091 	movx	@dptr,a
+   0345 A3                 1092 	inc	dptr
+   0346 E4                 1093 	clr	a
+   0347 F0                 1094 	movx	@dptr,a
+   0348 90s00r00           1095 	mov	dptr,#_epl_rf_en_rcv_pipe_config_PARM_3
+   034B EA                 1096 	mov	a,r2
+   034C F0                 1097 	movx	@dptr,a
+   034D 90s00r00           1098 	mov	dptr,#_epl_rf_en_rcv_pipe_config_PARM_4
+   0350 EB                 1099 	mov	a,r3
+   0351 F0                 1100 	movx	@dptr,a
+   0352 75 82 01           1101 	mov	dpl,#0x01
+   0355 12s00r00           1102 	lcall	_epl_rf_en_rcv_pipe_config
+                           1103 ;	../main.c:184: usb_send_packet(ACKbuf, 3);
+   0358 90s00r00           1104 	mov	dptr,#_usb_send_packet_PARM_2
+   035B 74 03              1105 	mov	a,#0x03
+   035D F0                 1106 	movx	@dptr,a
+   035E 90s00r69           1107 	mov	dptr,#_main_ACKbuf_1_1
+   0361 75 F0 00           1108 	mov	b,#0x00
+   0364 12s00r00           1109 	lcall	_usb_send_packet
+                           1110 ;	../main.c:185: break;
+   0367 02s0BrDC           1111 	ljmp	00190$
+                           1112 ;	../main.c:187: case EPL_DATA_LENGTH_P2:
+   036A                    1113 00124$:
+                           1114 ;	../main.c:188: data_length = (int) ubuf[2];
+   036A 90s00r02           1115 	mov	dptr,#(_ubuf + 0x0002)
+   036D E0                 1116 	movx	a,@dptr
+   036E FA                 1117 	mov	r2,a
+   036F 90s00r94           1118 	mov	dptr,#_main_data_length_1_1
+   0372 F0                 1119 	movx	@dptr,a
+                           1120 ;	../main.c:189: epl_rf_en_rcv_pipe_config(HAL_NRF_PIPE2, temp_addr, data_length, auto_ack);
+   0373 90s00r68           1121 	mov	dptr,#_main_auto_ack_1_1
+   0376 E0                 1122 	movx	a,@dptr
+   0377 FB                 1123 	mov	r3,a
+   0378 90s00r00           1124 	mov	dptr,#_epl_rf_en_rcv_pipe_config_PARM_2
+   037B 74r8F              1125 	mov	a,#_main_temp_addr_1_1
+   037D F0                 1126 	movx	@dptr,a
+   037E A3                 1127 	inc	dptr
+   037F 74s00              1128 	mov	a,#(_main_temp_addr_1_1 >> 8)
+   0381 F0                 1129 	movx	@dptr,a
+   0382 A3                 1130 	inc	dptr
+   0383 E4                 1131 	clr	a
+   0384 F0                 1132 	movx	@dptr,a
+   0385 90s00r00           1133 	mov	dptr,#_epl_rf_en_rcv_pipe_config_PARM_3
+   0388 EA                 1134 	mov	a,r2
+   0389 F0                 1135 	movx	@dptr,a
+   038A 90s00r00           1136 	mov	dptr,#_epl_rf_en_rcv_pipe_config_PARM_4
+   038D EB                 1137 	mov	a,r3
+   038E F0                 1138 	movx	@dptr,a
+   038F 75 82 02           1139 	mov	dpl,#0x02
+   0392 12s00r00           1140 	lcall	_epl_rf_en_rcv_pipe_config
+                           1141 ;	../main.c:190: usb_send_packet(ACKbuf, 3);
+   0395 90s00r00           1142 	mov	dptr,#_usb_send_packet_PARM_2
+   0398 74 03              1143 	mov	a,#0x03
+   039A F0                 1144 	movx	@dptr,a
+   039B 90s00r69           1145 	mov	dptr,#_main_ACKbuf_1_1
+   039E 75 F0 00           1146 	mov	b,#0x00
+   03A1 12s00r00           1147 	lcall	_usb_send_packet
+                           1148 ;	../main.c:191: break;
+   03A4 02s0BrDC           1149 	ljmp	00190$
+                           1150 ;	../main.c:193: case EPL_DATA_LENGTH_P3:
+   03A7                    1151 00125$:
+                           1152 ;	../main.c:194: data_length = (int) ubuf[2];
+   03A7 90s00r02           1153 	mov	dptr,#(_ubuf + 0x0002)
+   03AA E0                 1154 	movx	a,@dptr
+   03AB FA                 1155 	mov	r2,a
+   03AC 90s00r94           1156 	mov	dptr,#_main_data_length_1_1
+   03AF F0                 1157 	movx	@dptr,a
+                           1158 ;	../main.c:195: epl_rf_en_rcv_pipe_config(HAL_NRF_PIPE3, temp_addr, data_length, auto_ack);
+   03B0 90s00r68           1159 	mov	dptr,#_main_auto_ack_1_1
+   03B3 E0                 1160 	movx	a,@dptr
+   03B4 FB                 1161 	mov	r3,a
+   03B5 90s00r00           1162 	mov	dptr,#_epl_rf_en_rcv_pipe_config_PARM_2
+   03B8 74r8F              1163 	mov	a,#_main_temp_addr_1_1
+   03BA F0                 1164 	movx	@dptr,a
+   03BB A3                 1165 	inc	dptr
+   03BC 74s00              1166 	mov	a,#(_main_temp_addr_1_1 >> 8)
+   03BE F0                 1167 	movx	@dptr,a
+   03BF A3                 1168 	inc	dptr
+   03C0 E4                 1169 	clr	a
+   03C1 F0                 1170 	movx	@dptr,a
+   03C2 90s00r00           1171 	mov	dptr,#_epl_rf_en_rcv_pipe_config_PARM_3
+   03C5 EA                 1172 	mov	a,r2
+   03C6 F0                 1173 	movx	@dptr,a
+   03C7 90s00r00           1174 	mov	dptr,#_epl_rf_en_rcv_pipe_config_PARM_4
+   03CA EB                 1175 	mov	a,r3
+   03CB F0                 1176 	movx	@dptr,a
+   03CC 75 82 03           1177 	mov	dpl,#0x03
+   03CF 12s00r00           1178 	lcall	_epl_rf_en_rcv_pipe_config
+                           1179 ;	../main.c:196: usb_send_packet(ACKbuf, 3);
+   03D2 90s00r00           1180 	mov	dptr,#_usb_send_packet_PARM_2
+   03D5 74 03              1181 	mov	a,#0x03
+   03D7 F0                 1182 	movx	@dptr,a
+   03D8 90s00r69           1183 	mov	dptr,#_main_ACKbuf_1_1
+   03DB 75 F0 00           1184 	mov	b,#0x00
+   03DE 12s00r00           1185 	lcall	_usb_send_packet
+                           1186 ;	../main.c:197: break;
+   03E1 02s0BrDC           1187 	ljmp	00190$
+                           1188 ;	../main.c:200: case EPL_DATA_LENGTH_P4:
+   03E4                    1189 00126$:
+                           1190 ;	../main.c:201: data_length = (int) ubuf[2];
+   03E4 90s00r02           1191 	mov	dptr,#(_ubuf + 0x0002)
+   03E7 E0                 1192 	movx	a,@dptr
+   03E8 FA                 1193 	mov	r2,a
+   03E9 90s00r94           1194 	mov	dptr,#_main_data_length_1_1
+   03EC F0                 1195 	movx	@dptr,a
+                           1196 ;	../main.c:202: epl_rf_en_rcv_pipe_config(HAL_NRF_PIPE4, temp_addr, data_length, auto_ack);
+   03ED 90s00r68           1197 	mov	dptr,#_main_auto_ack_1_1
+   03F0 E0                 1198 	movx	a,@dptr
+   03F1 FB                 1199 	mov	r3,a
+   03F2 90s00r00           1200 	mov	dptr,#_epl_rf_en_rcv_pipe_config_PARM_2
+   03F5 74r8F              1201 	mov	a,#_main_temp_addr_1_1
+   03F7 F0                 1202 	movx	@dptr,a
+   03F8 A3                 1203 	inc	dptr
+   03F9 74s00              1204 	mov	a,#(_main_temp_addr_1_1 >> 8)
+   03FB F0                 1205 	movx	@dptr,a
+   03FC A3                 1206 	inc	dptr
+   03FD E4                 1207 	clr	a
+   03FE F0                 1208 	movx	@dptr,a
+   03FF 90s00r00           1209 	mov	dptr,#_epl_rf_en_rcv_pipe_config_PARM_3
+   0402 EA                 1210 	mov	a,r2
+   0403 F0                 1211 	movx	@dptr,a
+   0404 90s00r00           1212 	mov	dptr,#_epl_rf_en_rcv_pipe_config_PARM_4
+   0407 EB                 1213 	mov	a,r3
+   0408 F0                 1214 	movx	@dptr,a
+   0409 75 82 04           1215 	mov	dpl,#0x04
+   040C 12s00r00           1216 	lcall	_epl_rf_en_rcv_pipe_config
+                           1217 ;	../main.c:203: usb_send_packet(ACKbuf, 3);
+   040F 90s00r00           1218 	mov	dptr,#_usb_send_packet_PARM_2
+   0412 74 03              1219 	mov	a,#0x03
+   0414 F0                 1220 	movx	@dptr,a
+   0415 90s00r69           1221 	mov	dptr,#_main_ACKbuf_1_1
+   0418 75 F0 00           1222 	mov	b,#0x00
+   041B 12s00r00           1223 	lcall	_usb_send_packet
+                           1224 ;	../main.c:204: break;
+   041E 02s0BrDC           1225 	ljmp	00190$
+                           1226 ;	../main.c:206: case EPL_DATA_LENGTH_P5:
+   0421                    1227 00127$:
+                           1228 ;	../main.c:207: data_length = (int) ubuf[2];
+   0421 90s00r02           1229 	mov	dptr,#(_ubuf + 0x0002)
+   0424 E0                 1230 	movx	a,@dptr
+   0425 FA                 1231 	mov	r2,a
+   0426 90s00r94           1232 	mov	dptr,#_main_data_length_1_1
+   0429 F0                 1233 	movx	@dptr,a
+                           1234 ;	../main.c:208: epl_rf_en_rcv_pipe_config(HAL_NRF_PIPE5, temp_addr, data_length, auto_ack);
+   042A 90s00r68           1235 	mov	dptr,#_main_auto_ack_1_1
+   042D E0                 1236 	movx	a,@dptr
+   042E FB                 1237 	mov	r3,a
+   042F 90s00r00           1238 	mov	dptr,#_epl_rf_en_rcv_pipe_config_PARM_2
+   0432 74r8F              1239 	mov	a,#_main_temp_addr_1_1
+   0434 F0                 1240 	movx	@dptr,a
+   0435 A3                 1241 	inc	dptr
+   0436 74s00              1242 	mov	a,#(_main_temp_addr_1_1 >> 8)
+   0438 F0                 1243 	movx	@dptr,a
+   0439 A3                 1244 	inc	dptr
+   043A E4                 1245 	clr	a
+   043B F0                 1246 	movx	@dptr,a
+   043C 90s00r00           1247 	mov	dptr,#_epl_rf_en_rcv_pipe_config_PARM_3
+   043F EA                 1248 	mov	a,r2
+   0440 F0                 1249 	movx	@dptr,a
+   0441 90s00r00           1250 	mov	dptr,#_epl_rf_en_rcv_pipe_config_PARM_4
+   0444 EB                 1251 	mov	a,r3
+   0445 F0                 1252 	movx	@dptr,a
+   0446 75 82 05           1253 	mov	dpl,#0x05
+   0449 12s00r00           1254 	lcall	_epl_rf_en_rcv_pipe_config
+                           1255 ;	../main.c:209: usb_send_packet(ACKbuf, 3);
+   044C 90s00r00           1256 	mov	dptr,#_usb_send_packet_PARM_2
+   044F 74 03              1257 	mov	a,#0x03
+   0451 F0                 1258 	movx	@dptr,a
+   0452 90s00r69           1259 	mov	dptr,#_main_ACKbuf_1_1
+   0455 75 F0 00           1260 	mov	b,#0x00
+   0458 12s00r00           1261 	lcall	_usb_send_packet
+                           1262 ;	../main.c:210: break;
+   045B 02s0BrDC           1263 	ljmp	00190$
+                           1264 ;	../main.c:212: case EPL_CRC_MODE:
+   045E                    1265 00128$:
+                           1266 ;	../main.c:213: if (ubuf[2] == 0)
+   045E 90s00r02           1267 	mov	dptr,#(_ubuf + 0x0002)
+   0461 E0                 1268 	movx	a,@dptr
+   0462 FA                 1269 	mov	r2,a
+                           1270 ;	../main.c:214: hal_nrf_set_crc_mode(HAL_NRF_CRC_OFF);
+   0463 70 07              1271 	jnz	00135$
+   0465 F5 82              1272 	mov	dpl,a
+   0467 12s00r00           1273 	lcall	_hal_nrf_set_crc_mode
+   046A 80 14              1274 	sjmp	00136$
+   046C                    1275 00135$:
+                           1276 ;	../main.c:215: else if (ubuf[2] == 2)
+   046C BA 02 08           1277 	cjne	r2,#0x02,00132$
+                           1278 ;	../main.c:216: hal_nrf_set_crc_mode(HAL_NRF_CRC_8BIT);
+   046F 75 82 02           1279 	mov	dpl,#0x02
+   0472 12s00r00           1280 	lcall	_hal_nrf_set_crc_mode
+   0475 80 09              1281 	sjmp	00136$
+   0477                    1282 00132$:
+                           1283 ;	../main.c:217: else if (ubuf[2] == 3)
+   0477 BA 03 06           1284 	cjne	r2,#0x03,00136$
+                           1285 ;	../main.c:218: hal_nrf_set_crc_mode(HAL_NRF_CRC_16BIT);
+   047A 75 82 03           1286 	mov	dpl,#0x03
+   047D 12s00r00           1287 	lcall	_hal_nrf_set_crc_mode
+   0480                    1288 00136$:
+                           1289 ;	../main.c:222: usb_send_packet(ACKbuf, 3);
+   0480 90s00r00           1290 	mov	dptr,#_usb_send_packet_PARM_2
+   0483 74 03              1291 	mov	a,#0x03
+   0485 F0                 1292 	movx	@dptr,a
+   0486 90s00r69           1293 	mov	dptr,#_main_ACKbuf_1_1
+   0489 75 F0 00           1294 	mov	b,#0x00
+   048C 12s00r00           1295 	lcall	_usb_send_packet
+                           1296 ;	../main.c:223: break;
+   048F 02s0BrDC           1297 	ljmp	00190$
+                           1298 ;	../main.c:226: for (i = 0; i < addr_width; i++) {
+   0492                    1299 00269$:
+   0492 90s00r64           1300 	mov	dptr,#_main_addr_width_1_1
+   0495 E0                 1301 	movx	a,@dptr
+   0496 FA                 1302 	mov	r2,a
+   0497 A3                 1303 	inc	dptr
+   0498 E0                 1304 	movx	a,@dptr
+   0499 FB                 1305 	mov	r3,a
+   049A 7C 00              1306 	mov	r4,#0x00
+   049C 7D 00              1307 	mov	r5,#0x00
+   049E                    1308 00198$:
+   049E C3                 1309 	clr	c
+   049F EC                 1310 	mov	a,r4
+   04A0 9A                 1311 	subb	a,r2
+   04A1 ED                 1312 	mov	a,r5
+   04A2 64 80              1313 	xrl	a,#0x80
+   04A4 8B F0              1314 	mov	b,r3
+   04A6 63 F0 80           1315 	xrl	b,#0x80
+   04A9 95 F0              1316 	subb	a,b
+   04AB 50 2C              1317 	jnc	00201$
+                           1318 ;	../main.c:227: temp_addr[i] = ubuf[i + 2];
+   04AD C0 02              1319 	push	ar2
+   04AF C0 03              1320 	push	ar3
+   04B1 EC                 1321 	mov	a,r4
+   04B2 24r8F              1322 	add	a,#_main_temp_addr_1_1
+   04B4 FE                 1323 	mov	r6,a
+   04B5 ED                 1324 	mov	a,r5
+   04B6 34s00              1325 	addc	a,#(_main_temp_addr_1_1 >> 8)
+   04B8 FF                 1326 	mov	r7,a
+   04B9 8C 02              1327 	mov	ar2,r4
+   04BB 74 02              1328 	mov	a,#0x02
+   04BD 2A                 1329 	add	a,r2
+   04BE 24r00              1330 	add	a,#_ubuf
+   04C0 F5 82              1331 	mov	dpl,a
+   04C2 E4                 1332 	clr	a
+   04C3 34s00              1333 	addc	a,#(_ubuf >> 8)
+   04C5 F5 83              1334 	mov	dph,a
+   04C7 E0                 1335 	movx	a,@dptr
+   04C8 FA                 1336 	mov	r2,a
+   04C9 8E 82              1337 	mov	dpl,r6
+   04CB 8F 83              1338 	mov	dph,r7
+   04CD F0                 1339 	movx	@dptr,a
+                           1340 ;	../main.c:226: for (i = 0; i < addr_width; i++) {
+   04CE 0C                 1341 	inc	r4
+   04CF BC 00 01           1342 	cjne	r4,#0x00,00340$
+   04D2 0D                 1343 	inc	r5
+   04D3                    1344 00340$:
+   04D3 D0 03              1345 	pop	ar3
+   04D5 D0 02              1346 	pop	ar2
+   04D7 80 C5              1347 	sjmp	00198$
+   04D9                    1348 00201$:
+                           1349 ;	../main.c:229: hal_nrf_set_address(HAL_NRF_PIPE0, temp_addr);
+   04D9 90s00r00           1350 	mov	dptr,#_hal_nrf_set_address_PARM_2
+   04DC 74r8F              1351 	mov	a,#_main_temp_addr_1_1
+   04DE F0                 1352 	movx	@dptr,a
+   04DF A3                 1353 	inc	dptr
+   04E0 74s00              1354 	mov	a,#(_main_temp_addr_1_1 >> 8)
+   04E2 F0                 1355 	movx	@dptr,a
+   04E3 A3                 1356 	inc	dptr
+   04E4 E4                 1357 	clr	a
+   04E5 F0                 1358 	movx	@dptr,a
+   04E6 75 82 00           1359 	mov	dpl,#0x00
+   04E9 12s00r00           1360 	lcall	_hal_nrf_set_address
+                           1361 ;	../main.c:230: epl_rf_en_set_dst_addr(temp_addr);
+   04EC 90s00r8F           1362 	mov	dptr,#_main_temp_addr_1_1
+   04EF 75 F0 00           1363 	mov	b,#0x00
+   04F2 12s00r00           1364 	lcall	_epl_rf_en_set_dst_addr
+                           1365 ;	../main.c:232: usb_send_packet(ACKbuf, 3);
+   04F5 90s00r00           1366 	mov	dptr,#_usb_send_packet_PARM_2
+   04F8 74 03              1367 	mov	a,#0x03
+   04FA F0                 1368 	movx	@dptr,a
+   04FB 90s00r69           1369 	mov	dptr,#_main_ACKbuf_1_1
+   04FE 75 F0 00           1370 	mov	b,#0x00
+   0501 12s00r00           1371 	lcall	_usb_send_packet
+                           1372 ;	../main.c:233: break;
+   0504 02s0BrDC           1373 	ljmp	00190$
+                           1374 ;	../main.c:236: for (i = 0; i < addr_width; i++) {
+   0507                    1375 00271$:
+   0507 90s00r64           1376 	mov	dptr,#_main_addr_width_1_1
+   050A E0                 1377 	movx	a,@dptr
+   050B FA                 1378 	mov	r2,a
+   050C A3                 1379 	inc	dptr
+   050D E0                 1380 	movx	a,@dptr
+   050E FB                 1381 	mov	r3,a
+   050F 7C 00              1382 	mov	r4,#0x00
+   0511 7D 00              1383 	mov	r5,#0x00
+   0513                    1384 00202$:
+   0513 C3                 1385 	clr	c
+   0514 EC                 1386 	mov	a,r4
+   0515 9A                 1387 	subb	a,r2
+   0516 ED                 1388 	mov	a,r5
+   0517 64 80              1389 	xrl	a,#0x80
+   0519 8B F0              1390 	mov	b,r3
+   051B 63 F0 80           1391 	xrl	b,#0x80
+   051E 95 F0              1392 	subb	a,b
+   0520 50 2C              1393 	jnc	00205$
+                           1394 ;	../main.c:237: temp_addr[i] = ubuf[i + 2];
+   0522 C0 02              1395 	push	ar2
+   0524 C0 03              1396 	push	ar3
+   0526 EC                 1397 	mov	a,r4
+   0527 24r8F              1398 	add	a,#_main_temp_addr_1_1
+   0529 FE                 1399 	mov	r6,a
+   052A ED                 1400 	mov	a,r5
+   052B 34s00              1401 	addc	a,#(_main_temp_addr_1_1 >> 8)
+   052D FF                 1402 	mov	r7,a
+   052E 8C 02              1403 	mov	ar2,r4
+   0530 74 02              1404 	mov	a,#0x02
+   0532 2A                 1405 	add	a,r2
+   0533 24r00              1406 	add	a,#_ubuf
+   0535 F5 82              1407 	mov	dpl,a
+   0537 E4                 1408 	clr	a
+   0538 34s00              1409 	addc	a,#(_ubuf >> 8)
+   053A F5 83              1410 	mov	dph,a
+   053C E0                 1411 	movx	a,@dptr
+   053D FA                 1412 	mov	r2,a
+   053E 8E 82              1413 	mov	dpl,r6
+   0540 8F 83              1414 	mov	dph,r7
+   0542 F0                 1415 	movx	@dptr,a
+                           1416 ;	../main.c:236: for (i = 0; i < addr_width; i++) {
+   0543 0C                 1417 	inc	r4
+   0544 BC 00 01           1418 	cjne	r4,#0x00,00342$
+   0547 0D                 1419 	inc	r5
+   0548                    1420 00342$:
+   0548 D0 03              1421 	pop	ar3
+   054A D0 02              1422 	pop	ar2
+   054C 80 C5              1423 	sjmp	00202$
+   054E                    1424 00205$:
+                           1425 ;	../main.c:239: usb_send_packet(ACKbuf, 3);
+   054E 90s00r00           1426 	mov	dptr,#_usb_send_packet_PARM_2
+   0551 74 03              1427 	mov	a,#0x03
+   0553 F0                 1428 	movx	@dptr,a
+   0554 90s00r69           1429 	mov	dptr,#_main_ACKbuf_1_1
+   0557 75 F0 00           1430 	mov	b,#0x00
+   055A 12s00r00           1431 	lcall	_usb_send_packet
+                           1432 ;	../main.c:240: break;
+   055D 02s0BrDC           1433 	ljmp	00190$
+                           1434 ;	../main.c:242: for (i = 0; i < addr_width; i++) {
+   0560                    1435 00273$:
+   0560 90s00r64           1436 	mov	dptr,#_main_addr_width_1_1
+   0563 E0                 1437 	movx	a,@dptr
+   0564 FA                 1438 	mov	r2,a
+   0565 A3                 1439 	inc	dptr
+   0566 E0                 1440 	movx	a,@dptr
+   0567 FB                 1441 	mov	r3,a
+   0568 7C 00              1442 	mov	r4,#0x00
+   056A 7D 00              1443 	mov	r5,#0x00
+   056C                    1444 00206$:
+   056C C3                 1445 	clr	c
+   056D EC                 1446 	mov	a,r4
+   056E 9A                 1447 	subb	a,r2
+   056F ED                 1448 	mov	a,r5
+   0570 64 80              1449 	xrl	a,#0x80
+   0572 8B F0              1450 	mov	b,r3
+   0574 63 F0 80           1451 	xrl	b,#0x80
+   0577 95 F0              1452 	subb	a,b
+   0579 50 2C              1453 	jnc	00209$
+                           1454 ;	../main.c:243: temp_addr[i] = ubuf[i + 2];
+   057B C0 02              1455 	push	ar2
+   057D C0 03              1456 	push	ar3
+   057F EC                 1457 	mov	a,r4
+   0580 24r8F              1458 	add	a,#_main_temp_addr_1_1
+   0582 FE                 1459 	mov	r6,a
+   0583 ED                 1460 	mov	a,r5
+   0584 34s00              1461 	addc	a,#(_main_temp_addr_1_1 >> 8)
+   0586 FF                 1462 	mov	r7,a
+   0587 8C 02              1463 	mov	ar2,r4
+   0589 74 02              1464 	mov	a,#0x02
+   058B 2A                 1465 	add	a,r2
+   058C 24r00              1466 	add	a,#_ubuf
+   058E F5 82              1467 	mov	dpl,a
+   0590 E4                 1468 	clr	a
+   0591 34s00              1469 	addc	a,#(_ubuf >> 8)
+   0593 F5 83              1470 	mov	dph,a
+   0595 E0                 1471 	movx	a,@dptr
+   0596 FA                 1472 	mov	r2,a
+   0597 8E 82              1473 	mov	dpl,r6
+   0599 8F 83              1474 	mov	dph,r7
+   059B F0                 1475 	movx	@dptr,a
+                           1476 ;	../main.c:242: for (i = 0; i < addr_width; i++) {
+   059C 0C                 1477 	inc	r4
+   059D BC 00 01           1478 	cjne	r4,#0x00,00344$
+   05A0 0D                 1479 	inc	r5
+   05A1                    1480 00344$:
+   05A1 D0 03              1481 	pop	ar3
+   05A3 D0 02              1482 	pop	ar2
+   05A5 80 C5              1483 	sjmp	00206$
+   05A7                    1484 00209$:
+                           1485 ;	../main.c:245: usb_send_packet(ACKbuf, 3);
+   05A7 90s00r00           1486 	mov	dptr,#_usb_send_packet_PARM_2
+   05AA 74 03              1487 	mov	a,#0x03
+   05AC F0                 1488 	movx	@dptr,a
+   05AD 90s00r69           1489 	mov	dptr,#_main_ACKbuf_1_1
+   05B0 75 F0 00           1490 	mov	b,#0x00
+   05B3 12s00r00           1491 	lcall	_usb_send_packet
+                           1492 ;	../main.c:246: break;
+   05B6 02s0BrDC           1493 	ljmp	00190$
+                           1494 ;	../main.c:248: for (i = 0; i < addr_width; i++) {
+   05B9                    1495 00275$:
+   05B9 90s00r64           1496 	mov	dptr,#_main_addr_width_1_1
+   05BC E0                 1497 	movx	a,@dptr
+   05BD FA                 1498 	mov	r2,a
+   05BE A3                 1499 	inc	dptr
+   05BF E0                 1500 	movx	a,@dptr
+   05C0 FB                 1501 	mov	r3,a
+   05C1 7C 00              1502 	mov	r4,#0x00
+   05C3 7D 00              1503 	mov	r5,#0x00
+   05C5                    1504 00210$:
+   05C5 C3                 1505 	clr	c
+   05C6 EC                 1506 	mov	a,r4
+   05C7 9A                 1507 	subb	a,r2
+   05C8 ED                 1508 	mov	a,r5
+   05C9 64 80              1509 	xrl	a,#0x80
+   05CB 8B F0              1510 	mov	b,r3
+   05CD 63 F0 80           1511 	xrl	b,#0x80
+   05D0 95 F0              1512 	subb	a,b
+   05D2 50 2C              1513 	jnc	00213$
+                           1514 ;	../main.c:249: temp_addr[i] = ubuf[i + 2];
+   05D4 C0 02              1515 	push	ar2
+   05D6 C0 03              1516 	push	ar3
+   05D8 EC                 1517 	mov	a,r4
+   05D9 24r8F              1518 	add	a,#_main_temp_addr_1_1
+   05DB FE                 1519 	mov	r6,a
+   05DC ED                 1520 	mov	a,r5
+   05DD 34s00              1521 	addc	a,#(_main_temp_addr_1_1 >> 8)
+   05DF FF                 1522 	mov	r7,a
+   05E0 8C 02              1523 	mov	ar2,r4
+   05E2 74 02              1524 	mov	a,#0x02
+   05E4 2A                 1525 	add	a,r2
+   05E5 24r00              1526 	add	a,#_ubuf
+   05E7 F5 82              1527 	mov	dpl,a
+   05E9 E4                 1528 	clr	a
+   05EA 34s00              1529 	addc	a,#(_ubuf >> 8)
+   05EC F5 83              1530 	mov	dph,a
+   05EE E0                 1531 	movx	a,@dptr
+   05EF FA                 1532 	mov	r2,a
+   05F0 8E 82              1533 	mov	dpl,r6
+   05F2 8F 83              1534 	mov	dph,r7
+   05F4 F0                 1535 	movx	@dptr,a
+                           1536 ;	../main.c:248: for (i = 0; i < addr_width; i++) {
+   05F5 0C                 1537 	inc	r4
+   05F6 BC 00 01           1538 	cjne	r4,#0x00,00346$
+   05F9 0D                 1539 	inc	r5
+   05FA                    1540 00346$:
+   05FA D0 03              1541 	pop	ar3
+   05FC D0 02              1542 	pop	ar2
+   05FE 80 C5              1543 	sjmp	00210$
+   0600                    1544 00213$:
+                           1545 ;	../main.c:251: usb_send_packet(ACKbuf, 3);
+   0600 90s00r00           1546 	mov	dptr,#_usb_send_packet_PARM_2
+   0603 74 03              1547 	mov	a,#0x03
+   0605 F0                 1548 	movx	@dptr,a
+   0606 90s00r69           1549 	mov	dptr,#_main_ACKbuf_1_1
+   0609 75 F0 00           1550 	mov	b,#0x00
+   060C 12s00r00           1551 	lcall	_usb_send_packet
+                           1552 ;	../main.c:252: break;
+   060F 02s0BrDC           1553 	ljmp	00190$
+                           1554 ;	../main.c:254: for (i = 0; i < addr_width; i++) {
+   0612                    1555 00277$:
+   0612 90s00r64           1556 	mov	dptr,#_main_addr_width_1_1
+   0615 E0                 1557 	movx	a,@dptr
+   0616 FA                 1558 	mov	r2,a
+   0617 A3                 1559 	inc	dptr
+   0618 E0                 1560 	movx	a,@dptr
+   0619 FB                 1561 	mov	r3,a
+   061A 7C 00              1562 	mov	r4,#0x00
+   061C 7D 00              1563 	mov	r5,#0x00
+   061E                    1564 00214$:
+   061E C3                 1565 	clr	c
+   061F EC                 1566 	mov	a,r4
+   0620 9A                 1567 	subb	a,r2
+   0621 ED                 1568 	mov	a,r5
+   0622 64 80              1569 	xrl	a,#0x80
+   0624 8B F0              1570 	mov	b,r3
+   0626 63 F0 80           1571 	xrl	b,#0x80
+   0629 95 F0              1572 	subb	a,b
+   062B 50 2C              1573 	jnc	00217$
+                           1574 ;	../main.c:255: temp_addr[i] = ubuf[i + 2];
+   062D C0 02              1575 	push	ar2
+   062F C0 03              1576 	push	ar3
+   0631 EC                 1577 	mov	a,r4
+   0632 24r8F              1578 	add	a,#_main_temp_addr_1_1
+   0634 FE                 1579 	mov	r6,a
+   0635 ED                 1580 	mov	a,r5
+   0636 34s00              1581 	addc	a,#(_main_temp_addr_1_1 >> 8)
+   0638 FF                 1582 	mov	r7,a
+   0639 8C 02              1583 	mov	ar2,r4
+   063B 74 02              1584 	mov	a,#0x02
+   063D 2A                 1585 	add	a,r2
+   063E 24r00              1586 	add	a,#_ubuf
+   0640 F5 82              1587 	mov	dpl,a
+   0642 E4                 1588 	clr	a
+   0643 34s00              1589 	addc	a,#(_ubuf >> 8)
+   0645 F5 83              1590 	mov	dph,a
+   0647 E0                 1591 	movx	a,@dptr
+   0648 FA                 1592 	mov	r2,a
+   0649 8E 82              1593 	mov	dpl,r6
+   064B 8F 83              1594 	mov	dph,r7
+   064D F0                 1595 	movx	@dptr,a
+                           1596 ;	../main.c:254: for (i = 0; i < addr_width; i++) {
+   064E 0C                 1597 	inc	r4
+   064F BC 00 01           1598 	cjne	r4,#0x00,00348$
+   0652 0D                 1599 	inc	r5
+   0653                    1600 00348$:
+   0653 D0 03              1601 	pop	ar3
+   0655 D0 02              1602 	pop	ar2
+   0657 80 C5              1603 	sjmp	00214$
+   0659                    1604 00217$:
+                           1605 ;	../main.c:257: usb_send_packet(ACKbuf, 3);
+   0659 90s00r00           1606 	mov	dptr,#_usb_send_packet_PARM_2
+   065C 74 03              1607 	mov	a,#0x03
+   065E F0                 1608 	movx	@dptr,a
+   065F 90s00r69           1609 	mov	dptr,#_main_ACKbuf_1_1
+   0662 75 F0 00           1610 	mov	b,#0x00
+   0665 12s00r00           1611 	lcall	_usb_send_packet
+                           1612 ;	../main.c:258: break;
+   0668 02s0BrDC           1613 	ljmp	00190$
+                           1614 ;	../main.c:260: for (i = 0; i < addr_width; i++) {
+   066B                    1615 00279$:
+   066B 90s00r64           1616 	mov	dptr,#_main_addr_width_1_1
+   066E E0                 1617 	movx	a,@dptr
+   066F FA                 1618 	mov	r2,a
+   0670 A3                 1619 	inc	dptr
+   0671 E0                 1620 	movx	a,@dptr
+   0672 FB                 1621 	mov	r3,a
+   0673 7C 00              1622 	mov	r4,#0x00
+   0675 7D 00              1623 	mov	r5,#0x00
+   0677                    1624 00218$:
+   0677 C3                 1625 	clr	c
+   0678 EC                 1626 	mov	a,r4
+   0679 9A                 1627 	subb	a,r2
+   067A ED                 1628 	mov	a,r5
+   067B 64 80              1629 	xrl	a,#0x80
+   067D 8B F0              1630 	mov	b,r3
+   067F 63 F0 80           1631 	xrl	b,#0x80
+   0682 95 F0              1632 	subb	a,b
+   0684 50 2C              1633 	jnc	00221$
+                           1634 ;	../main.c:261: temp_addr[i] = ubuf[i + 2];
+   0686 C0 02              1635 	push	ar2
+   0688 C0 03              1636 	push	ar3
+   068A EC                 1637 	mov	a,r4
+   068B 24r8F              1638 	add	a,#_main_temp_addr_1_1
+   068D FE                 1639 	mov	r6,a
+   068E ED                 1640 	mov	a,r5
+   068F 34s00              1641 	addc	a,#(_main_temp_addr_1_1 >> 8)
+   0691 FF                 1642 	mov	r7,a
+   0692 8C 02              1643 	mov	ar2,r4
+   0694 74 02              1644 	mov	a,#0x02
+   0696 2A                 1645 	add	a,r2
+   0697 24r00              1646 	add	a,#_ubuf
+   0699 F5 82              1647 	mov	dpl,a
+   069B E4                 1648 	clr	a
+   069C 34s00              1649 	addc	a,#(_ubuf >> 8)
+   069E F5 83              1650 	mov	dph,a
+   06A0 E0                 1651 	movx	a,@dptr
+   06A1 FA                 1652 	mov	r2,a
+   06A2 8E 82              1653 	mov	dpl,r6
+   06A4 8F 83              1654 	mov	dph,r7
+   06A6 F0                 1655 	movx	@dptr,a
+                           1656 ;	../main.c:260: for (i = 0; i < addr_width; i++) {
+   06A7 0C                 1657 	inc	r4
+   06A8 BC 00 01           1658 	cjne	r4,#0x00,00350$
+   06AB 0D                 1659 	inc	r5
+   06AC                    1660 00350$:
+   06AC D0 03              1661 	pop	ar3
+   06AE D0 02              1662 	pop	ar2
+   06B0 80 C5              1663 	sjmp	00218$
+   06B2                    1664 00221$:
+                           1665 ;	../main.c:263: usb_send_packet(ACKbuf, 3);
+   06B2 90s00r00           1666 	mov	dptr,#_usb_send_packet_PARM_2
+   06B5 74 03              1667 	mov	a,#0x03
+   06B7 F0                 1668 	movx	@dptr,a
+   06B8 90s00r69           1669 	mov	dptr,#_main_ACKbuf_1_1
+   06BB 75 F0 00           1670 	mov	b,#0x00
+   06BE 12s00r00           1671 	lcall	_usb_send_packet
+                           1672 ;	../main.c:264: break;
+   06C1 02s0BrDC           1673 	ljmp	00190$
+                           1674 ;	../main.c:266: case EPL_USER_PLOAD:
+   06C4                    1675 00143$:
+                           1676 ;	../main.c:267: if (ubuf[2] == USRS_PLOAD) {
+   06C4 90s00r02           1677 	mov	dptr,#(_ubuf + 0x0002)
+   06C7 E0                 1678 	movx	a,@dptr
+   06C8 70 4E              1679 	jnz	00145$
+                           1680 ;	../main.c:268: customized_plen = (int) ubuf[3];
+   06CA 90s00r03           1681 	mov	dptr,#(_ubuf + 0x0003)
+   06CD E0                 1682 	movx	a,@dptr
+   06CE FA                 1683 	mov	r2,a
+   06CF 7B 00              1684 	mov	r3,#0x00
+   06D1 90s00r66           1685 	mov	dptr,#_main_customized_plen_1_1
+   06D4 EA                 1686 	mov	a,r2
+   06D5 F0                 1687 	movx	@dptr,a
+   06D6 A3                 1688 	inc	dptr
+   06D7 EB                 1689 	mov	a,r3
+   06D8 F0                 1690 	movx	@dptr,a
+                           1691 ;	../main.c:270: for (i = 0; i < customized_plen; i++) {
+   06D9 7C 00              1692 	mov	r4,#0x00
+   06DB 7D 00              1693 	mov	r5,#0x00
+   06DD                    1694 00222$:
+   06DD C3                 1695 	clr	c
+   06DE EC                 1696 	mov	a,r4
+   06DF 9A                 1697 	subb	a,r2
+   06E0 ED                 1698 	mov	a,r5
+   06E1 64 80              1699 	xrl	a,#0x80
+   06E3 8B F0              1700 	mov	b,r3
+   06E5 63 F0 80           1701 	xrl	b,#0x80
+   06E8 95 F0              1702 	subb	a,b
+   06EA 50 5A              1703 	jnc	00146$
+                           1704 ;	../main.c:271: packet[i] = ubuf[i + 4];
+   06EC C0 02              1705 	push	ar2
+   06EE C0 03              1706 	push	ar3
+   06F0 EC                 1707 	mov	a,r4
+   06F1 24r42              1708 	add	a,#_packet
+   06F3 FE                 1709 	mov	r6,a
+   06F4 ED                 1710 	mov	a,r5
+   06F5 34s00              1711 	addc	a,#(_packet >> 8)
+   06F7 FF                 1712 	mov	r7,a
+   06F8 8C 02              1713 	mov	ar2,r4
+   06FA 74 04              1714 	mov	a,#0x04
+   06FC 2A                 1715 	add	a,r2
+   06FD 24r00              1716 	add	a,#_ubuf
+   06FF F5 82              1717 	mov	dpl,a
+   0701 E4                 1718 	clr	a
+   0702 34s00              1719 	addc	a,#(_ubuf >> 8)
+   0704 F5 83              1720 	mov	dph,a
+   0706 E0                 1721 	movx	a,@dptr
+   0707 FA                 1722 	mov	r2,a
+   0708 8E 82              1723 	mov	dpl,r6
+   070A 8F 83              1724 	mov	dph,r7
+   070C F0                 1725 	movx	@dptr,a
+                           1726 ;	../main.c:270: for (i = 0; i < customized_plen; i++) {
+   070D 0C                 1727 	inc	r4
+   070E BC 00 01           1728 	cjne	r4,#0x00,00353$
+   0711 0D                 1729 	inc	r5
+   0712                    1730 00353$:
+   0712 D0 03              1731 	pop	ar3
+   0714 D0 02              1732 	pop	ar2
+   0716 80 C5              1733 	sjmp	00222$
+   0718                    1734 00145$:
+                           1735 ;	../main.c:274: customized_plen = 0;
+   0718 90s00r66           1736 	mov	dptr,#_main_customized_plen_1_1
+   071B E4                 1737 	clr	a
+   071C F0                 1738 	movx	@dptr,a
+   071D A3                 1739 	inc	dptr
+   071E F0                 1740 	movx	@dptr,a
+                           1741 ;	../main.c:276: for (i = 0; i < PLOAD_LEN; i++) {
+   071F 7A 00              1742 	mov	r2,#0x00
+   0721 7B 00              1743 	mov	r3,#0x00
+   0723                    1744 00226$:
+   0723 C3                 1745 	clr	c
+   0724 EA                 1746 	mov	a,r2
+   0725 94 20              1747 	subb	a,#0x20
+   0727 EB                 1748 	mov	a,r3
+   0728 64 80              1749 	xrl	a,#0x80
+   072A 94 80              1750 	subb	a,#0x80
+   072C 50 18              1751 	jnc	00146$
+                           1752 ;	../main.c:277: packet[i] = i + 9;
+   072E EA                 1753 	mov	a,r2
+   072F 24r42              1754 	add	a,#_packet
+   0731 F5 82              1755 	mov	dpl,a
+   0733 EB                 1756 	mov	a,r3
+   0734 34s00              1757 	addc	a,#(_packet >> 8)
+   0736 F5 83              1758 	mov	dph,a
+   0738 8A 04              1759 	mov	ar4,r2
+   073A 74 09              1760 	mov	a,#0x09
+   073C 2C                 1761 	add	a,r4
+   073D FC                 1762 	mov	r4,a
+   073E F0                 1763 	movx	@dptr,a
+                           1764 ;	../main.c:276: for (i = 0; i < PLOAD_LEN; i++) {
+   073F 0A                 1765 	inc	r2
+   0740 BA 00 E0           1766 	cjne	r2,#0x00,00226$
+   0743 0B                 1767 	inc	r3
+   0744 80 DD              1768 	sjmp	00226$
+   0746                    1769 00146$:
+                           1770 ;	../main.c:281: usb_send_packet(ACKbuf, 3);
+   0746 90s00r00           1771 	mov	dptr,#_usb_send_packet_PARM_2
+   0749 74 03              1772 	mov	a,#0x03
+   074B F0                 1773 	movx	@dptr,a
+   074C 90s00r69           1774 	mov	dptr,#_main_ACKbuf_1_1
+   074F 75 F0 00           1775 	mov	b,#0x00
+   0752 12s00r00           1776 	lcall	_usb_send_packet
+                           1777 ;	../main.c:282: break;
+   0755 02s0BrDC           1778 	ljmp	00190$
+                           1779 ;	../main.c:284: case EPL_NEW_COUNTER:
+   0758                    1780 00147$:
+                           1781 ;	../main.c:285: total_pkt_count = 1;
+   0758 90s00r62           1782 	mov	dptr,#_main_total_pkt_count_1_1
+   075B 74 01              1783 	mov	a,#0x01
+   075D F0                 1784 	movx	@dptr,a
+   075E E4                 1785 	clr	a
+   075F A3                 1786 	inc	dptr
+   0760 F0                 1787 	movx	@dptr,a
+                           1788 ;	../main.c:286: usb_send_packet(ACKbuf, 3);
+   0761 90s00r00           1789 	mov	dptr,#_usb_send_packet_PARM_2
+   0764 74 03              1790 	mov	a,#0x03
+   0766 F0                 1791 	movx	@dptr,a
+   0767 90s00r69           1792 	mov	dptr,#_main_ACKbuf_1_1
+   076A 75 F0 00           1793 	mov	b,#0x00
+   076D 12s00r00           1794 	lcall	_usb_send_packet
+                           1795 ;	../main.c:287: break;
+   0770 02s0BrDC           1796 	ljmp	00190$
+                           1797 ;	../main.c:290: case EPL_DYNAMIC_PD:
+   0773                    1798 00148$:
+                           1799 ;	../main.c:291: dynpd_pipe = (int)ubuf[2];
+   0773 90s00r02           1800 	mov	dptr,#(_ubuf + 0x0002)
+   0776 E0                 1801 	movx	a,@dptr
+   0777 FA                 1802 	mov	r2,a
+                           1803 ;	../main.c:292: if ((int)ubuf[3] == 01){
+   0778 90s00r03           1804 	mov	dptr,#(_ubuf + 0x0003)
+   077B E0                 1805 	movx	a,@dptr
+   077C FB                 1806 	mov	r3,a
+   077D 7C 00              1807 	mov	r4,#0x00
+   077F BB 01 2B           1808 	cjne	r3,#0x01,00150$
+   0782 BC 00 28           1809 	cjne	r4,#0x00,00150$
+                           1810 ;	../main.c:294: hal_nrf_write_reg(DYNPD, (1<<dynpd_pipe) | hal_nrf_read_reg(DYNPD));
+   0785 8A F0              1811 	mov	b,r2
+   0787 05 F0              1812 	inc	b
+   0789 74 01              1813 	mov	a,#0x01
+   078B 80 02              1814 	sjmp	00359$
+   078D                    1815 00357$:
+   078D 25 E0              1816 	add	a,acc
+   078F                    1817 00359$:
+   078F D5 F0 FB           1818 	djnz	b,00357$
+   0792 FB                 1819 	mov	r3,a
+   0793 75 82 1C           1820 	mov	dpl,#0x1C
+   0796 C0 03              1821 	push	ar3
+   0798 12s00r00           1822 	lcall	_hal_nrf_read_reg
+   079B AC 82              1823 	mov	r4,dpl
+   079D D0 03              1824 	pop	ar3
+   079F 90s00r00           1825 	mov	dptr,#_hal_nrf_write_reg_PARM_2
+   07A2 EC                 1826 	mov	a,r4
+   07A3 4B                 1827 	orl	a,r3
+   07A4 F0                 1828 	movx	@dptr,a
+   07A5 75 82 1C           1829 	mov	dpl,#0x1C
+   07A8 12s00r00           1830 	lcall	_hal_nrf_write_reg
+   07AB 80 27              1831 	sjmp	00151$
+   07AD                    1832 00150$:
+                           1833 ;	../main.c:298: hal_nrf_write_reg(DYNPD, ~(1<<dynpd_pipe) & hal_nrf_read_reg(DYNPD));
+   07AD 8A F0              1834 	mov	b,r2
+   07AF 05 F0              1835 	inc	b
+   07B1 74 01              1836 	mov	a,#0x01
+   07B3 80 02              1837 	sjmp	00362$
+   07B5                    1838 00360$:
+   07B5 25 E0              1839 	add	a,acc
+   07B7                    1840 00362$:
+   07B7 D5 F0 FB           1841 	djnz	b,00360$
+   07BA F4                 1842 	cpl	a
+   07BB FA                 1843 	mov	r2,a
+   07BC 75 82 1C           1844 	mov	dpl,#0x1C
+   07BF C0 02              1845 	push	ar2
+   07C1 12s00r00           1846 	lcall	_hal_nrf_read_reg
+   07C4 AB 82              1847 	mov	r3,dpl
+   07C6 D0 02              1848 	pop	ar2
+   07C8 90s00r00           1849 	mov	dptr,#_hal_nrf_write_reg_PARM_2
+   07CB EB                 1850 	mov	a,r3
+   07CC 5A                 1851 	anl	a,r2
+   07CD F0                 1852 	movx	@dptr,a
+   07CE 75 82 1C           1853 	mov	dpl,#0x1C
+   07D1 12s00r00           1854 	lcall	_hal_nrf_write_reg
+   07D4                    1855 00151$:
+                           1856 ;	../main.c:301: usb_send_packet(ACKbuf, 3);
+   07D4 90s00r00           1857 	mov	dptr,#_usb_send_packet_PARM_2
+   07D7 74 03              1858 	mov	a,#0x03
+   07D9 F0                 1859 	movx	@dptr,a
+   07DA 90s00r69           1860 	mov	dptr,#_main_ACKbuf_1_1
+   07DD 75 F0 00           1861 	mov	b,#0x00
+   07E0 12s00r00           1862 	lcall	_usb_send_packet
+                           1863 ;	../main.c:302: break;
+   07E3 02s0BrDC           1864 	ljmp	00190$
+                           1865 ;	../main.c:305: LED_Toggle();
+   07E6                    1866 00153$:
+   07E6 63 80 30           1867 	xrl	_P0,#0x30
+                           1868 ;	../main.c:306: epl_rf_en_enter_tx_mode();
+   07E9 12s00r00           1869 	lcall	_epl_rf_en_enter_tx_mode
+                           1870 ;	../main.c:308: hal_nrf_clear_irq_flag(HAL_NRF_TX_DS);
+   07EC 75 82 05           1871 	mov	dpl,#0x05
+   07EF 12s00r00           1872 	lcall	_hal_nrf_clear_irq_flag
+                           1873 ;	../main.c:309: hal_nrf_clear_irq_flag(HAL_NRF_MAX_RT);
+   07F2 75 82 04           1874 	mov	dpl,#0x04
+   07F5 12s00r00           1875 	lcall	_hal_nrf_clear_irq_flag
+                           1876 ;	../main.c:311: if (ubuf[2] == AUTO_PLOAD) {
+   07F8 90s00r02           1877 	mov	dptr,#(_ubuf + 0x0002)
+   07FB E0                 1878 	movx	a,@dptr
+   07FC FA                 1879 	mov	r2,a
+   07FD BA 01 2B           1880 	cjne	r2,#0x01,00157$
+                           1881 ;	../main.c:313: packet[0] = total_pkt_count++;
+   0800 90s00r62           1882 	mov	dptr,#_main_total_pkt_count_1_1
+   0803 E0                 1883 	movx	a,@dptr
+   0804 FA                 1884 	mov	r2,a
+   0805 A3                 1885 	inc	dptr
+   0806 E0                 1886 	movx	a,@dptr
+   0807 FB                 1887 	mov	r3,a
+   0808 90s00r62           1888 	mov	dptr,#_main_total_pkt_count_1_1
+   080B 74 01              1889 	mov	a,#0x01
+   080D 2A                 1890 	add	a,r2
+   080E F0                 1891 	movx	@dptr,a
+   080F E4                 1892 	clr	a
+   0810 3B                 1893 	addc	a,r3
+   0811 A3                 1894 	inc	dptr
+   0812 F0                 1895 	movx	@dptr,a
+   0813 90s00r42           1896 	mov	dptr,#_packet
+   0816 EA                 1897 	mov	a,r2
+   0817 F0                 1898 	movx	@dptr,a
+                           1899 ;	../main.c:314: epl_rf_en_send(packet, data_length);
+   0818 90s00r94           1900 	mov	dptr,#_main_data_length_1_1
+   081B E0                 1901 	movx	a,@dptr
+   081C 90s00r00           1902 	mov	dptr,#_epl_rf_en_send_PARM_2
+   081F F0                 1903 	movx	@dptr,a
+   0820 90s00r42           1904 	mov	dptr,#_packet
+   0823 75 F0 00           1905 	mov	b,#0x00
+   0826 12s00r00           1906 	lcall	_epl_rf_en_send
+   0829 80 15              1907 	sjmp	00158$
+   082B                    1908 00157$:
+                           1909 ;	../main.c:318: epl_rf_en_send(packet, customized_plen);
+   082B 90s00r66           1910 	mov	dptr,#_main_customized_plen_1_1
+   082E E0                 1911 	movx	a,@dptr
+   082F FA                 1912 	mov	r2,a
+   0830 A3                 1913 	inc	dptr
+   0831 E0                 1914 	movx	a,@dptr
+   0832 90s00r00           1915 	mov	dptr,#_epl_rf_en_send_PARM_2
+   0835 EA                 1916 	mov	a,r2
+   0836 F0                 1917 	movx	@dptr,a
+   0837 90s00r42           1918 	mov	dptr,#_packet
+   083A 75 F0 00           1919 	mov	b,#0x00
+   083D 12s00r00           1920 	lcall	_epl_rf_en_send
+   0840                    1921 00158$:
+                           1922 ;	../main.c:322: array_cp(temp_buf, ACKbuf, 3);
+   0840 90s00r9A           1923 	mov	dptr,#_array_cp_PARM_2
+   0843 74r69              1924 	mov	a,#_main_ACKbuf_1_1
+   0845 F0                 1925 	movx	@dptr,a
+   0846 A3                 1926 	inc	dptr
+   0847 74s00              1927 	mov	a,#(_main_ACKbuf_1_1 >> 8)
+   0849 F0                 1928 	movx	@dptr,a
+   084A A3                 1929 	inc	dptr
+   084B E4                 1930 	clr	a
+   084C F0                 1931 	movx	@dptr,a
+   084D 90s00r9D           1932 	mov	dptr,#_array_cp_PARM_3
+   0850 74 03              1933 	mov	a,#0x03
+   0852 F0                 1934 	movx	@dptr,a
+   0853 E4                 1935 	clr	a
+   0854 A3                 1936 	inc	dptr
+   0855 F0                 1937 	movx	@dptr,a
+   0856 90s00r6D           1938 	mov	dptr,#_main_temp_buf_1_1
+   0859 75 F0 00           1939 	mov	b,#0x00
+   085C 12s0BrE5           1940 	lcall	_array_cp
+                           1941 ;	../main.c:323: temp_buf[3] = hal_nrf_read_reg(OBSERVE_TX) & 0x0F;
+   085F 75 82 08           1942 	mov	dpl,#0x08
+   0862 12s00r00           1943 	lcall	_hal_nrf_read_reg
+   0865 E5 82              1944 	mov	a,dpl
+   0867 54 0F              1945 	anl	a,#0x0F
+   0869 90s00r70           1946 	mov	dptr,#(_main_temp_buf_1_1 + 0x0003)
+   086C F0                 1947 	movx	@dptr,a
+                           1948 ;	../main.c:324: usb_send_packet(temp_buf, 4);
+   086D 90s00r00           1949 	mov	dptr,#_usb_send_packet_PARM_2
+   0870 74 04              1950 	mov	a,#0x04
+   0872 F0                 1951 	movx	@dptr,a
+   0873 90s00r6D           1952 	mov	dptr,#_main_temp_buf_1_1
+   0876 75 F0 00           1953 	mov	b,#0x00
+   0879 12s00r00           1954 	lcall	_usb_send_packet
+                           1955 ;	../main.c:325: epl_rf_en_enter_rx_mode();
+   087C 12s00r00           1956 	lcall	_epl_rf_en_enter_rx_mode
+                           1957 ;	../main.c:326: LED_Toggle();
+   087F 63 80 30           1958 	xrl	_P0,#0x30
+                           1959 ;	../main.c:327: break;
+   0882 02s0BrDC           1960 	ljmp	00190$
+                           1961 ;	../main.c:329: case EPL_RUN_DUMPER:
+   0885                    1962 00162$:
+                           1963 ;	../main.c:330: hal_nrf_clear_irq_flag(HAL_NRF_RX_DR);
+   0885 75 82 06           1964 	mov	dpl,#0x06
+   0888 12s00r00           1965 	lcall	_hal_nrf_clear_irq_flag
+                           1966 ;	../main.c:331: hal_nrf_flush_rx();
+   088B 12s00r00           1967 	lcall	_hal_nrf_flush_rx
+                           1968 ;	../main.c:332: epl_rf_en_enter_rx_mode();
+   088E 12s00r00           1969 	lcall	_epl_rf_en_enter_rx_mode
+                           1970 ;	../main.c:333: while (1) {
+   0891                    1971 00186$:
+                           1972 ;	../main.c:334: LED_Off();
+   0891 43 80 30           1973 	orl	_P0,#0x30
+                           1974 ;	../main.c:335: if (ubuf[1] == 0xf5) { // Host wants to terminate
+   0894 90s00r01           1975 	mov	dptr,#(_ubuf + 0x0001)
+   0897 E0                 1976 	movx	a,@dptr
+   0898 FA                 1977 	mov	r2,a
+   0899 BA F5 06           1978 	cjne	r2,#0xF5,00183$
+                           1979 ;	../main.c:337: LED_Off();
+   089C 43 80 30           1980 	orl	_P0,#0x30
+                           1981 ;	../main.c:338: break;
+   089F 02s0BrDC           1982 	ljmp	00190$
+   08A2                    1983 00183$:
+                           1984 ;	../main.c:339: }else if (hal_nrf_rx_fifo_empty() == 0) { // Rx_fifo is not empty
+   08A2 12s00r00           1985 	lcall	_hal_nrf_rx_fifo_empty
+   08A5 E5 82              1986 	mov	a,dpl
+   08A7 70 E8              1987 	jnz	00186$
+                           1988 ;	../main.c:340: LED_Toggle();
+   08A9 63 80 30           1989 	xrl	_P0,#0x30
+                           1990 ;	../main.c:341: pipe_source = hal_nrf_get_rx_data_source();
+   08AC 12s00r00           1991 	lcall	_hal_nrf_get_rx_data_source
+   08AF AA 82              1992 	mov	r2,dpl
+                           1993 ;	../main.c:342: hal_nrf_read_rx_pload(temp_buf);
+   08B1 90s00r6D           1994 	mov	dptr,#_main_temp_buf_1_1
+   08B4 75 F0 00           1995 	mov	b,#0x00
+   08B7 C0 02              1996 	push	ar2
+   08B9 12s00r00           1997 	lcall	_hal_nrf_read_rx_pload
+   08BC D0 02              1998 	pop	ar2
+                           1999 ;	../main.c:345: temp_buf[32] = pipe_source;
+   08BE 90s00r8D           2000 	mov	dptr,#(_main_temp_buf_1_1 + 0x0020)
+   08C1 EA                 2001 	mov	a,r2
+   08C2 F0                 2002 	movx	@dptr,a
+                           2003 ;	../main.c:346: if(hal_nrf_read_reg(DYNPD)>>(int)pipe_source)
+   08C3 75 82 1C           2004 	mov	dpl,#0x1C
+   08C6 C0 02              2005 	push	ar2
+   08C8 12s00r00           2006 	lcall	_hal_nrf_read_reg
+   08CB AB 82              2007 	mov	r3,dpl
+   08CD D0 02              2008 	pop	ar2
+   08CF 8A 04              2009 	mov	ar4,r2
+   08D1 7D 00              2010 	mov	r5,#0x00
+   08D3 8C F0              2011 	mov	b,r4
+   08D5 05 F0              2012 	inc	b
+   08D7 EB                 2013 	mov	a,r3
+   08D8 80 02              2014 	sjmp	00369$
+   08DA                    2015 00368$:
+   08DA C3                 2016 	clr	c
+   08DB 13                 2017 	rrc	a
+   08DC                    2018 00369$:
+   08DC D5 F0 FB           2019 	djnz	b,00368$
+   08DF 60 0F              2020 	jz	00173$
+                           2021 ;	../main.c:347: temp_buf[33] = hal_nrf_read_reg(RD_RX_PLOAD_W);
+   08E1 75 82 60           2022 	mov	dpl,#0x60
+   08E4 12s00r00           2023 	lcall	_hal_nrf_read_reg
+   08E7 AB 82              2024 	mov	r3,dpl
+   08E9 90s00r8E           2025 	mov	dptr,#(_main_temp_buf_1_1 + 0x0021)
+   08EC EB                 2026 	mov	a,r3
+   08ED F0                 2027 	movx	@dptr,a
+   08EE 80 0F              2028 	sjmp	00174$
+   08F0                    2029 00173$:
+                           2030 ;	../main.c:349: temp_buf[33] = hal_nrf_read_reg(RX_PW_P0+pipe_source);
+   08F0 74 11              2031 	mov	a,#0x11
+   08F2 2A                 2032 	add	a,r2
+   08F3 F5 82              2033 	mov	dpl,a
+   08F5 12s00r00           2034 	lcall	_hal_nrf_read_reg
+   08F8 AA 82              2035 	mov	r2,dpl
+   08FA 90s00r8E           2036 	mov	dptr,#(_main_temp_buf_1_1 + 0x0021)
+   08FD EA                 2037 	mov	a,r2
+   08FE F0                 2038 	movx	@dptr,a
+   08FF                    2039 00174$:
+                           2040 ;	../main.c:353: usb_send_packet(temp_buf, 34);
+   08FF 90s00r00           2041 	mov	dptr,#_usb_send_packet_PARM_2
+   0902 74 22              2042 	mov	a,#0x22
+   0904 F0                 2043 	movx	@dptr,a
+   0905 90s00r6D           2044 	mov	dptr,#_main_temp_buf_1_1
+   0908 75 F0 00           2045 	mov	b,#0x00
+   090B 12s00r00           2046 	lcall	_usb_send_packet
+                           2047 ;	../main.c:355: if((hal_nrf_read_reg(STATUS))&0x10){
+   090E 75 82 07           2048 	mov	dpl,#0x07
+   0911 12s00r00           2049 	lcall	_hal_nrf_read_reg
+   0914 E5 82              2050 	mov	a,dpl
+   0916 30 E4 0B           2051 	jnb	acc.4,00177$
+                           2052 ;	../main.c:356: hal_nrf_write_reg(FLUSH_TX, 0);
+   0919 90s00r00           2053 	mov	dptr,#_hal_nrf_write_reg_PARM_2
+   091C E4                 2054 	clr	a
+   091D F0                 2055 	movx	@dptr,a
+   091E 75 82 E1           2056 	mov	dpl,#0xE1
+   0921 12s00r00           2057 	lcall	_hal_nrf_write_reg
+                           2058 ;	../main.c:358: LED_Toggle();
+   0924                    2059 00177$:
+   0924 63 80 30           2060 	xrl	_P0,#0x30
+   0927 02s08r91           2061 	ljmp	00186$
+                           2062 ;	../main.c:364: case EPL_SHOW_CONFIG:
+   092A                    2063 00188$:
+                           2064 ;	../main.c:365: epl_uart_putstr("\r\n0. CONFIG = ");
+   092A 90s00r33           2065 	mov	dptr,#__str_4
+   092D 75 F0 80           2066 	mov	b,#0x80
+   0930 12s00r00           2067 	lcall	_epl_uart_putstr
+                           2068 ;	../main.c:366: epl_uart_puthex(hal_nrf_read_reg(CONFIG));
+   0933 75 82 00           2069 	mov	dpl,#0x00
+   0936 12s00r00           2070 	lcall	_hal_nrf_read_reg
+   0939 7B 00              2071 	mov	r3,#0x00
+   093B 8B 83              2072 	mov	dph,r3
+   093D 12s00r00           2073 	lcall	_epl_uart_puthex
+                           2074 ;	../main.c:367: epl_uart_putstr("\r\n1. RF_CH = ");
+   0940 90s00r42           2075 	mov	dptr,#__str_5
+   0943 75 F0 80           2076 	mov	b,#0x80
+   0946 12s00r00           2077 	lcall	_epl_uart_putstr
+                           2078 ;	../main.c:368: epl_uart_puthex(hal_nrf_read_reg(RF_CH));
+   0949 75 82 05           2079 	mov	dpl,#0x05
+   094C 12s00r00           2080 	lcall	_hal_nrf_read_reg
+   094F 7B 00              2081 	mov	r3,#0x00
+   0951 8B 83              2082 	mov	dph,r3
+   0953 12s00r00           2083 	lcall	_epl_uart_puthex
+                           2084 ;	../main.c:369: epl_uart_putstr("\r\n2. EN_AA = ");
+   0956 90s00r50           2085 	mov	dptr,#__str_6
+   0959 75 F0 80           2086 	mov	b,#0x80
+   095C 12s00r00           2087 	lcall	_epl_uart_putstr
+                           2088 ;	../main.c:370: epl_uart_puthex(hal_nrf_read_reg(EN_AA));
+   095F 75 82 01           2089 	mov	dpl,#0x01
+   0962 12s00r00           2090 	lcall	_hal_nrf_read_reg
+   0965 7B 00              2091 	mov	r3,#0x00
+   0967 8B 83              2092 	mov	dph,r3
+   0969 12s00r00           2093 	lcall	_epl_uart_puthex
+                           2094 ;	../main.c:371: epl_uart_putstr("\r\n3. EN_RXADDR = ");
+   096C 90s00r5E           2095 	mov	dptr,#__str_7
+   096F 75 F0 80           2096 	mov	b,#0x80
+   0972 12s00r00           2097 	lcall	_epl_uart_putstr
+                           2098 ;	../main.c:372: epl_uart_puthex(hal_nrf_read_reg(EN_RXADDR));
+   0975 75 82 02           2099 	mov	dpl,#0x02
+   0978 12s00r00           2100 	lcall	_hal_nrf_read_reg
+   097B 7B 00              2101 	mov	r3,#0x00
+   097D 8B 83              2102 	mov	dph,r3
+   097F 12s00r00           2103 	lcall	_epl_uart_puthex
+                           2104 ;	../main.c:373: epl_uart_putstr("\r\n4. TX_ADDR = ");
+   0982 90s00r70           2105 	mov	dptr,#__str_8
+   0985 75 F0 80           2106 	mov	b,#0x80
+   0988 12s00r00           2107 	lcall	_epl_uart_putstr
+                           2108 ;	../main.c:374: hal_nrf_read_multibyte_reg(HAL_NRF_TX, addr_buf);
+   098B 90s00r00           2109 	mov	dptr,#_hal_nrf_read_multibyte_reg_PARM_2
+   098E 74r95              2110 	mov	a,#_main_addr_buf_1_1
+   0990 F0                 2111 	movx	@dptr,a
+   0991 A3                 2112 	inc	dptr
+   0992 74s00              2113 	mov	a,#(_main_addr_buf_1_1 >> 8)
+   0994 F0                 2114 	movx	@dptr,a
+   0995 A3                 2115 	inc	dptr
+   0996 E4                 2116 	clr	a
+   0997 F0                 2117 	movx	@dptr,a
+   0998 75 82 06           2118 	mov	dpl,#0x06
+   099B 12s00r00           2119 	lcall	_hal_nrf_read_multibyte_reg
+                           2120 ;	../main.c:375: epl_uart_puthex(addr_buf[0]);
+   099E 90s00r95           2121 	mov	dptr,#_main_addr_buf_1_1
+   09A1 E0                 2122 	movx	a,@dptr
+   09A2 FA                 2123 	mov	r2,a
+   09A3 7B 00              2124 	mov	r3,#0x00
+   09A5 8A 82              2125 	mov	dpl,r2
+   09A7 8B 83              2126 	mov	dph,r3
+   09A9 12s00r00           2127 	lcall	_epl_uart_puthex
+                           2128 ;	../main.c:376: epl_uart_puthex(addr_buf[1]);
+   09AC 90s00r96           2129 	mov	dptr,#(_main_addr_buf_1_1 + 0x0001)
+   09AF E0                 2130 	movx	a,@dptr
+   09B0 FA                 2131 	mov	r2,a
+   09B1 7B 00              2132 	mov	r3,#0x00
+   09B3 8A 82              2133 	mov	dpl,r2
+   09B5 8B 83              2134 	mov	dph,r3
+   09B7 12s00r00           2135 	lcall	_epl_uart_puthex
+                           2136 ;	../main.c:377: epl_uart_puthex(addr_buf[2]);
+   09BA 90s00r97           2137 	mov	dptr,#(_main_addr_buf_1_1 + 0x0002)
+   09BD E0                 2138 	movx	a,@dptr
+   09BE FA                 2139 	mov	r2,a
+   09BF 7B 00              2140 	mov	r3,#0x00
+   09C1 8A 82              2141 	mov	dpl,r2
+   09C3 8B 83              2142 	mov	dph,r3
+   09C5 12s00r00           2143 	lcall	_epl_uart_puthex
+                           2144 ;	../main.c:378: epl_uart_puthex(addr_buf[3]);
+   09C8 90s00r98           2145 	mov	dptr,#(_main_addr_buf_1_1 + 0x0003)
+   09CB E0                 2146 	movx	a,@dptr
+   09CC FA                 2147 	mov	r2,a
+   09CD 7B 00              2148 	mov	r3,#0x00
+   09CF 8A 82              2149 	mov	dpl,r2
+   09D1 8B 83              2150 	mov	dph,r3
+   09D3 12s00r00           2151 	lcall	_epl_uart_puthex
+                           2152 ;	../main.c:379: epl_uart_puthex(addr_buf[4]);
+   09D6 90s00r99           2153 	mov	dptr,#(_main_addr_buf_1_1 + 0x0004)
+   09D9 E0                 2154 	movx	a,@dptr
+   09DA FA                 2155 	mov	r2,a
+   09DB 7B 00              2156 	mov	r3,#0x00
+   09DD 8A 82              2157 	mov	dpl,r2
+   09DF 8B 83              2158 	mov	dph,r3
+   09E1 12s00r00           2159 	lcall	_epl_uart_puthex
+                           2160 ;	../main.c:380: epl_uart_putstr("\r\n4. RX_ADDR_PO = ");
+   09E4 90s00r80           2161 	mov	dptr,#__str_9
+   09E7 75 F0 80           2162 	mov	b,#0x80
+   09EA 12s00r00           2163 	lcall	_epl_uart_putstr
+                           2164 ;	../main.c:381: hal_nrf_read_multibyte_reg(HAL_NRF_PIPE0, addr_buf);
+   09ED 90s00r00           2165 	mov	dptr,#_hal_nrf_read_multibyte_reg_PARM_2
+   09F0 74r95              2166 	mov	a,#_main_addr_buf_1_1
+   09F2 F0                 2167 	movx	@dptr,a
+   09F3 A3                 2168 	inc	dptr
+   09F4 74s00              2169 	mov	a,#(_main_addr_buf_1_1 >> 8)
+   09F6 F0                 2170 	movx	@dptr,a
+   09F7 A3                 2171 	inc	dptr
+   09F8 E4                 2172 	clr	a
+   09F9 F0                 2173 	movx	@dptr,a
+   09FA 75 82 00           2174 	mov	dpl,#0x00
+   09FD 12s00r00           2175 	lcall	_hal_nrf_read_multibyte_reg
+                           2176 ;	../main.c:382: epl_uart_puthex(addr_buf[0]);
+   0A00 90s00r95           2177 	mov	dptr,#_main_addr_buf_1_1
+   0A03 E0                 2178 	movx	a,@dptr
+   0A04 FA                 2179 	mov	r2,a
+   0A05 7B 00              2180 	mov	r3,#0x00
+   0A07 8A 82              2181 	mov	dpl,r2
+   0A09 8B 83              2182 	mov	dph,r3
+   0A0B 12s00r00           2183 	lcall	_epl_uart_puthex
+                           2184 ;	../main.c:383: epl_uart_puthex(addr_buf[1]);
+   0A0E 90s00r96           2185 	mov	dptr,#(_main_addr_buf_1_1 + 0x0001)
+   0A11 E0                 2186 	movx	a,@dptr
+   0A12 FA                 2187 	mov	r2,a
+   0A13 7B 00              2188 	mov	r3,#0x00
+   0A15 8A 82              2189 	mov	dpl,r2
+   0A17 8B 83              2190 	mov	dph,r3
+   0A19 12s00r00           2191 	lcall	_epl_uart_puthex
+                           2192 ;	../main.c:384: epl_uart_puthex(addr_buf[2]);
+   0A1C 90s00r97           2193 	mov	dptr,#(_main_addr_buf_1_1 + 0x0002)
+   0A1F E0                 2194 	movx	a,@dptr
+   0A20 FA                 2195 	mov	r2,a
+   0A21 7B 00              2196 	mov	r3,#0x00
+   0A23 8A 82              2197 	mov	dpl,r2
+   0A25 8B 83              2198 	mov	dph,r3
+   0A27 12s00r00           2199 	lcall	_epl_uart_puthex
+                           2200 ;	../main.c:385: epl_uart_puthex(addr_buf[3]);
+   0A2A 90s00r98           2201 	mov	dptr,#(_main_addr_buf_1_1 + 0x0003)
+   0A2D E0                 2202 	movx	a,@dptr
+   0A2E FA                 2203 	mov	r2,a
+   0A2F 7B 00              2204 	mov	r3,#0x00
+   0A31 8A 82              2205 	mov	dpl,r2
+   0A33 8B 83              2206 	mov	dph,r3
+   0A35 12s00r00           2207 	lcall	_epl_uart_puthex
+                           2208 ;	../main.c:386: epl_uart_puthex(addr_buf[4]);
+   0A38 90s00r99           2209 	mov	dptr,#(_main_addr_buf_1_1 + 0x0004)
+   0A3B E0                 2210 	movx	a,@dptr
+   0A3C FA                 2211 	mov	r2,a
+   0A3D 7B 00              2212 	mov	r3,#0x00
+   0A3F 8A 82              2213 	mov	dpl,r2
+   0A41 8B 83              2214 	mov	dph,r3
+   0A43 12s00r00           2215 	lcall	_epl_uart_puthex
+                           2216 ;	../main.c:387: epl_uart_putstr("\r\n   RX_ADDR_P1 = ");
+   0A46 90s00r93           2217 	mov	dptr,#__str_10
+   0A49 75 F0 80           2218 	mov	b,#0x80
+   0A4C 12s00r00           2219 	lcall	_epl_uart_putstr
+                           2220 ;	../main.c:388: hal_nrf_read_multibyte_reg(HAL_NRF_PIPE1, addr_buf);
+   0A4F 90s00r00           2221 	mov	dptr,#_hal_nrf_read_multibyte_reg_PARM_2
+   0A52 74r95              2222 	mov	a,#_main_addr_buf_1_1
+   0A54 F0                 2223 	movx	@dptr,a
+   0A55 A3                 2224 	inc	dptr
+   0A56 74s00              2225 	mov	a,#(_main_addr_buf_1_1 >> 8)
+   0A58 F0                 2226 	movx	@dptr,a
+   0A59 A3                 2227 	inc	dptr
+   0A5A E4                 2228 	clr	a
+   0A5B F0                 2229 	movx	@dptr,a
+   0A5C 75 82 01           2230 	mov	dpl,#0x01
+   0A5F 12s00r00           2231 	lcall	_hal_nrf_read_multibyte_reg
+                           2232 ;	../main.c:389: epl_uart_puthex(addr_buf[0]);
+   0A62 90s00r95           2233 	mov	dptr,#_main_addr_buf_1_1
+   0A65 E0                 2234 	movx	a,@dptr
+   0A66 FA                 2235 	mov	r2,a
+   0A67 7B 00              2236 	mov	r3,#0x00
+   0A69 8A 82              2237 	mov	dpl,r2
+   0A6B 8B 83              2238 	mov	dph,r3
+   0A6D 12s00r00           2239 	lcall	_epl_uart_puthex
+                           2240 ;	../main.c:390: epl_uart_puthex(addr_buf[1]);
+   0A70 90s00r96           2241 	mov	dptr,#(_main_addr_buf_1_1 + 0x0001)
+   0A73 E0                 2242 	movx	a,@dptr
+   0A74 FA                 2243 	mov	r2,a
+   0A75 7B 00              2244 	mov	r3,#0x00
+   0A77 8A 82              2245 	mov	dpl,r2
+   0A79 8B 83              2246 	mov	dph,r3
+   0A7B 12s00r00           2247 	lcall	_epl_uart_puthex
+                           2248 ;	../main.c:391: epl_uart_puthex(addr_buf[2]);
+   0A7E 90s00r97           2249 	mov	dptr,#(_main_addr_buf_1_1 + 0x0002)
+   0A81 E0                 2250 	movx	a,@dptr
+   0A82 FA                 2251 	mov	r2,a
+   0A83 7B 00              2252 	mov	r3,#0x00
+   0A85 8A 82              2253 	mov	dpl,r2
+   0A87 8B 83              2254 	mov	dph,r3
+   0A89 12s00r00           2255 	lcall	_epl_uart_puthex
+                           2256 ;	../main.c:392: epl_uart_puthex(addr_buf[3]);
+   0A8C 90s00r98           2257 	mov	dptr,#(_main_addr_buf_1_1 + 0x0003)
+   0A8F E0                 2258 	movx	a,@dptr
+   0A90 FA                 2259 	mov	r2,a
+   0A91 7B 00              2260 	mov	r3,#0x00
+   0A93 8A 82              2261 	mov	dpl,r2
+   0A95 8B 83              2262 	mov	dph,r3
+   0A97 12s00r00           2263 	lcall	_epl_uart_puthex
+                           2264 ;	../main.c:393: epl_uart_puthex(addr_buf[4]);
+   0A9A 90s00r99           2265 	mov	dptr,#(_main_addr_buf_1_1 + 0x0004)
+   0A9D E0                 2266 	movx	a,@dptr
+   0A9E FA                 2267 	mov	r2,a
+   0A9F 7B 00              2268 	mov	r3,#0x00
+   0AA1 8A 82              2269 	mov	dpl,r2
+   0AA3 8B 83              2270 	mov	dph,r3
+   0AA5 12s00r00           2271 	lcall	_epl_uart_puthex
+                           2272 ;	../main.c:394: epl_uart_putstr("\r\n   RX_ADDR_P2 = ");
+   0AA8 90s00rA6           2273 	mov	dptr,#__str_11
+   0AAB 75 F0 80           2274 	mov	b,#0x80
+   0AAE 12s00r00           2275 	lcall	_epl_uart_putstr
+                           2276 ;	../main.c:395: epl_uart_puthex(hal_nrf_read_reg(RX_ADDR_P2));
+   0AB1 75 82 0C           2277 	mov	dpl,#0x0C
+   0AB4 12s00r00           2278 	lcall	_hal_nrf_read_reg
+   0AB7 7B 00              2279 	mov	r3,#0x00
+   0AB9 8B 83              2280 	mov	dph,r3
+   0ABB 12s00r00           2281 	lcall	_epl_uart_puthex
+                           2282 ;	../main.c:396: epl_uart_putstr("\r\n   RX_ADDR_P3 = ");
+   0ABE 90s00rB9           2283 	mov	dptr,#__str_12
+   0AC1 75 F0 80           2284 	mov	b,#0x80
+   0AC4 12s00r00           2285 	lcall	_epl_uart_putstr
+                           2286 ;	../main.c:397: epl_uart_puthex(hal_nrf_read_reg(RX_ADDR_P3));
+   0AC7 75 82 0D           2287 	mov	dpl,#0x0D
+   0ACA 12s00r00           2288 	lcall	_hal_nrf_read_reg
+   0ACD 7B 00              2289 	mov	r3,#0x00
+   0ACF 8B 83              2290 	mov	dph,r3
+   0AD1 12s00r00           2291 	lcall	_epl_uart_puthex
+                           2292 ;	../main.c:398: epl_uart_putstr("\r\n   RX_ADDR_P4 = ");
+   0AD4 90s00rCC           2293 	mov	dptr,#__str_13
+   0AD7 75 F0 80           2294 	mov	b,#0x80
+   0ADA 12s00r00           2295 	lcall	_epl_uart_putstr
+                           2296 ;	../main.c:399: epl_uart_puthex(hal_nrf_read_reg(RX_ADDR_P4));
+   0ADD 75 82 0E           2297 	mov	dpl,#0x0E
+   0AE0 12s00r00           2298 	lcall	_hal_nrf_read_reg
+   0AE3 7B 00              2299 	mov	r3,#0x00
+   0AE5 8B 83              2300 	mov	dph,r3
+   0AE7 12s00r00           2301 	lcall	_epl_uart_puthex
+                           2302 ;	../main.c:400: epl_uart_putstr("\r\n   RX_ADDR_P5 = ");
+   0AEA 90s00rDF           2303 	mov	dptr,#__str_14
+   0AED 75 F0 80           2304 	mov	b,#0x80
+   0AF0 12s00r00           2305 	lcall	_epl_uart_putstr
+                           2306 ;	../main.c:401: epl_uart_puthex(hal_nrf_read_reg(RX_ADDR_P5));
+   0AF3 75 82 0F           2307 	mov	dpl,#0x0F
+   0AF6 12s00r00           2308 	lcall	_hal_nrf_read_reg
+   0AF9 7B 00              2309 	mov	r3,#0x00
+   0AFB 8B 83              2310 	mov	dph,r3
+   0AFD 12s00r00           2311 	lcall	_epl_uart_puthex
+                           2312 ;	../main.c:402: epl_uart_putstr("\r\n5. RX_PW_P0 = ");
+   0B00 90s00rF2           2313 	mov	dptr,#__str_15
+   0B03 75 F0 80           2314 	mov	b,#0x80
+   0B06 12s00r00           2315 	lcall	_epl_uart_putstr
+                           2316 ;	../main.c:403: epl_uart_puthex(hal_nrf_read_reg(RX_PW_P0));
+   0B09 75 82 11           2317 	mov	dpl,#0x11
+   0B0C 12s00r00           2318 	lcall	_hal_nrf_read_reg
+   0B0F 7B 00              2319 	mov	r3,#0x00
+   0B11 8B 83              2320 	mov	dph,r3
+   0B13 12s00r00           2321 	lcall	_epl_uart_puthex
+                           2322 ;	../main.c:404: epl_uart_putstr("\r\n   RX_PW_P1 = ");
+   0B16 90s01r03           2323 	mov	dptr,#__str_16
+   0B19 75 F0 80           2324 	mov	b,#0x80
+   0B1C 12s00r00           2325 	lcall	_epl_uart_putstr
+                           2326 ;	../main.c:405: epl_uart_puthex(hal_nrf_read_reg(RX_PW_P1));
+   0B1F 75 82 12           2327 	mov	dpl,#0x12
+   0B22 12s00r00           2328 	lcall	_hal_nrf_read_reg
+   0B25 7B 00              2329 	mov	r3,#0x00
+   0B27 8B 83              2330 	mov	dph,r3
+   0B29 12s00r00           2331 	lcall	_epl_uart_puthex
+                           2332 ;	../main.c:406: epl_uart_putstr("\r\n   RX_PW_P2 = ");
+   0B2C 90s01r14           2333 	mov	dptr,#__str_17
+   0B2F 75 F0 80           2334 	mov	b,#0x80
+   0B32 12s00r00           2335 	lcall	_epl_uart_putstr
+                           2336 ;	../main.c:407: epl_uart_puthex(hal_nrf_read_reg(RX_PW_P2));
+   0B35 75 82 13           2337 	mov	dpl,#0x13
+   0B38 12s00r00           2338 	lcall	_hal_nrf_read_reg
+   0B3B 7B 00              2339 	mov	r3,#0x00
+   0B3D 8B 83              2340 	mov	dph,r3
+   0B3F 12s00r00           2341 	lcall	_epl_uart_puthex
+                           2342 ;	../main.c:408: epl_uart_putstr("\r\n   RX_PW_P3 = ");
+   0B42 90s01r25           2343 	mov	dptr,#__str_18
+   0B45 75 F0 80           2344 	mov	b,#0x80
+   0B48 12s00r00           2345 	lcall	_epl_uart_putstr
+                           2346 ;	../main.c:409: epl_uart_puthex(hal_nrf_read_reg(RX_PW_P3));
+   0B4B 75 82 14           2347 	mov	dpl,#0x14
+   0B4E 12s00r00           2348 	lcall	_hal_nrf_read_reg
+   0B51 7B 00              2349 	mov	r3,#0x00
+   0B53 8B 83              2350 	mov	dph,r3
+   0B55 12s00r00           2351 	lcall	_epl_uart_puthex
+                           2352 ;	../main.c:410: epl_uart_putstr("\r\n   RX_PW_P4 = ");
+   0B58 90s01r36           2353 	mov	dptr,#__str_19
+   0B5B 75 F0 80           2354 	mov	b,#0x80
+   0B5E 12s00r00           2355 	lcall	_epl_uart_putstr
+                           2356 ;	../main.c:411: epl_uart_puthex(hal_nrf_read_reg(RX_PW_P4));
+   0B61 75 82 15           2357 	mov	dpl,#0x15
+   0B64 12s00r00           2358 	lcall	_hal_nrf_read_reg
+   0B67 7B 00              2359 	mov	r3,#0x00
+   0B69 8B 83              2360 	mov	dph,r3
+   0B6B 12s00r00           2361 	lcall	_epl_uart_puthex
+                           2362 ;	../main.c:412: epl_uart_putstr("\r\n   RX_PW_P5 = ");
+   0B6E 90s01r47           2363 	mov	dptr,#__str_20
+   0B71 75 F0 80           2364 	mov	b,#0x80
+   0B74 12s00r00           2365 	lcall	_epl_uart_putstr
+                           2366 ;	../main.c:413: epl_uart_puthex(hal_nrf_read_reg(RX_PW_P5));
+   0B77 75 82 16           2367 	mov	dpl,#0x16
+   0B7A 12s00r00           2368 	lcall	_hal_nrf_read_reg
+   0B7D 7B 00              2369 	mov	r3,#0x00
+   0B7F 8B 83              2370 	mov	dph,r3
+   0B81 12s00r00           2371 	lcall	_epl_uart_puthex
+                           2372 ;	../main.c:414: epl_uart_putstr("\r\n6. RF_SETUP = ");
+   0B84 90s01r58           2373 	mov	dptr,#__str_21
+   0B87 75 F0 80           2374 	mov	b,#0x80
+   0B8A 12s00r00           2375 	lcall	_epl_uart_putstr
+                           2376 ;	../main.c:415: epl_uart_puthex(hal_nrf_read_reg(RF_SETUP));
+   0B8D 75 82 06           2377 	mov	dpl,#0x06
+   0B90 12s00r00           2378 	lcall	_hal_nrf_read_reg
+   0B93 7B 00              2379 	mov	r3,#0x00
+   0B95 8B 83              2380 	mov	dph,r3
+   0B97 12s00r00           2381 	lcall	_epl_uart_puthex
+                           2382 ;	../main.c:416: epl_uart_putstr("\r\n7. STATUS = ");
+   0B9A 90s01r69           2383 	mov	dptr,#__str_22
+   0B9D 75 F0 80           2384 	mov	b,#0x80
+   0BA0 12s00r00           2385 	lcall	_epl_uart_putstr
+                           2386 ;	../main.c:417: epl_uart_puthex(hal_nrf_read_reg(STATUS));
+   0BA3 75 82 07           2387 	mov	dpl,#0x07
+   0BA6 12s00r00           2388 	lcall	_hal_nrf_read_reg
+   0BA9 7B 00              2389 	mov	r3,#0x00
+   0BAB 8B 83              2390 	mov	dph,r3
+   0BAD 12s00r00           2391 	lcall	_epl_uart_puthex
+                           2392 ;	../main.c:418: epl_uart_putstr("\r\n8 .DYNPD = ");
+   0BB0 90s01r78           2393 	mov	dptr,#__str_23
+   0BB3 75 F0 80           2394 	mov	b,#0x80
+   0BB6 12s00r00           2395 	lcall	_epl_uart_putstr
+                           2396 ;	../main.c:419: epl_uart_puthex(hal_nrf_read_reg(DYNPD));
+   0BB9 75 82 1C           2397 	mov	dpl,#0x1C
+   0BBC 12s00r00           2398 	lcall	_hal_nrf_read_reg
+   0BBF 7B 00              2399 	mov	r3,#0x00
+   0BC1 8B 83              2400 	mov	dph,r3
+   0BC3 12s00r00           2401 	lcall	_epl_uart_puthex
+                           2402 ;	../main.c:420: epl_uart_putstr("\r\n9. FEATURE = ");
+   0BC6 90s01r86           2403 	mov	dptr,#__str_24
+   0BC9 75 F0 80           2404 	mov	b,#0x80
+   0BCC 12s00r00           2405 	lcall	_epl_uart_putstr
+                           2406 ;	../main.c:421: epl_uart_puthex(hal_nrf_read_reg(FEATURE));
+   0BCF 75 82 1D           2407 	mov	dpl,#0x1D
+   0BD2 12s00r00           2408 	lcall	_hal_nrf_read_reg
+   0BD5 7B 00              2409 	mov	r3,#0x00
+   0BD7 8B 83              2410 	mov	dph,r3
+   0BD9 12s00r00           2411 	lcall	_epl_uart_puthex
+                           2412 ;	../main.c:424: }// end switch case
+   0BDC                    2413 00190$:
+                           2414 ;	../main.c:425: mdelay(1);
+   0BDC 90 00 01           2415 	mov	dptr,#0x0001
+   0BDF 12s00r00           2416 	lcall	_mdelay
+   0BE2 02s00r95           2417 	ljmp	00192$
+                           2418 ;------------------------------------------------------------
+                           2419 ;Allocation info for local variables in function 'array_cp'
+                           2420 ;------------------------------------------------------------
+                           2421 ;src_array                 Allocated with name '_array_cp_PARM_2'
+                           2422 ;len                       Allocated with name '_array_cp_PARM_3'
+                           2423 ;dst_array                 Allocated with name '_array_cp_dst_array_1_1'
+                           2424 ;i                         Allocated with name '_array_cp_i_1_1'
+                           2425 ;sloc0                     Allocated with name '_array_cp_sloc0_1_0'
+                           2426 ;sloc1                     Allocated with name '_array_cp_sloc1_1_0'
+                           2427 ;sloc2                     Allocated with name '_array_cp_sloc2_1_0'
+                           2428 ;------------------------------------------------------------
+                           2429 ;	../main.c:431: void array_cp(unsigned char *dst_array, unsigned char *src_array, int len) {
+                           2430 ;	-----------------------------------------
+                           2431 ;	 function array_cp
+                           2432 ;	-----------------------------------------
+   0BE5                    2433 _array_cp:
+   0BE5 AA F0              2434 	mov	r2,b
+   0BE7 AB 83              2435 	mov	r3,dph
+   0BE9 E5 82              2436 	mov	a,dpl
+   0BEB 90s00r9F           2437 	mov	dptr,#_array_cp_dst_array_1_1
+   0BEE F0                 2438 	movx	@dptr,a
+   0BEF A3                 2439 	inc	dptr
+   0BF0 EB                 2440 	mov	a,r3
+   0BF1 F0                 2441 	movx	@dptr,a
+   0BF2 A3                 2442 	inc	dptr
+   0BF3 EA                 2443 	mov	a,r2
+   0BF4 F0                 2444 	movx	@dptr,a
+                           2445 ;	../main.c:434: for (i = 0; i < len; i++)
+   0BF5 90s00r9F           2446 	mov	dptr,#_array_cp_dst_array_1_1
+   0BF8 E0                 2447 	movx	a,@dptr
+   0BF9 FA                 2448 	mov	r2,a
+   0BFA A3                 2449 	inc	dptr
+   0BFB E0                 2450 	movx	a,@dptr
+   0BFC FB                 2451 	mov	r3,a
+   0BFD A3                 2452 	inc	dptr
+   0BFE E0                 2453 	movx	a,@dptr
+   0BFF FC                 2454 	mov	r4,a
+   0C00 90s00r9A           2455 	mov	dptr,#_array_cp_PARM_2
+   0C03 E0                 2456 	movx	a,@dptr
+   0C04 F5*02              2457 	mov	_array_cp_sloc1_1_0,a
+   0C06 A3                 2458 	inc	dptr
+   0C07 E0                 2459 	movx	a,@dptr
+   0C08 F5*03              2460 	mov	(_array_cp_sloc1_1_0 + 1),a
+   0C0A A3                 2461 	inc	dptr
+   0C0B E0                 2462 	movx	a,@dptr
+   0C0C F5*04              2463 	mov	(_array_cp_sloc1_1_0 + 2),a
+   0C0E 90s00r9D           2464 	mov	dptr,#_array_cp_PARM_3
+   0C11 E0                 2465 	movx	a,@dptr
+   0C12 F8                 2466 	mov	r0,a
+   0C13 A3                 2467 	inc	dptr
+   0C14 E0                 2468 	movx	a,@dptr
+   0C15 F9                 2469 	mov	r1,a
+   0C16 E4                 2470 	clr	a
+   0C17 F5*00              2471 	mov	_array_cp_sloc0_1_0,a
+   0C19 F5*01              2472 	mov	(_array_cp_sloc0_1_0 + 1),a
+   0C1B                    2473 00101$:
+   0C1B C3                 2474 	clr	c
+   0C1C E5*00              2475 	mov	a,_array_cp_sloc0_1_0
+   0C1E 98                 2476 	subb	a,r0
+   0C1F E5*01              2477 	mov	a,(_array_cp_sloc0_1_0 + 1)
+   0C21 64 80              2478 	xrl	a,#0x80
+   0C23 89 F0              2479 	mov	b,r1
+   0C25 63 F0 80           2480 	xrl	b,#0x80
+   0C28 95 F0              2481 	subb	a,b
+   0C2A 50 40              2482 	jnc	00105$
+                           2483 ;	../main.c:435: dst_array[i] = src_array[i];
+   0C2C C0 00              2484 	push	ar0
+   0C2E C0 01              2485 	push	ar1
+   0C30 E5*00              2486 	mov	a,_array_cp_sloc0_1_0
+   0C32 2A                 2487 	add	a,r2
+   0C33 F5*05              2488 	mov	_array_cp_sloc2_1_0,a
+   0C35 E5*01              2489 	mov	a,(_array_cp_sloc0_1_0 + 1)
+   0C37 3B                 2490 	addc	a,r3
+   0C38 F5*06              2491 	mov	(_array_cp_sloc2_1_0 + 1),a
+   0C3A 8C*07              2492 	mov	(_array_cp_sloc2_1_0 + 2),r4
+   0C3C E5*00              2493 	mov	a,_array_cp_sloc0_1_0
+   0C3E 25*02              2494 	add	a,_array_cp_sloc1_1_0
+   0C40 FE                 2495 	mov	r6,a
+   0C41 E5*01              2496 	mov	a,(_array_cp_sloc0_1_0 + 1)
+   0C43 35*03              2497 	addc	a,(_array_cp_sloc1_1_0 + 1)
+   0C45 FF                 2498 	mov	r7,a
+   0C46 AD*04              2499 	mov	r5,(_array_cp_sloc1_1_0 + 2)
+   0C48 8E 82              2500 	mov	dpl,r6
+   0C4A 8F 83              2501 	mov	dph,r7
+   0C4C 8D F0              2502 	mov	b,r5
+   0C4E 12s00r00           2503 	lcall	__gptrget
+   0C51 FE                 2504 	mov	r6,a
+   0C52 85*05 82           2505 	mov	dpl,_array_cp_sloc2_1_0
+   0C55 85*06 83           2506 	mov	dph,(_array_cp_sloc2_1_0 + 1)
+   0C58 85*07 F0           2507 	mov	b,(_array_cp_sloc2_1_0 + 2)
+   0C5B 12s00r00           2508 	lcall	__gptrput
+                           2509 ;	../main.c:434: for (i = 0; i < len; i++)
+   0C5E 05*00              2510 	inc	_array_cp_sloc0_1_0
+   0C60 E4                 2511 	clr	a
+   0C61 B5*00 02           2512 	cjne	a,_array_cp_sloc0_1_0,00111$
+   0C64 05*01              2513 	inc	(_array_cp_sloc0_1_0 + 1)
+   0C66                    2514 00111$:
+   0C66 D0 01              2515 	pop	ar1
+   0C68 D0 00              2516 	pop	ar0
+   0C6A 80 AF              2517 	sjmp	00101$
+   0C6C                    2518 00105$:
+   0C6C 22                 2519 	ret
+                           2520 	.area CSEG    (CODE)
+                           2521 	.area CONST   (CODE)
+   0000                    2522 __str_1:
+   0000 73 74 61 72 74 21  2523 	.ascii "start!"
+   0006 00                 2524 	.db 0x00
+   0007                    2525 __str_2:
+   0007 45 50 4C 5F 4F 55  2526 	.ascii "EPL_OUTPUT_POWER"
+        54 50 55 54 5F 50
+        4F 57 45 52
+   0017 0A                 2527 	.db 0x0A
+   0018 00                 2528 	.db 0x00
+   0019                    2529 __str_3:
+   0019 45 50 4C 5F 4F 55  2530 	.ascii "EPL_OUTPUT_POWER     END"
+        54 50 55 54 5F 50
+        4F 57 45 52 20 20
+        20 20 20 45 4E 44
+   0031 0A                 2531 	.db 0x0A
+   0032 00                 2532 	.db 0x00
+   0033                    2533 __str_4:
+   0033 0D                 2534 	.db 0x0D
+   0034 0A                 2535 	.db 0x0A
+   0035 30 2E 20 43 4F 4E  2536 	.ascii "0. CONFIG = "
+        46 49 47 20 3D 20
+   0041 00                 2537 	.db 0x00
+   0042                    2538 __str_5:
+   0042 0D                 2539 	.db 0x0D
+   0043 0A                 2540 	.db 0x0A
+   0044 31 2E 20 52 46 5F  2541 	.ascii "1. RF_CH = "
+        43 48 20 3D 20
+   004F 00                 2542 	.db 0x00
+   0050                    2543 __str_6:
+   0050 0D                 2544 	.db 0x0D
+   0051 0A                 2545 	.db 0x0A
+   0052 32 2E 20 45 4E 5F  2546 	.ascii "2. EN_AA = "
+        41 41 20 3D 20
+   005D 00                 2547 	.db 0x00
+   005E                    2548 __str_7:
+   005E 0D                 2549 	.db 0x0D
+   005F 0A                 2550 	.db 0x0A
+   0060 33 2E 20 45 4E 5F  2551 	.ascii "3. EN_RXADDR = "
+        52 58 41 44 44 52
+        20 3D 20
+   006F 00                 2552 	.db 0x00
+   0070                    2553 __str_8:
+   0070 0D                 2554 	.db 0x0D
+   0071 0A                 2555 	.db 0x0A
+   0072 34 2E 20 54 58 5F  2556 	.ascii "4. TX_ADDR = "
+        41 44 44 52 20 3D
+        20
+   007F 00                 2557 	.db 0x00
+   0080                    2558 __str_9:
+   0080 0D                 2559 	.db 0x0D
+   0081 0A                 2560 	.db 0x0A
+   0082 34 2E 20 52 58 5F  2561 	.ascii "4. RX_ADDR_PO = "
+        41 44 44 52 5F 50
+        4F 20 3D 20
+   0092 00                 2562 	.db 0x00
+   0093                    2563 __str_10:
+   0093 0D                 2564 	.db 0x0D
+   0094 0A                 2565 	.db 0x0A
+   0095 20 20 20 52 58 5F  2566 	.ascii "   RX_ADDR_P1 = "
+        41 44 44 52 5F 50
+        31 20 3D 20
+   00A5 00                 2567 	.db 0x00
+   00A6                    2568 __str_11:
+   00A6 0D                 2569 	.db 0x0D
+   00A7 0A                 2570 	.db 0x0A
+   00A8 20 20 20 52 58 5F  2571 	.ascii "   RX_ADDR_P2 = "
+        41 44 44 52 5F 50
+        32 20 3D 20
+   00B8 00                 2572 	.db 0x00
+   00B9                    2573 __str_12:
+   00B9 0D                 2574 	.db 0x0D
+   00BA 0A                 2575 	.db 0x0A
+   00BB 20 20 20 52 58 5F  2576 	.ascii "   RX_ADDR_P3 = "
+        41 44 44 52 5F 50
+        33 20 3D 20
+   00CB 00                 2577 	.db 0x00
+   00CC                    2578 __str_13:
+   00CC 0D                 2579 	.db 0x0D
+   00CD 0A                 2580 	.db 0x0A
+   00CE 20 20 20 52 58 5F  2581 	.ascii "   RX_ADDR_P4 = "
+        41 44 44 52 5F 50
+        34 20 3D 20
+   00DE 00                 2582 	.db 0x00
+   00DF                    2583 __str_14:
+   00DF 0D                 2584 	.db 0x0D
+   00E0 0A                 2585 	.db 0x0A
+   00E1 20 20 20 52 58 5F  2586 	.ascii "   RX_ADDR_P5 = "
+        41 44 44 52 5F 50
+        35 20 3D 20
+   00F1 00                 2587 	.db 0x00
+   00F2                    2588 __str_15:
+   00F2 0D                 2589 	.db 0x0D
+   00F3 0A                 2590 	.db 0x0A
+   00F4 35 2E 20 52 58 5F  2591 	.ascii "5. RX_PW_P0 = "
+        50 57 5F 50 30 20
+        3D 20
+   0102 00                 2592 	.db 0x00
+   0103                    2593 __str_16:
+   0103 0D                 2594 	.db 0x0D
+   0104 0A                 2595 	.db 0x0A
+   0105 20 20 20 52 58 5F  2596 	.ascii "   RX_PW_P1 = "
+        50 57 5F 50 31 20
+        3D 20
+   0113 00                 2597 	.db 0x00
+   0114                    2598 __str_17:
+   0114 0D                 2599 	.db 0x0D
+   0115 0A                 2600 	.db 0x0A
+   0116 20 20 20 52 58 5F  2601 	.ascii "   RX_PW_P2 = "
+        50 57 5F 50 32 20
+        3D 20
+   0124 00                 2602 	.db 0x00
+   0125                    2603 __str_18:
+   0125 0D                 2604 	.db 0x0D
+   0126 0A                 2605 	.db 0x0A
+   0127 20 20 20 52 58 5F  2606 	.ascii "   RX_PW_P3 = "
+        50 57 5F 50 33 20
+        3D 20
+   0135 00                 2607 	.db 0x00
+   0136                    2608 __str_19:
+   0136 0D                 2609 	.db 0x0D
+   0137 0A                 2610 	.db 0x0A
+   0138 20 20 20 52 58 5F  2611 	.ascii "   RX_PW_P4 = "
+        50 57 5F 50 34 20
+        3D 20
+   0146 00                 2612 	.db 0x00
+   0147                    2613 __str_20:
+   0147 0D                 2614 	.db 0x0D
+   0148 0A                 2615 	.db 0x0A
+   0149 20 20 20 52 58 5F  2616 	.ascii "   RX_PW_P5 = "
+        50 57 5F 50 35 20
+        3D 20
+   0157 00                 2617 	.db 0x00
+   0158                    2618 __str_21:
+   0158 0D                 2619 	.db 0x0D
+   0159 0A                 2620 	.db 0x0A
+   015A 36 2E 20 52 46 5F  2621 	.ascii "6. RF_SETUP = "
+        53 45 54 55 50 20
+        3D 20
+   0168 00                 2622 	.db 0x00
+   0169                    2623 __str_22:
+   0169 0D                 2624 	.db 0x0D
+   016A 0A                 2625 	.db 0x0A
+   016B 37 2E 20 53 54 41  2626 	.ascii "7. STATUS = "
+        54 55 53 20 3D 20
+   0177 00                 2627 	.db 0x00
+   0178                    2628 __str_23:
+   0178 0D                 2629 	.db 0x0D
+   0179 0A                 2630 	.db 0x0A
+   017A 38 20 2E 44 59 4E  2631 	.ascii "8 .DYNPD = "
+        50 44 20 3D 20
+   0185 00                 2632 	.db 0x00
+   0186                    2633 __str_24:
+   0186 0D                 2634 	.db 0x0D
+   0187 0A                 2635 	.db 0x0A
+   0188 39 2E 20 46 45 41  2636 	.ascii "9. FEATURE = "
+        54 55 52 45 20 3D
+        20
+   0195 00                 2637 	.db 0x00
+                           2638 	.area XINIT   (CODE)
+                           2639 	.area CABS    (ABS,CODE)
