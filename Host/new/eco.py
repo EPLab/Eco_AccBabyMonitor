@@ -39,7 +39,7 @@ class SensorView(threading.Thread):
     AXISES = ['x', 'y', 'z']
 
     def __init__(self, num, label, text, frame, inq, fs):
-        self.debug = False
+        self.debug = True
         threading.Thread.__init__(self)
         self.sensor_id = num
         self.name = "Sensor %d" % self.sensor_id
@@ -127,8 +127,17 @@ class SensorView(threading.Thread):
             print self.name, " thread start"
         while True:
             if self._quit.isSet():
-                break
+                if not self.inq.empty():
+                    self.inq.get()
+                    self.inq.task_done()
+                    continue
+                else:
+                    break
             if self._stop.isSet():
+                if not self.inq.empty():
+                    self.inq.get()
+                    self.inq.task_done()
+                    continue
                 time.sleep(0.5)
                 continue
 
@@ -159,7 +168,7 @@ class SensorView(threading.Thread):
 
                 count = (count + 1) % self.display_tick_window
             except Exception as e:
-                pass
+                continue
 
             # update graph
             if needUpdate and (datetime.now() - update_time > self.update_interval):
@@ -327,6 +336,7 @@ class USBTransceiver(threading.Thread):
             x, y, z = self.raw2g(x, y, z, v)
             if self.qlist:
                 self.qlist[sid - 1].put((x, y, z))
+            return
             if self.debug:
                 print "RECV PKT FROM :\n",
                 stop = False
@@ -370,6 +380,7 @@ class USBTransceiver(threading.Thread):
                 if not self.send_q.empty():
                     self.send_q.get()
                     self.send_q.task_done()
+                    continue
                 time.sleep(0.5)
                 continue
 
@@ -382,7 +393,10 @@ class USBTransceiver(threading.Thread):
                     self.recv_packet()
                     self.send_q.task_done()
                 if msg[0] == "SEND":
-                    pass
+                    print "send pkt"
+                    time.sleep(1)
+                    self.send_q.task_done()
+                    print "send done"
             except Exception as e:
                 pass
 
