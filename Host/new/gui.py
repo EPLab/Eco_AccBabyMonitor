@@ -31,6 +31,9 @@ class MyApp:
         # callback functions
         builder.connect_callbacks(self)
 
+        # bind window close event
+        master.protocol('WM_DELETE_WINDOW', self.on_button_quit_clicked)
+
         # construct SensorView
         self.sv_q = []
         self.sv = []
@@ -87,7 +90,7 @@ class MyApp:
             self.dongle.setup_dumper()
             self.dongle.resume()
             print "send start"
-            self.dongle.send_start_packet(100)
+            self.dongle.send_start_packet(10)
             time.sleep(1)
             if not self.dongle.isAlive():
                 self.dongle.start()
@@ -102,8 +105,7 @@ class MyApp:
             if self.debug:
                 print "Pause"
             print "send stop"
-            for i in range(3):
-                self.dongle.send_stop_packet()
+            self.dongle.send_stop_packet()
             self.dongle.pause()
             print "exit dumper"
             self.dongle.exit_dumper()

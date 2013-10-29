@@ -280,6 +280,8 @@ class USBTransceiver(threading.Thread):
         time.sleep(0.01)
 
     def send_start_packet(self, fs):
+        if self.debug:
+            print "Enqueue START pkt"
         self.send_q.put(("SEND", fs))
 
     def _send_start_packet(self, fs):
@@ -314,7 +316,9 @@ class USBTransceiver(threading.Thread):
                 self.setup_dumper()
 
     def send_stop_packet(self):
-        self.send_q.put(0)
+        if self.debug:
+            print "Enqueue STOP pkt"
+        self.send_q.put(("SEND", 0))
 
     def recv_packet(self):
         try:
@@ -378,7 +382,11 @@ class USBTransceiver(threading.Thread):
 
             if self._pause.isSet():
                 if not self.send_q.empty():
-                    self.send_q.get()
+                    msg = self.send_q.get()
+                    if msg[0] == "SEND":
+                        print "send pkt"
+                        self._send_start_packet(msg[1])
+                        print "send done"
                     self.send_q.task_done()
                     continue
                 time.sleep(0.5)
@@ -394,7 +402,7 @@ class USBTransceiver(threading.Thread):
                     self.send_q.task_done()
                 if msg[0] == "SEND":
                     print "send pkt"
-                    time.sleep(1)
+                    self._send_start_packet(msg[1])
                     self.send_q.task_done()
                     print "send done"
             except Exception as e:
