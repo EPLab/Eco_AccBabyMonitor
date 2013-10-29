@@ -316,7 +316,6 @@ class USBTransceiver(threading.Thread):
             x, y, z = self.raw2g(x, y, z, v)
             if self.qlist:
                 self.qlist[sid - 1].put((x, y, z))
-                return
             if self.debug:
                 print "RECV PKT FROM :\n",
                 stop = False
