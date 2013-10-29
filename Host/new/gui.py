@@ -49,9 +49,9 @@ class MyApp:
  #       for i in range(5):
  #           self.sv[i].start()
 
- #       self.dongle = USBTransceiver(5, self.sv_q)
- #       self.dongle.exit_dumper()
- #       self.dongle.start()
+        self.dongle = USBTransceiver(5, self.sv_q)
+        self.dongle.exit_dumper()
+        self.dongle.start()
 
     def on_button_quit_clicked(self):
         if self.debug:
@@ -64,7 +64,12 @@ class MyApp:
 
         self.dongle.stop()
         time.sleep(1)
-        self.master.quit()
+        for i in range(5):
+            if self.sv[i].isAlive():
+                self.sv[i].join()
+        if self.dongle.isAlive():
+            self.dongle.join()
+        self.master.destroy()
 
     def on_button_start_clicked(self):
         text = self.builder.get_variable("current_start_text")
