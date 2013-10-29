@@ -66,9 +66,12 @@ class MyApp:
         time.sleep(1)
         for i in range(5):
             if self.sv[i].isAlive():
+                print "wait sv ", i
                 self.sv[i].join()
         if self.dongle.isAlive():
+            print "wait dongle"
             self.dongle.join()
+        print "ready to exit"
         self.master.destroy()
 
     def on_button_start_clicked(self):
@@ -85,6 +88,8 @@ class MyApp:
             print "send start"
 #            self.dongle.send_start_packet(100)
             time.sleep(1)
+            if not self.dongle.isAlive():
+                self.dongle.start()
             self.dongle.resume()
 
             text.set("Stop")

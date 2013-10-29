@@ -39,6 +39,7 @@ class SensorView(threading.Thread):
     AXISES = ['x', 'y', 'z']
 
     def __init__(self, num, label, text, frame, inq, fs):
+        self.debug = False
         threading.Thread.__init__(self)
         self.sensor_id = num
         self.name = "Sensor %d" % self.sensor_id
@@ -94,7 +95,6 @@ class SensorView(threading.Thread):
         # draw default graph
         self.f.tight_layout()
 
-        # setup associated eco handler
 
     def on(self):
         self.text.set(self.name + "(ON)")
@@ -122,13 +122,18 @@ class SensorView(threading.Thread):
         update_time = datetime.now() - self.update_interval
         tmp = None
         count = 0
+        needUpdate = False
+        if self.debug:
+            print self.name, " thread start"
         while True:
             if self._quit.isSet():
                 break
             if self._stop.isSet():
+                time.sleep(0.5)
                 continue
+
             try:
-                val = self.inq.get()
+                val = self.inq.get(timeout=5)
                 if not tmp:
                     tmp = list(val)
                 else:
@@ -150,17 +155,21 @@ class SensorView(threading.Thread):
                         # sensor itself is +-3G
                         if self.lim[axis] > 3000:
                             self.lim[axis] = 3000
+                    needUpdate = True
 
                 count = (count + 1) % self.display_tick_window
             except Exception as e:
-                continue
+                pass
 
             # update graph
-            if datetime.now() - update_time > self.update_interval:
-#                stime = datetime.now()
+            if needUpdate and (datetime.now() - update_time > self.update_interval):
                 self.task()
                 update_time = datetime.now()
-#                print (datetime.now() - stime)
+                needUpdate = False
+
+        if self.debug:
+            print self.name, " thread end"
+
 
     def task(self):  # update graph task takes 0.04 sec
         for axis in SensorView.AXISES:
@@ -178,17 +187,18 @@ class SensorView(threading.Thread):
             self.stop()
 
     def stop(self):
-        self._quit.set()
+        while not self._quit.isSet():
+            self._quit.set()
 
     def pause(self):
-        if not self._stop.isSet():
+        while not self._stop.isSet():
             self._stop.set()
-            self.off()
+        self.off()
 
     def resume(self):
-        if self._stop.isSet():
+        while self._stop.isSet():
             self._stop.clear()
-            self.on()
+        self.on()
 
 class USBTransceiver(threading.Thread):
     RECV_ADDR = ["01", "01", "0F", "65", "65"] # base station address, 3 bytes
@@ -205,6 +215,7 @@ class USBTransceiver(threading.Thread):
     def __init__(self, count, qlist=None):
         threading.Thread.__init__(self)
         self.debug = True
+        self.name = "USB Transceiver"
         self.eco_gid = 10
         self.sensor_count = count
         self.qlist = qlist
@@ -260,7 +271,7 @@ class USBTransceiver(threading.Thread):
         time.sleep(0.01)
 
     def send_start_packet(self, fs):
-        self.send_q.put(fs)
+        self.send_q.put(("SEND", fs))
 
     def _send_start_packet(self, fs):
         with self._ctrl_lock:
@@ -343,42 +354,58 @@ class USBTransceiver(threading.Thread):
         gz = int((0.0 + z - v)/ (2 ** 12) * (3000/333) * 1000)
         return gx, gy, gz
 
-
-
     def run(self):
+        if self.debug:
+            print self.name, "thread start"
         while True:
             if self._stop.isSet():
                 if not self.send_q.empty():
-                    self.pause()
+                    self.send_q.get()
+                    self.send_q.task_done()
                     continue
-                break
+                else:
+                    break
+
+            if self._pause.isSet():
+                if not self.send_q.empty():
+                    self.send_q.get()
+                    self.send_q.task_done()
+                time.sleep(0.5)
+                continue
+
+            if self.send_q.empty():
+                self.send_q.put(("RECV", None))
 
             try:
-                msg = self.send_q.get(False)
-                self._send_start_packet(msg)
-                self.send_q.task_done()
+                msg = self.send_q.get(timeout=1)
+                if msg[0] == "RECV":
+                    self.recv_packet()
+                    self.send_q.task_done()
+                if msg[0] == "SEND":
+                    pass
             except Exception as e:
                 pass
 
-            if self._pause.isSet():
-                continue
+        if self.debug:
+            print self.name, "thread end"
 
-            if not self.send_q.empty():
-                continue
-
-            with self._ctrl_lock:
-                self.recv_packet()
 
     def stop(self):
-        if not self._stop.isSet():
+        while not self._stop.isSet():
+            if self.debug:
+                print self.name, " stop"
             self._stop.set()
 
     def pause(self):
-        if not self._pause.isSet():
+        while not self._pause.isSet():
+            if self.debug:
+                print self.name, " pause"
             self._pause.set()
 
     def resume(self):
-        if self._pause.isSet():
+        while self._pause.isSet():
+            if self.debug:
+                print self.name, " resume"
             self._pause.clear()
 
 
