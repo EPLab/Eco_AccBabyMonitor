@@ -228,21 +228,32 @@ class USBTransceiver(threading.Thread):
         self.eco_gid = 10
         self.sensor_count = count
         self.qlist = qlist
-        self.connection = epl_usb_lib.EPL_USB()
-        self.transceiver = EPL_Transceiver.EPL_Transceiver(self.connection)
+
         self._stop = threading.Event()
         self._stop.clear()
         self._ctrl_lock = threading.Lock()
         self._pause = threading.Event()
         self.pause()
         self.send_q = Queue()
-        self.dumper_mode = False
         self.datalog_q = Queue()
-
         self.datalogger = DataLogger(self.datalog_q, "test.txt")
         self.datalogger.start()
 
-        self.setup_default()
+        # USB connection
+        self.dumper_mode = False
+        self.isConnected = False
+        self.setup_tranceiver()
+
+    def setup_tranceiver(self):
+        if not self.isConnected:
+            self.connection = epl_usb_lib.EPL_USB()
+            self.isConnected = self.connection.isConnected
+            if not self.isConnected:
+                if self.debug:
+                    print self.name + " is not connected"
+                return
+            self.transceiver = EPL_Transceiver.EPL_Transceiver(self.connection)
+            self.setup_default()
 
     def setup_default(self):
         self.transceiver.set_output_power(USBTransceiver.RF_POWER)
@@ -255,6 +266,10 @@ class USBTransceiver(threading.Thread):
         self.transceiver.set_dynamic_payload(0, OFF)
 
     def setup_sender(self):
+        self.setup_tranceiver()
+        if not self.isConnected:
+            return
+
         self.transceiver.set_dest_addr(0, USBTransceiver.SEND_ADDR)
         self.transceiver.set_data_length(0, USBTransceiver.RECV_WIDTH)
         self.transceiver.enter_sender_mode()
@@ -262,6 +277,10 @@ class USBTransceiver(threading.Thread):
         time.sleep(0.01)
 
     def setup_dumper(self):
+        self.setup_tranceiver()
+        if not self.isConnected:
+            return
+
         self.transceiver.set_dest_addr(0, USBTransceiver.RECV_ADDR)
         self.transceiver.set_data_length(0, USBTransceiver.RECV_WIDTH)
         self.transceiver.enter_dumper_mode()
@@ -275,6 +294,10 @@ class USBTransceiver(threading.Thread):
             print e
 
     def exit_dumper(self):
+        self.setup_tranceiver()
+        if not self.isConnected:
+            return
+
         cmd = OP_transceiver + EPL_EXIT_DUMPER
         try:
             self.connection.sendCmd(cmd)
@@ -289,35 +312,38 @@ class USBTransceiver(threading.Thread):
         self.send_q.put(("SEND", fs))
 
     def _send_start_packet(self, fs):
-        with self._ctrl_lock:
-            if self.dumper_mode:
-                self.exit_dumper()
+        self.setup_tranceiver()
+        if not self.isConnected:
+            return
 
-            self.setup_sender()
+        if self.dumper_mode:
+            self.exit_dumper()
 
-            # setup packet
-            cmd = OP_transceiver + EPL_USER_PLOAD + USRS_PLOAD
-            cmd += "%02X%02X%02X" % (USBTransceiver.PKT_LENGTH, self.eco_gid, fs)
-            try:
-                self.connection.sendCmd(cmd)
-                ret_val = self.connection.recvCmd(4)
-                if self.debug:
-                    print "Setup packet ", ret_val, fs
-            except Exception as e:
-                print e
+        self.setup_sender()
 
-            # setnd packet
-            cmd = OP_transceiver + EPL_RUN_SENDER + USRS_PLOAD
-            try:
-                self.connection.sendCmd(cmd)
-                ret_val = self.connection.recvCmd(4)
-                if self.debug:
-                    print "Send packet ", ret_val, fs
-            except Exception as e:
-                print e
+        # setup packet
+        cmd = OP_transceiver + EPL_USER_PLOAD + USRS_PLOAD
+        cmd += "%02X%02X%02X" % (USBTransceiver.PKT_LENGTH, self.eco_gid, fs)
+        try:
+            self.connection.sendCmd(cmd)
+            ret_val = self.connection.recvCmd(4)
+            if self.debug:
+                print "Setup packet ", ret_val, fs
+        except Exception as e:
+            print e
 
-            if self.dumper_mode:
-                self.setup_dumper()
+        # setnd packet
+        cmd = OP_transceiver + EPL_RUN_SENDER + USRS_PLOAD
+        try:
+            self.connection.sendCmd(cmd)
+            ret_val = self.connection.recvCmd(4)
+            if self.debug:
+                print "Send packet ", ret_val, fs
+        except Exception as e:
+            print e
+
+        if self.dumper_mode:
+            self.setup_dumper()
 
     def send_stop_packet(self):
         if self.debug:
@@ -325,8 +351,13 @@ class USBTransceiver(threading.Thread):
         self.send_q.put(("SEND", 0))
 
     def recv_packet(self):
+        self.setup_tranceiver()
+        if not self.isConnected:
+            return
+
         try:
             ret_val = self.connection.recvCmd(34)
+            # receive 2 readings in 1 packet
             payload = ret_val[0:32]
             pipe_num = ord(ret_val[32])
             data_length = ord(ret_val[33])
@@ -336,14 +367,20 @@ class USBTransceiver(threading.Thread):
             sid = (tmp & 0x0F)
             seq = ord(ret_val[1])
             (x, y, z, v) = struct.unpack(">hhhh", "".join(payload[2:10]))
-            x, y, z = self.raw2g(x, y, z, v)
+            gx, gy, gz = self.raw2g(x, y, z, v)
+            log = ["time", gid, sid, (x, y, z, v), (gx, gy, gz)]
             if self.qlist:
-                self.qlist[sid - 1].put((x, y, z))
+                self.qlist[sid - 1].put((gx, gy, gz))
+            self.datalog_q.put(log)
+
             seq = ord(payload[11])
             (x, y, z, v) = struct.unpack(">hhhh", "".join(payload[12:20]))
-            x, y, z = self.raw2g(x, y, z, v)
+            gx, gy, gz = self.raw2g(x, y, z, v)
+            log = ["time", gid, sid, (x, y, z, v), (gx, gy, gz)]
             if self.qlist:
-                self.qlist[sid - 1].put((x, y, z))
+                self.qlist[sid - 1].put((gx, gy, gz))
+            self.datalog_q.put(log)
+
             return
             if self.debug:
                 print "RECV PKT FROM :\n",
@@ -471,6 +508,8 @@ class DataLogger(threading.Thread):
         self._stop.set()
 
     def task(self, msg):
+        if self.debug:
+            print msg
         pass
 
 

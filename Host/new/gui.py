@@ -65,10 +65,12 @@ class MyApp:
         time.sleep(1)
         for i in range(5):
             if self.sv[i].isAlive():
-                print "wait sv ", i
+                if self.debug:
+                    print "wait sv ", i+1
                 self.sv[i].join()
         if self.dongle.isAlive():
-            print "wait dongle"
+            if self.debug:
+                print "wait dongle"
             self.dongle.join()
         print "ready to exit"
         self.master.destroy()
@@ -88,7 +90,7 @@ class MyApp:
             self.dongle.setup_dumper()
             self.dongle.resume()
             print "send start"
-            self.dongle.send_start_packet(10)
+            self.dongle.send_start_packet(100)
 #            time.sleep(1)
             if not self.dongle.isAlive():
                 self.dongle.start()
