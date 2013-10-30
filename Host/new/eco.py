@@ -368,7 +368,7 @@ class USBTransceiver(threading.Thread):
             seq = ord(ret_val[1])
             (x, y, z, v) = struct.unpack(">hhhh", "".join(payload[2:10]))
             gx, gy, gz = self.raw2g(x, y, z, v)
-            log = ["time", gid, sid, (x, y, z, v), (gx, gy, gz)]
+            log = ["time", gid, sid, seq, (x, y, z, v), (gx, gy, gz)]
             if self.qlist:
                 self.qlist[sid - 1].put((gx, gy, gz))
             self.datalog_q.put(log)
@@ -376,7 +376,7 @@ class USBTransceiver(threading.Thread):
             seq = ord(payload[11])
             (x, y, z, v) = struct.unpack(">hhhh", "".join(payload[12:20]))
             gx, gy, gz = self.raw2g(x, y, z, v)
-            log = ["time", gid, sid, (x, y, z, v), (gx, gy, gz)]
+            log = ["time", gid, sid, seq, (x, y, z, v), (gx, gy, gz)]
             if self.qlist:
                 self.qlist[sid - 1].put((gx, gy, gz))
             self.datalog_q.put(log)
