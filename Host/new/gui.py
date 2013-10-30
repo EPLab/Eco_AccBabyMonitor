@@ -48,10 +48,6 @@ class MyApp:
             self.sv.append(SensorView(i, label, text, frame, inq, 100))
             self.sv_q.append(inq)
 
-        # spawn threads for updating graphs, start in pause mode
- #       for i in range(5):
- #           self.sv[i].start()
-
         self.dongle = USBTransceiver(5, self.sv_q)
         self.dongle.exit_dumper()
         self.dongle.start()
@@ -78,6 +74,8 @@ class MyApp:
         self.master.destroy()
 
     def on_button_start_clicked(self):
+        button = self.builder.get_object("Button_Start", self.master)
+        button.configure(state="disabled")
         text = self.builder.get_variable("current_start_text")
         if self.debug:
             print "button start clicked"
@@ -91,7 +89,7 @@ class MyApp:
             self.dongle.resume()
             print "send start"
             self.dongle.send_start_packet(10)
-            time.sleep(1)
+#            time.sleep(1)
             if not self.dongle.isAlive():
                 self.dongle.start()
 
@@ -112,8 +110,9 @@ class MyApp:
 
             text.set("Start")
             self.started = False
-            for i in range(5):
-                self.sv[i].pause()
+#            for i in range(5):
+#                self.sv[i].pause()
+        button.configure(state="normal")
 
     def on_button_save_clicked(self):
         if self.debug:

@@ -237,6 +237,10 @@ class USBTransceiver(threading.Thread):
         self.pause()
         self.send_q = Queue()
         self.dumper_mode = False
+        self.datalog_q = Queue()
+
+        self.datalogger = DataLogger(self.datalog_q, "test.txt")
+        self.datalogger.start()
 
         self.setup_default()
 
@@ -410,6 +414,9 @@ class USBTransceiver(threading.Thread):
 
         if self.debug:
             print self.name, "thread end"
+        if self.debug:
+            print self.name, "Terminate datalogger thread"
+        self.datalogger.stop()
 
 
     def stop(self):
@@ -434,23 +441,34 @@ class USBTransceiver(threading.Thread):
 class DataLogger(threading.Thread):
     def __init__(self, inq, fname):
         threading.Thread.__init__(self)
+        self.debug = True
+        self.name = "DataLogger"
         self.inq = inq
         self.fname = fname
         self._stop = threading.Event()
+        self._stop.clear()
 
         self.fd = None
 
-    def start(self):
-        while not self._stop.isSet():
-            msg = self.inq.get()
-            self.task(msg)
-            self.inq.task_done()
-        while not self.inq.empty():
-            self.inq.task_done()
-        self.inq.join()
+    def run(self):
+        if self.debug:
+            print self.name + " Thread start"
+        while True:
+            if self._stop.isSet():
+                if self.inq.empty():
+                    break
+            try:
+                msg = self.inq.get(timeout=1)
+                self.task(msg)
+                self.inq.task_done()
+            except Exception as e:
+                pass
+
+        if self.debug:
+            print self.name + " Thread stop"
 
     def stop(self):
-        set._stop.set()
+        self._stop.set()
 
     def task(self, msg):
         pass
