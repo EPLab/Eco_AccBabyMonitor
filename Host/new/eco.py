@@ -555,16 +555,16 @@ class DataLogger(threading.Thread):
             # raw
             self.log_title_raw_format += "%6s%6s%6s%6s"
             self.log_raw_format += "%6d%6d%6d%6d"
-            self.log_title_raw_fields.append("%d:X" % idx)
-            self.log_title_raw_fields.append("%d:Y" % idx)
-            self.log_title_raw_fields.append("%d:Z" % idx)
-            self.log_title_raw_fields.append("%d:V" % idx)
+            self.log_title_raw_fields.append("%4d:X" % idx)
+            self.log_title_raw_fields.append("%4d:Y" % idx)
+            self.log_title_raw_fields.append("%4d:Z" % idx)
+            self.log_title_raw_fields.append("%4d:V" % idx)
             # converted
             self.log_title_format += "%8s%8s%8s"
             self.log_format += "%8d%8d%8d"
-            self.log_title_fields.append("%d:X(mg)" % idx)
-            self.log_title_fields.append("%d:Y(mg)" % idx)
-            self.log_title_fields.append("%d:Z(mg)" % idx)
+            self.log_title_fields.append("%-4d:X(mg)" % idx)
+            self.log_title_fields.append("%-4d:Y(mg)" % idx)
+            self.log_title_fields.append("%-4d:Z(mg)" % idx)
 
         self.log_raw_title = self.log_title_raw_format % tuple(self.log_title_raw_fields)
         self.log_title = self.log_title_format % tuple(self.log_title_fields)
@@ -587,16 +587,26 @@ class DataLogger(threading.Thread):
                 self.reading_map[seq][sid]["timestamp"] = datetime.now()
                 self.reading_map[seq][sid]["raw"] = [0] * 4
                 self.reading_map[seq][sid]["conv"] = [0] * 3
-        self.show_reading_map()
 
-    def show_reading_map(self):
+    def show_reading_map(self, no_conv=False):
         # print header
-        print "SEQ      TIMESTAMP   1:raw  1:conv  2:raw  2:conv  3:raw  3:conv  4:raw  4:conv  5:raw  5:conv"
+        if no_conv:
+            print "%3s %12s %23s %23s %23s %23s %23s " % ("SEQ", "TIMESTAMP", "1:RAW", "2:RAW", "3:RAW", "4:RAW", "5:RAW")
+        else:
+            print "SEQ    TIMESTAMP   1:raw  1:conv  2:raw  2:conv  3:raw  3:conv  4:raw  4:conv  5:raw  5:conv"
         # print content
         for seq in range(1, self.sample_fs+1):
-            print seq, self.getTimeStamp(self.reading_map[seq][0]['timestamp']),
+            print "%3d" % seq, self.getTimeStamp(self.reading_map[seq][0]['timestamp']),
             for sid in range(5):
-                print self.reading_map[seq][sid]['raw'], self.reading_map[seq][sid]['conv'],
+                print "[",
+                for idx in range(4):
+                    print "%4d" % self.reading_map[seq][sid]['raw'][idx],
+                print "]",
+                if not no_conv:
+                    print "[",
+                    for idx in range(3):
+                        print "%-4d" % self.reading_map[seq][sid]['conv'][idx],
+                    print "]",
             print ""
 
     def getTimeStamp(self, dt):
@@ -604,40 +614,39 @@ class DataLogger(threading.Thread):
         stamp += ".%03d" % (dt.microsecond / 1000)
         return stamp
 
-
     def task(self, msg):
-        if self.debug:
-            print msg
         timestamp = msg[0]
         sensor_group = msg[1]
-        sensor_id = msg[2]
+        sid = msg[2] - 1
         seq = msg[3]
         raw_reading = list(msg[4])
         conv_reading = list(msg[5])
 
-        print "haha", timestamp, sensor_id, seq
-#        log = make_log(timestamp, sensor_reading)
-        raw_log = self.make_raw_log(timestamp, self.reading_map[0][2]["raw"])
-#        print log
-        print raw_log
+        self.reading_map[seq][0]['timestamp'] = timestamp
+        self.reading_map[seq][sid]['raw'] = raw_reading
+        self.reading_map[seq][sid]['conv'] = conv_reading
+
+        if self.debug and seq == 1:
+#            self.show_reading_map(no_conv=True)
+            print self.log_raw_format % self.make_raw_log(1)
+            print self.log_format % self.make_log(1)
 
 
-    def make_raw_log(self, timestamp, sensor_reading):
-        print "test"
-        ret = [timestamp]
-        print ret
-        for i in range(5):
-            for j in range(4):
-                print sensor_reading[i][j]
-                ret.append(sensor_reading[i][j])
-        print ret
+    def make_raw_log(self, seq):
+        timestamp = self.reading_map[seq][0]['timestamp']
+        ret = [self.getTimeStamp(timestamp)]
+        for sid in range(5):
+            for idx in range(4):
+                ret.append(self.reading_map[seq][sid]['raw'][idx])
         return tuple(ret)
+        
 
-    def make_log(self, timestamp, sensor_reading):
-        ret = [timestamp]
-        for i in range(5):
-            for j in range(3):
-                ret.append(sensor_reading[i][j])
+    def make_log(self, seq):
+        timestamp = self.reading_map[seq][0]['timestamp']
+        ret = [self.getTimeStamp(timestamp)]
+        for sid in range(5):
+            for idx in range(3):
+                ret.append(self.reading_map[seq][sid]['conv'][idx])
         return tuple(ret)
 
     def run(self):
