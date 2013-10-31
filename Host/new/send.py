@@ -46,7 +46,7 @@ transceiver.set_crc_mode("02") # 0: off, 02: 8-bit, 03: 16-bit
 
 
 pkt_count = 1
-fs = 2
+fs = 100
 while True:
     if prog_stop:
         break

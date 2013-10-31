@@ -45,7 +45,7 @@ class EPL_Transceiver:
         elif ret_val == "NAK":
             return 1
         else:
-            print "ERROR GET_RET_VAL!!"
+            print "ERROR GET_RET_VAL!!", ret_val
             return -1
 
     def enter_sender_mode(self):

@@ -18,6 +18,7 @@ import transceiver.EPL_Transceiver as EPL_Transceiver
 import transceiver.epl_usb_lib as epl_usb_lib
 from transceiver.EPL_Transceiver_Param import *
 from datetime import datetime, timedelta
+import os.path
 
 # load GUI associated packages
 try:
@@ -181,18 +182,26 @@ class SensorView(threading.Thread):
 
 
     def task(self):  # update graph task takes 0.04 sec
-        for axis in SensorView.AXISES:
-            self.lines[axis].set_ydata(numpy.array(self.data[axis]))
-            self.ax[axis].set_ylim(self.lim[axis] * -1, self.lim[axis])
-            yticks = range(self.lim[axis] * -1, self.lim[axis], self.lim[axis] / 2)
-            yticks.append(self.lim[axis])
-            self.ax[axis].yaxis.set_ticks(yticks)
+        try:
+            for axis in SensorView.AXISES:
+                self.lines[axis].set_ydata(numpy.array(self.data[axis]))
+                self.ax[axis].set_ylim(self.lim[axis] * -1, self.lim[axis])
+                yticks = range(self.lim[axis] * -1, self.lim[axis], self.lim[axis] / 2)
+                yticks.append(self.lim[axis])
+                self.ax[axis].yaxis.set_ticks(yticks)
 #            self.ax[axis].relim()
 #            self.ax[axis].autoscale_view()
+        except Exception as e:
+            if self.debug:
+                print e
+                print self.name, " graph setup error"
+            return
+
         try:
             self.canvas.show()
         except Exception as e:
-            print e
+            if self.debug:
+                print e
             self.stop()
 
     def stop(self):
@@ -221,13 +230,16 @@ class USBTransceiver(threading.Thread):
     RF_ADDR_WIDTH = "03"
     RF_CRC_MODE = "02" # 0: off, 02: 8-bit, 03: 16-bit
 
-    def __init__(self, count, qlist=None):
+    TIMESTAMP_FORMAT = "%H:%M:%S"
+
+    def __init__(self, sensor_count, qlist=None, sampling_fs=10):
         threading.Thread.__init__(self)
         self.debug = True
         self.name = "USB Transceiver"
         self.eco_gid = 10
-        self.sensor_count = count
+        self.sensor_count = sensor_count
         self.qlist = qlist
+        self.sampling_fs = sampling_fs
 
         self._stop = threading.Event()
         self._stop.clear()
@@ -235,17 +247,38 @@ class USBTransceiver(threading.Thread):
         self._pause = threading.Event()
         self.pause()
         self.send_q = Queue()
-        self.datalog_q = Queue()
-        self.datalogger = DataLogger(self.datalog_q, "test.txt")
-        self.datalogger.start()
+
+        self.datalog_q = None
+        self.datalogger = None
 
         # USB connection
         self.dumper_mode = False
         self.isConnected = False
         self.setup_tranceiver()
 
+
+    def logger_start(self, fs):
+        if self.debug:
+            print self.name, " start data logger"
+        self.datalog_q = Queue()
+        self.datalogger = DataLogger(self.datalog_q, "test.txt", fs)
+        self.datalogger.start()
+
+    def logger_stop(self):
+        if self.datalogger:
+            if self.debug:
+                print self.name, " stop data logger"
+            self.datalogger.stop()
+
+    def getTimeStamp(self, dt):
+        stamp = dt.strftime(USBTransceiver.TIMESTAMP_FORMAT)
+        stamp += ".%03d" % (dt.microsecond / 1000)
+        return stamp
+
     def setup_tranceiver(self):
         if not self.isConnected:
+            if self.debug:
+                print self.name, " init"
             self.connection = epl_usb_lib.EPL_USB()
             self.isConnected = self.connection.isConnected
             if not self.isConnected:
@@ -256,6 +289,11 @@ class USBTransceiver(threading.Thread):
             self.setup_default()
 
     def setup_default(self):
+        if self.debug:
+            print self.name, " setup default settings"
+        self.setup_tranceiver()
+        if not self.isConnected:
+            return
         self.transceiver.set_output_power(USBTransceiver.RF_POWER)
         self.transceiver.set_channel(USBTransceiver.RF_CHANNEL)
         self.transceiver.set_datarate(USBTransceiver.RF_DATARATE)
@@ -266,6 +304,8 @@ class USBTransceiver(threading.Thread):
         self.transceiver.set_dynamic_payload(0, OFF)
 
     def setup_sender(self):
+        if self.debug:
+            print self.name, " prepare to send"
         self.setup_tranceiver()
         if not self.isConnected:
             return
@@ -274,9 +314,11 @@ class USBTransceiver(threading.Thread):
         self.transceiver.set_data_length(0, USBTransceiver.RECV_WIDTH)
         self.transceiver.enter_sender_mode()
         # pause before setting is ready
-        time.sleep(0.01)
+        time.sleep(0.1)
 
     def setup_dumper(self):
+        if self.debug:
+            print self.name, " prepare to receive"
         self.setup_tranceiver()
         if not self.isConnected:
             return
@@ -285,7 +327,7 @@ class USBTransceiver(threading.Thread):
         self.transceiver.set_data_length(0, USBTransceiver.RECV_WIDTH)
         self.transceiver.enter_dumper_mode()
         # pause before setting is ready
-        time.sleep(0.01)
+        time.sleep(0.1)
         # start listening
         cmd = OP_transceiver + EPL_RUN_DUMPER + "00"
         try:
@@ -294,6 +336,8 @@ class USBTransceiver(threading.Thread):
             print e
 
     def exit_dumper(self):
+        if self.debug:
+            print self.name, " exit dumper mode"
         self.setup_tranceiver()
         if not self.isConnected:
             return
@@ -304,7 +348,7 @@ class USBTransceiver(threading.Thread):
         except Exception as e:
             print e
         # pause before transceiver is ready
-        time.sleep(0.01)
+        time.sleep(0.1)
 
     def send_start_packet(self, fs):
         if self.debug:
@@ -328,7 +372,7 @@ class USBTransceiver(threading.Thread):
             self.connection.sendCmd(cmd)
             ret_val = self.connection.recvCmd(4)
             if self.debug:
-                print "Setup packet ", ret_val, fs
+                print "Setup packet ", ret_val, fs, cmd
         except Exception as e:
             print e
 
@@ -357,6 +401,13 @@ class USBTransceiver(threading.Thread):
 
         try:
             ret_val = self.connection.recvCmd(34)
+            if not ret_val:
+                return
+            if len(ret_val) != 34:
+                return
+
+            # get timestamp
+            timestamp = datetime.now()
             # receive 2 readings in 1 packet
             payload = ret_val[0:32]
             pipe_num = ord(ret_val[32])
@@ -368,18 +419,21 @@ class USBTransceiver(threading.Thread):
             seq = ord(ret_val[1])
             (x, y, z, v) = struct.unpack(">hhhh", "".join(payload[2:10]))
             gx, gy, gz = self.raw2g(x, y, z, v)
-            log = ["time", gid, sid, seq, (x, y, z, v), (gx, gy, gz)]
+            log = [timestamp, gid, sid, seq, (x, y, z, v), (gx, gy, gz)]
             if self.qlist:
                 self.qlist[sid - 1].put((gx, gy, gz))
-            self.datalog_q.put(log)
+            if self.datalog_q:
+                self.datalog_q.put(log)
 
+            timestamp += timedelta(milliseconds=(1000/self.sampling_fs))
             seq = ord(payload[11])
             (x, y, z, v) = struct.unpack(">hhhh", "".join(payload[12:20]))
             gx, gy, gz = self.raw2g(x, y, z, v)
-            log = ["time", gid, sid, seq, (x, y, z, v), (gx, gy, gz)]
+            log = [timestamp, gid, sid, seq, (x, y, z, v), (gx, gy, gz)]
             if self.qlist:
                 self.qlist[sid - 1].put((gx, gy, gz))
-            self.datalog_q.put(log)
+            if self.datalog_q:
+                self.datalog_q.put(log)
 
             return
             if self.debug:
@@ -451,9 +505,12 @@ class USBTransceiver(threading.Thread):
 
         if self.debug:
             print self.name, "thread end"
-        if self.debug:
-            print self.name, "Terminate datalogger thread"
-        self.datalogger.stop()
+        # Terminate USB Connection
+        self.connection.close()
+        if self.datalogger:
+            if self.debug:
+                print self.name, "Terminate datalogger thread"
+            self.datalogger.stop()
 
 
     def stop(self):
@@ -476,24 +533,132 @@ class USBTransceiver(threading.Thread):
 
 
 class DataLogger(threading.Thread):
-    def __init__(self, inq, fname):
+    FILENAME_DATE_FORMAT  = "%Y%m%d_%H%M%S"
+    TIMESTAMP_FORMAT = "%H:%M:%S"
+
+    def __init__(self, inq, fname, sample_fs):
         threading.Thread.__init__(self)
         self.debug = True
         self.name = "DataLogger"
+        # genrate log title format and fields
+        # raw data log
+        self.log_title_raw_fields = ["TimeStamp"]
+        self.log_title_raw_format = "%14s"
+        self.log_raw_format = "%14s"
+        # converted data log
+        self.log_title_fields = ["TimeStamp"]
+        self.log_title_format = "%14s"
+        self.log_format = "%14s"
+
+        for i in range(5):
+            idx = i + 1
+            # raw
+            self.log_title_raw_format += "%6s%6s%6s%6s"
+            self.log_raw_format += "%6d%6d%6d%6d"
+            self.log_title_raw_fields.append("%d:X" % idx)
+            self.log_title_raw_fields.append("%d:Y" % idx)
+            self.log_title_raw_fields.append("%d:Z" % idx)
+            self.log_title_raw_fields.append("%d:V" % idx)
+            # converted
+            self.log_title_format += "%8s%8s%8s"
+            self.log_format += "%8d%8d%8d"
+            self.log_title_fields.append("%d:X(mg)" % idx)
+            self.log_title_fields.append("%d:Y(mg)" % idx)
+            self.log_title_fields.append("%d:Z(mg)" % idx)
+
+        self.log_raw_title = self.log_title_raw_format % tuple(self.log_title_raw_fields)
+        self.log_title = self.log_title_format % tuple(self.log_title_fields)
+
         self.inq = inq
         self.fname = fname
+        self.sample_fs = sample_fs
         self._stop = threading.Event()
         self._stop.clear()
 
-        self.fd = None
+        self.rfd = None
+        self.cfd = None
+
+        # data map init.
+        self.reading_map = {}
+        for seq in range(1, sample_fs+1):
+            self.reading_map[seq] = {}
+            for sid in range(5):
+                self.reading_map[seq][sid] = {}
+                self.reading_map[seq][sid]["timestamp"] = datetime.now()
+                self.reading_map[seq][sid]["raw"] = [0] * 4
+                self.reading_map[seq][sid]["conv"] = [0] * 3
+        self.show_reading_map()
+
+    def show_reading_map(self):
+        # print header
+        print "SEQ      TIMESTAMP   1:raw  1:conv  2:raw  2:conv  3:raw  3:conv  4:raw  4:conv  5:raw  5:conv"
+        # print content
+        for seq in range(1, self.sample_fs+1):
+            print seq, self.getTimeStamp(self.reading_map[seq][0]['timestamp']),
+            for sid in range(5):
+                print self.reading_map[seq][sid]['raw'], self.reading_map[seq][sid]['conv'],
+            print ""
+
+    def getTimeStamp(self, dt):
+        stamp = dt.strftime(USBTransceiver.TIMESTAMP_FORMAT)
+        stamp += ".%03d" % (dt.microsecond / 1000)
+        return stamp
+
+
+    def task(self, msg):
+        if self.debug:
+            print msg
+        timestamp = msg[0]
+        sensor_group = msg[1]
+        sensor_id = msg[2]
+        seq = msg[3]
+        raw_reading = list(msg[4])
+        conv_reading = list(msg[5])
+
+        print "haha", timestamp, sensor_id, seq
+#        log = make_log(timestamp, sensor_reading)
+        raw_log = self.make_raw_log(timestamp, self.reading_map[0][2]["raw"])
+#        print log
+        print raw_log
+
+
+    def make_raw_log(self, timestamp, sensor_reading):
+        print "test"
+        ret = [timestamp]
+        print ret
+        for i in range(5):
+            for j in range(4):
+                print sensor_reading[i][j]
+                ret.append(sensor_reading[i][j])
+        print ret
+        return tuple(ret)
+
+    def make_log(self, timestamp, sensor_reading):
+        ret = [timestamp]
+        for i in range(5):
+            for j in range(3):
+                ret.append(sensor_reading[i][j])
+        return tuple(ret)
 
     def run(self):
+        if self.debug:
+            print self.name, " creat log files"
+        tmp = datetime.now().strftime(DataLogger.FILENAME_DATE_FORMAT)
+        raw_filename  = "data/" + tmp + "_raw.txt"
+        conv_filename = "data/" + tmp + ".txt"
+        if not os.path.exists("data"):
+            os.makedirs("data")
+#        self.rfd = open(raw_filename, 'w')
+#        self.cfd = open(conv_filename, 'w')
+#        self.rfd.write(self.log_raw_title + '\n')
+#        self.cfd.write(self.log_title + '\n')
         if self.debug:
             print self.name + " Thread start"
         while True:
             if self._stop.isSet():
+                # kepp logging till no more data
                 if self.inq.empty():
-                    break
+                    break                   
             try:
                 msg = self.inq.get(timeout=1)
                 self.task(msg)
@@ -503,15 +668,15 @@ class DataLogger(threading.Thread):
 
         if self.debug:
             print self.name + " Thread stop"
+        if self.debug:
+            print self.name, " finish log files"
+#        self.rfd.flush()
+#        self.cfd.flush()
+#        self.rfd.close()
+#        self.cfd.close()
 
     def stop(self):
         self._stop.set()
-
-    def task(self, msg):
-        if self.debug:
-            print msg
-        pass
-
 
 if __name__ == "__main__":
     dongle = USBTransceiver(5)

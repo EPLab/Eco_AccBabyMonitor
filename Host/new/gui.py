@@ -48,7 +48,7 @@ class MyApp:
             self.sv.append(SensorView(i, label, text, frame, inq, 100))
             self.sv_q.append(inq)
 
-        self.dongle = USBTransceiver(5, self.sv_q)
+        self.dongle = USBTransceiver(5, self.sv_q, 10)
         self.dongle.exit_dumper()
         self.dongle.start()
 
@@ -84,14 +84,15 @@ class MyApp:
         if not self.started:
             if self.debug:
                 print "Resume"
+            # start data logger
+            self.dongle.logger_start(10)
             # dongle enter dumper mode
+            self.dongle.resume()
+            print "send start"
+            self.dongle.send_start_packet(10)
             print "enter dumper"
             self.dongle.dumper_mode = True
             self.dongle.setup_dumper()
-            self.dongle.resume()
-            print "send start"
-            self.dongle.send_start_packet(100)
-#            time.sleep(1)
             if not self.dongle.isAlive():
                 self.dongle.start()
 
@@ -109,11 +110,11 @@ class MyApp:
             self.dongle.pause()
             print "exit dumper"
             self.dongle.exit_dumper()
+            # stop data logger
+            self.dongle.logger_stop()
 
             text.set("Start")
             self.started = False
-#            for i in range(5):
-#                self.sv[i].pause()
         button.configure(state="normal")
 
     def on_button_save_clicked(self):
