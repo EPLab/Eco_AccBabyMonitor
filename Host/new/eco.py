@@ -5,8 +5,9 @@ import matplotlib
 matplotlib.use('TkAgg')
 
 # load packages
-from numpy import arange, sin, pi
+#from numpy import arange, sin, pi
 import numpy
+from numpy import arange
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import mpl_toolkits.axisartist as AA
@@ -168,7 +169,7 @@ class SensorView(threading.Thread):
                     needUpdate = True
 
                 count = (count + 1) % self.display_tick_window
-            except Exception as e:
+            except Exception:
                 continue
 
             # update graph
@@ -193,7 +194,6 @@ class SensorView(threading.Thread):
 #            self.ax[axis].autoscale_view()
         except Exception as e:
             if self.debug:
-                print e
                 print self.name, " graph setup error"
             return
 
@@ -248,8 +248,12 @@ class USBTransceiver(threading.Thread):
         self.pause()
         self.send_q = Queue()
 
-        self.datalog_q = None
-        self.datalogger = None
+        # queu for datalogger
+        self.log_q_list = None
+        self.dataloggers = None
+
+#        self.datalog_q = None
+#        self.datalogger = None
 
         # USB connection
         self.dumper_mode = False
@@ -259,16 +263,25 @@ class USBTransceiver(threading.Thread):
 
     def logger_start(self, fs):
         if self.debug:
-            print self.name, " start data logger"
-        self.datalog_q = Queue()
-        self.datalogger = DataLogger(self.datalog_q, "test.txt", fs)
-        self.datalogger.start()
+            print self.name, " start data loggers"
+#        self.datalog_q = Queue()
+#        self.datalogger = DataLogger(self.datalog_q, "test.txt", fs)
+#        self.datalogger.start()
+        # clean up old Queues
+        self.log_q_list = list()
+        self.dataloggers = list()
+        for i in range(self.sensor_count):
+            self.log_q_list.append(Queue())
+            self.dataloggers.append(DataLogger(self.log_q_list[i], "Sensor%d" % (i+1),  fs))
+            self.dataloggers[i].start()
 
     def logger_stop(self):
-        if self.datalogger:
+        if self.dataloggers:
             if self.debug:
-                print self.name, " stop data logger"
-            self.datalogger.stop()
+                print self.name, " stop data loggers"
+#            self.datalogger.stop()
+        for i in range(self.sensor_count):
+            self.dataloggers[i].stop()
 
     def getTimeStamp(self, dt):
         stamp = dt.strftime(USBTransceiver.TIMESTAMP_FORMAT)
@@ -333,6 +346,7 @@ class USBTransceiver(threading.Thread):
         try:
             self.connection.sendCmd(cmd)
         except Exception as e:
+            print "setup dumper exception"
             print e
 
     def exit_dumper(self):
@@ -346,6 +360,7 @@ class USBTransceiver(threading.Thread):
         try:
             self.connection.sendCmd(cmd)
         except Exception as e:
+            print "exit dumper exception"
             print e
         # pause before transceiver is ready
         time.sleep(0.1)
@@ -410,20 +425,23 @@ class USBTransceiver(threading.Thread):
             timestamp = datetime.now()
             # receive 2 readings in 1 packet
             payload = ret_val[0:32]
-            pipe_num = ord(ret_val[32])
+#            pipe_num = ord(ret_val[32])
             data_length = ord(ret_val[33])
 
             tmp = ord(ret_val[0])
             gid = (tmp & 0xF0) >> 4
             sid = (tmp & 0x0F)
             seq = ord(ret_val[1])
+            timestamp -= timedelta(milliseconds=(1000 * sid))
             (x, y, z, v) = struct.unpack(">hhhh", "".join(payload[2:10]))
             gx, gy, gz = self.raw2g(x, y, z, v)
             log = [timestamp, gid, sid, seq, (x, y, z, v), (gx, gy, gz)]
             if self.qlist:
                 self.qlist[sid - 1].put((gx, gy, gz))
-            if self.datalog_q:
-                self.datalog_q.put(log)
+#            if self.datalog_q:
+#                self.datalog_q.put(log)
+            if self.log_q_list[sid-1]:
+                self.log_q_list[sid-1].put(log)
 
             timestamp += timedelta(milliseconds=(1000/self.sampling_fs))
             seq = ord(payload[11])
@@ -432,8 +450,10 @@ class USBTransceiver(threading.Thread):
             log = [timestamp, gid, sid, seq, (x, y, z, v), (gx, gy, gz)]
             if self.qlist:
                 self.qlist[sid - 1].put((gx, gy, gz))
-            if self.datalog_q:
-                self.datalog_q.put(log)
+#            if self.datalog_q:
+#                self.datalog_q.put(log)
+            if self.log_q_list[sid-1]:
+                self.log_q_list[sid-1].put(log)
 
             return
             if self.debug:
@@ -451,11 +471,9 @@ class USBTransceiver(threading.Thread):
                             stop = True
                             break
                     print ""
-            dispatch = True
         except Exception as e:
             if self.debug:
-                print "Recv pkt exception"
-            print e
+                print "Recv pkt exception: ", e
 
     def raw2g(self, x, y, z, v):
         gx = int((0.0 + x - v)/ (2 ** 12) * (3000/333) * 1000)
@@ -500,17 +518,19 @@ class USBTransceiver(threading.Thread):
                     self._send_start_packet(msg[1])
                     self.send_q.task_done()
                     print "send done"
-            except Exception as e:
+            except Exception:
                 pass
 
         if self.debug:
             print self.name, "thread end"
         # Terminate USB Connection
         self.connection.close()
-        if self.datalogger:
+
+        if self.dataloggers:
             if self.debug:
                 print self.name, "Terminate datalogger thread"
-            self.datalogger.stop()
+            for datalogger in self.dataloggers:
+                datalogger.stop()
 
 
     def stop(self):
@@ -536,10 +556,11 @@ class DataLogger(threading.Thread):
     FILENAME_DATE_FORMAT  = "%Y%m%d_%H%M%S"
     TIMESTAMP_FORMAT = "%H:%M:%S"
 
-    def __init__(self, inq, fname, sample_fs):
+    def __init__(self, inq, prefix, sample_fs):
         threading.Thread.__init__(self)
         self.debug = True
-        self.name = "DataLogger"
+        self.prefix = prefix
+        self.name = self.prefix + " DataLogger"
         # genrate log title format and fields
         # raw data log
         self.log_title_raw_fields = ["TimeStamp"]
@@ -570,7 +591,6 @@ class DataLogger(threading.Thread):
         self.log_title = self.log_title_format % tuple(self.log_title_fields)
 
         self.inq = inq
-        self.fname = fname
         self.sample_fs = sample_fs
         self._stop = threading.Event()
         self._stop.clear()
@@ -650,11 +670,12 @@ class DataLogger(threading.Thread):
         return tuple(ret)
 
     def run(self):
-        if self.debug:
-            print self.name, " creat log files"
         tmp = datetime.now().strftime(DataLogger.FILENAME_DATE_FORMAT)
-        raw_filename  = "data/" + tmp + "_raw.txt"
-        conv_filename = "data/" + tmp + ".txt"
+        raw_filename  = "data/%s_%s_raw.txt" % (self.prefix, tmp)
+        conv_filename = "data/%s_%s.txt" % (self.prefix, tmp)
+        if self.debug:
+            print self.name, " creat log file: %s" % (conv_filename)
+
         if not os.path.exists("data"):
             os.makedirs("data")
 #        self.rfd = open(raw_filename, 'w')
@@ -672,13 +693,13 @@ class DataLogger(threading.Thread):
                 msg = self.inq.get(timeout=1)
                 self.task(msg)
                 self.inq.task_done()
-            except Exception as e:
+            except Exception:
                 pass
 
         if self.debug:
             print self.name + " Thread stop"
         if self.debug:
-            print self.name, " finish log files"
+            print self.name, " close log file"
 #        self.rfd.flush()
 #        self.cfd.flush()
 #        self.rfd.close()

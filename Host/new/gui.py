@@ -89,7 +89,9 @@ class MyApp:
             # dongle enter dumper mode
             self.dongle.resume()
             print "send start"
-            self.dongle.send_start_packet(10)
+            for i in range(5):
+                self.dongle.send_start_packet(10)
+                time.sleep(0.1)
             print "enter dumper"
             self.dongle.dumper_mode = True
             self.dongle.setup_dumper()
@@ -106,7 +108,9 @@ class MyApp:
             if self.debug:
                 print "Pause"
             print "send stop"
-            self.dongle.send_stop_packet()
+            for i in range(5):
+                self.dongle.send_stop_packet()
+                time.sleep(0.1)            
             self.dongle.pause()
             print "exit dumper"
             self.dongle.exit_dumper()
