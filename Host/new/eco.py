@@ -299,7 +299,7 @@ class USBTransceiver(threading.Thread):
 
     def set_sample_fs(self, fs):
         self.sampling_fs = fs
-        
+
     def logger_start(self, fs):
         if self.debug:
             print self.name, " start data loggers"
@@ -739,13 +739,14 @@ class DataLogger(threading.Thread):
 
     def run(self):
         tmp = datetime.now().strftime(DataLogger.FILENAME_DATE_FORMAT)
-        raw_filename  = "data/%s_%s_raw.txt" % (self.prefix, tmp)
-        conv_filename = "data/%s_%s.txt" % (self.prefix, tmp)
+        datapath = "data/" + tmp
+        raw_filename  = "%s/%s_raw.txt" % (datapath, self.prefix)
+        conv_filename = "%s/%s.txt" % (datapath, self.prefix)
         if self.debug:
             print self.name, " creat log file: %s" % (conv_filename)
 
-        if not os.path.exists("data"):
-            os.makedirs("data")
+        if not os.path.exists(datapath):
+            os.makedirs(datapath)
 #        self.rfd = open(raw_filename, 'w')
         self.cfd = open(conv_filename, 'w')
 #        self.rfd.write(self.log_raw_title + '\n')
