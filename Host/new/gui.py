@@ -18,6 +18,7 @@ class MyApp:
         self.debug = True
 
         self.started = False
+        self.sample_fs = 50
 
         self.master = master
         # create builder
@@ -90,7 +91,7 @@ class MyApp:
             self.dongle.resume()
             print "send start"
             for i in range(5):
-                self.dongle.send_start_packet(10)
+                self.dongle.send_start_packet(self.sample_fs)
                 time.sleep(0.1)
             print "enter dumper"
             self.dongle.dumper_mode = True
@@ -125,29 +126,19 @@ class MyApp:
         if self.debug:
             print "button save clicked"
 
-    def on_10Hz_clicked(self):
-        if self.debug:
-            print "select 10Hz"
-        text_var = self.builder.get_variable('current_freq_text')
-        text_var.set("10Hz")
-
     def on_20Hz_clicked(self):
         if self.debug:
             print "select 20Hz"
         text_var = self.builder.get_variable('current_freq_text')
         text_var.set("20Hz")
+        self.sample_fs = 20
 
     def on_50Hz_clicked(self):
         if self.debug:
             print "select 50Hz"
         text_var = self.builder.get_variable('current_freq_text')
         text_var.set("50Hz")
-
-    def on_100Hz_clicked(self):
-        if self.debug:
-            print "select 100Hz"
-        text_var = self.builder.get_variable('current_freq_text')
-        text_var.set("100Hz")
+        self.sample_fs = 50
 
 
 if __name__ == "__main__":
