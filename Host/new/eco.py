@@ -562,6 +562,13 @@ class DataLogger(threading.Thread):
         self.prefix = prefix
         self.name = self.prefix + " DataLogger"
         # genrate log title format and fields
+        # one sensor log format
+        self.sensor_title_raw_format = "%14s\t%6s\t%6s\t%6s\t%6s"
+        self.sensor_title_raw_fields = ["TimeStamp", "X", "Y", "Z", "Vref"]
+        self.sensor_title_fields = ["TimeStamp", "X(mg)", "Y(mg)", "Z(mg)"]
+        self.sensor_title_format = "%14s\t%6s\t%6s\t%6s\t%6s"
+        self.sensor_raw_format = "%14s\t%6d\t%6d\t%6d\t%6d"
+        self.sensor_format = "%14s\t%6d\t%6d\t%6d"
         # raw data log
         self.log_title_raw_fields = ["TimeStamp"]
         self.log_title_raw_format = "%14s"
@@ -642,14 +649,24 @@ class DataLogger(threading.Thread):
         raw_reading = list(msg[4])
         conv_reading = list(msg[5])
 
-        self.reading_map[seq][0]['timestamp'] = timestamp
-        self.reading_map[seq][sid]['raw'] = raw_reading
-        self.reading_map[seq][sid]['conv'] = conv_reading
+#        self.reading_map[seq][0]['timestamp'] = timestamp
+#        self.reading_map[seq][sid]['raw'] = raw_reading
+#        self.reading_map[seq][sid]['conv'] = conv_reading
+#
+#        if self.debug and seq == 1:
+##            self.show_reading_map(no_conv=True)
+#            print self.log_raw_format % self.make_raw_log(1)
+#            print self.log_format % self.make_log(1)
 
-        if self.debug and seq == 1:
-#            self.show_reading_map(no_conv=True)
-            print self.log_raw_format % self.make_raw_log(1)
-            print self.log_format % self.make_log(1)
+        log = [self.getTimeStamp(timestamp)]
+        raw_log = [self.getTimeStamp(timestamp)]
+        for idx in range(4):
+            raw_log.append(raw_reading[idx])
+        for idx in range(3):
+            log.append(conv_reading[idx])
+#        print raw_log
+        print self.sensor_raw_format % tuple(raw_log)
+        print self.sensor_format % tuple(log)
 
 
     def make_raw_log(self, seq):
