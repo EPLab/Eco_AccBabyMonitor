@@ -11,8 +11,9 @@
 #define MSG_LENGTH		20
 #define RF_CH			(10 << 1)
 #define ADDR_LENGTH		3
-#define ECO_ID			2
-#define GROUP_ID		10
+
+static char GROUP_ID = 10;
+static char ECO_ID = 5;
 
 #define LED_Off()		P0 |= 0x20
 #define LED_On()		P0 &= ~(0x20)
@@ -35,15 +36,16 @@ char dst_addr[3] = { 0x0F, 0x01, 0x01 };
 extern char rf_buf[RF_BUF_LEN];
 char rflag;
 char msg[MSG_LENGTH];
+char start = 0;
 
 void main()
 {
 	int i;
-	char start = 1;
+
 	char seq = 0;
 	char gid = 0;
-	char fs = 100;
-	int delay = 0;
+	char fs = 10;
+	int delay = 1000 / fs;
 	store_cpu_rate(16);
 	/* init led */
 	P0_DIR &= ~0x28;
@@ -86,14 +88,12 @@ void main()
 					seq = 0;
 					delay = 1000 / fs;
 				}
-			} else{
-				rflag = 0;
-				continue;
 			}
+			rflag = 0;
 		}
 
 		if (start){
-			mdelay(delay);
+			blink_led();
 			msg[0] = (GROUP_ID << 4) | (ECO_ID);
 			msg[1] = seq + 1;
 			read_acc(0);
@@ -104,14 +104,23 @@ void main()
 			read_acc(10);
 			seq = (seq + 1) % fs;
 
-			if (ECO_ID > 1){
-				mdelay(ECO_ID);
+			if (ECO_ID > 0){
+				mdelay(ECO_ID * 2);
 			}
 
 			rf_enter_tx();
 			rf_send(dst_addr, ADDR_LENGTH, msg, MSG_LENGTH);
 			rf_enter_rx();
-			blink_led();
+			mdelay(delay - 2 - (ECO_ID * 2));
+		} else{
+			LED_Off();
+			mdelay(1000);
+			for (i = 0; i < ECO_ID; i++){
+				LED_On();
+				mdelay(100);
+				LED_Off();
+				mdelay(100);
+			}
 		}
 	}
 }
@@ -119,13 +128,14 @@ void main()
 void interrupt_rf() interrupt 10
 {
 	unsigned char i;
-
+	blink_led();
 	i=0;
 	while (DR1) {
 		rf_buf[i++] = spi_write_then_read(0);	/* clock in data */
 	}
 
 	rflag = 1;
+	start = 0;
 	/* clean up rf interrupt */
 	CE = 0;
 	EXIF &= ~0x40;
