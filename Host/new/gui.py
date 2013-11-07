@@ -46,7 +46,7 @@ class MyApp:
             text_id = "label_sensor_%d_text" % i
             text = builder.get_variable(text_id)
             inq = Queue()
-            self.sv.append(SensorView(i, label, text, frame, inq, 100))
+            self.sv.append(SensorView(i, label, text, frame, inq, self.sample_fs))
             self.sv_q.append(inq)
 
         self.dongle = USBTransceiver(5, self.sv_q, 10)
@@ -85,8 +85,10 @@ class MyApp:
         if not self.started:
             if self.debug:
                 print "Resume"
+            for i in range(5):
+                self.sv[i].set_sample_fs(self.sample_fs)
             # start data logger
-            self.dongle.logger_start(10)
+            self.dongle.logger_start(self.sample_fs)
             # dongle enter dumper mode
             self.dongle.resume()
             print "send start"

@@ -66,7 +66,7 @@ class SensorView(threading.Thread):
         self.lim = {}
         for axis in SensorView.AXISES:
             self.data[axis] = []
-            self.lim[axis] = 1000
+            self.lim[axis] = 500
         self.data['t'] = []
         self.ax = {}
         self.lines = {}
@@ -88,6 +88,10 @@ class SensorView(threading.Thread):
         s = 0 * t
         for axis in SensorView.AXISES:
             self.data[axis] = [0.0] * self.display_data_length
+            self.ax[axis].set_ylim(self.lim[axis] * -1, self.lim[axis])
+            yticks = range(self.lim[axis] * -1, self.lim[axis], self.lim[axis] / 2)
+            yticks.append(self.lim[axis])
+            self.ax[axis].yaxis.set_ticks(yticks)
         self.lines['x'], = self.ax['x'].plot(t, s, SensorView.XCOLOR)
         self.lines['y'], = self.ax['y'].plot(t, s, SensorView.YCOLOR)
         self.lines['z'], = self.ax['z'].plot(t, s, SensorView.ZCOLOR)
@@ -96,6 +100,36 @@ class SensorView(threading.Thread):
 
         # draw default graph
         self.f.tight_layout()
+
+    def set_sample_fs(self, fs):
+        # clear the old graph
+        for axis in SensorView.AXISES:
+            self.ax[axis].clear()
+
+        # setup new graph according to new sampling freq.
+        self.display_data_length    = int(self.display_time_duration / self.display_tick)
+        self.display_tick_window    = int(self.display_tick * 1000) / (1000 / self.fs)
+        t = arange(0.0, self.display_time_duration, self.display_tick)
+        s = 0 * t
+        for axis in SensorView.AXISES:
+            self.data[axis] = [0.0] * self.display_data_length
+            self.ax[axis].set_ylim(self.lim[axis] * -1, self.lim[axis])
+            yticks = range(self.lim[axis] * -1, self.lim[axis], self.lim[axis] / 2)
+            yticks.append(self.lim[axis])
+            self.ax[axis].yaxis.set_ticks(yticks)
+        self.lines['x'], = self.ax['x'].plot(t, s, SensorView.XCOLOR)
+        self.lines['y'], = self.ax['y'].plot(t, s, SensorView.YCOLOR)
+        self.lines['z'], = self.ax['z'].plot(t, s, SensorView.ZCOLOR)
+
+
+        self.default_setup()
+
+        # draw default graph
+        self.f.tight_layout()
+
+        # update canvas
+        self.canvas.show()
+
 
 
     def on(self):
@@ -185,7 +219,9 @@ class SensorView(threading.Thread):
     def task(self):  # update graph task takes 0.04 sec
         try:
             for axis in SensorView.AXISES:
-                self.lines[axis].set_ydata(numpy.array(self.data[axis]))
+                tmp = self.data[axis][:]
+                tmp.reverse()
+                self.lines[axis].set_ydata(numpy.array(tmp))
                 self.ax[axis].set_ylim(self.lim[axis] * -1, self.lim[axis])
                 yticks = range(self.lim[axis] * -1, self.lim[axis], self.lim[axis] / 2)
                 yticks.append(self.lim[axis])
@@ -194,7 +230,7 @@ class SensorView(threading.Thread):
 #            self.ax[axis].autoscale_view()
         except Exception as e:
             if self.debug:
-                print self.name, " graph setup error"
+                print self.name, " graph setup error", e
             return
 
         try:
@@ -432,7 +468,7 @@ class USBTransceiver(threading.Thread):
             gid = (tmp & 0xF0) >> 4
             sid = (tmp & 0x0F)
             seq = ord(ret_val[1])
-            timestamp -= timedelta(milliseconds=(1000 * sid))
+            timestamp -= timedelta(milliseconds=(sid))
             (x, y, z, v) = struct.unpack(">hhhh", "".join(payload[2:10]))
             gx, gy, gz = self.raw2g(x, y, z, v)
             log = [timestamp, gid, sid, seq, (x, y, z, v), (gx, gy, gz)]
@@ -566,7 +602,7 @@ class DataLogger(threading.Thread):
         self.sensor_title_raw_format = "%14s\t%6s\t%6s\t%6s\t%6s"
         self.sensor_title_raw_fields = ["TimeStamp", "X", "Y", "Z", "Vref"]
         self.sensor_title_fields = ["TimeStamp", "X(mg)", "Y(mg)", "Z(mg)"]
-        self.sensor_title_format = "%14s\t%6s\t%6s\t%6s\t%6s"
+        self.sensor_title_format = "%14s\t%6s\t%6s\t%6s"
         self.sensor_raw_format = "%14s\t%6d\t%6d\t%6d\t%6d"
         self.sensor_format = "%14s\t%6d\t%6d\t%6d"
         # raw data log
@@ -596,6 +632,9 @@ class DataLogger(threading.Thread):
 
         self.log_raw_title = self.log_title_raw_format % tuple(self.log_title_raw_fields)
         self.log_title = self.log_title_format % tuple(self.log_title_fields)
+
+        self.sensor_raw_title = self.sensor_title_raw_format % tuple(self.sensor_title_raw_fields)
+        self.sensor_title = self.sensor_title_format % tuple(self.sensor_title_fields)
 
         self.inq = inq
         self.sample_fs = sample_fs
@@ -665,8 +704,14 @@ class DataLogger(threading.Thread):
         for idx in range(3):
             log.append(conv_reading[idx])
 #        print raw_log
-        print self.sensor_raw_format % tuple(raw_log)
-        print self.sensor_format % tuple(log)
+        if self.cfd:
+            self.cfd.write(self.sensor_format % tuple(log))
+            self.cfd.write('\n')
+        if self.rfd:
+            self.rfd.write(self.sensor_raw_format % tuple(log))
+            self.rfd.write('\n')
+#        print self.sensor_raw_format % tuple(raw_log)
+#        print self.sensor_format % tuple(log)
 
 
     def make_raw_log(self, seq):
@@ -696,9 +741,10 @@ class DataLogger(threading.Thread):
         if not os.path.exists("data"):
             os.makedirs("data")
 #        self.rfd = open(raw_filename, 'w')
-#        self.cfd = open(conv_filename, 'w')
+        self.cfd = open(conv_filename, 'w')
 #        self.rfd.write(self.log_raw_title + '\n')
 #        self.cfd.write(self.log_title + '\n')
+        self.cfd.write(self.sensor_title + '\n')
         if self.debug:
             print self.name + " Thread start"
         while True:
@@ -718,9 +764,9 @@ class DataLogger(threading.Thread):
         if self.debug:
             print self.name, " close log file"
 #        self.rfd.flush()
-#        self.cfd.flush()
+        self.cfd.flush()
 #        self.rfd.close()
-#        self.cfd.close()
+        self.cfd.close()
 
     def stop(self):
         self._stop.set()
