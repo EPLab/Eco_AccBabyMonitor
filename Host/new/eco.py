@@ -243,6 +243,7 @@ class SensorView(threading.Thread):
     def stop(self):
         while not self._quit.isSet():
             self._quit.set()
+        self.off()
 
     def pause(self):
         while not self._stop.isSet():
@@ -296,7 +297,9 @@ class USBTransceiver(threading.Thread):
         self.isConnected = False
         self.setup_tranceiver()
 
-
+    def set_sample_fs(self, fs):
+        self.sampling_fs = fs
+        
     def logger_start(self, fs):
         if self.debug:
             print self.name, " start data loggers"
@@ -404,6 +407,7 @@ class USBTransceiver(threading.Thread):
     def send_start_packet(self, fs):
         if self.debug:
             print "Enqueue START pkt"
+        self.sampling_fs = fs
         self.send_q.put(("SEND", fs))
 
     def _send_start_packet(self, fs):
@@ -461,7 +465,7 @@ class USBTransceiver(threading.Thread):
             timestamp = datetime.now()
             # receive 2 readings in 1 packet
             payload = ret_val[0:32]
-#            pipe_num = ord(ret_val[32])
+            pipe_num = ord(ret_val[32])
             data_length = ord(ret_val[33])
 
             tmp = ord(ret_val[0])
@@ -559,6 +563,8 @@ class USBTransceiver(threading.Thread):
 
         if self.debug:
             print self.name, "thread end"
+        # exit dumper
+        self.exit_dumper()
         # Terminate USB Connection
         self.connection.close()
 

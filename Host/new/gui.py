@@ -49,8 +49,7 @@ class MyApp:
             self.sv.append(SensorView(i, label, text, frame, inq, self.sample_fs))
             self.sv_q.append(inq)
 
-        self.dongle = USBTransceiver(5, self.sv_q, 10)
-        self.dongle.exit_dumper()
+        self.dongle = USBTransceiver(5, self.sv_q, self.sample_fs)
         self.dongle.start()
 
     def on_button_quit_clicked(self):
@@ -87,6 +86,7 @@ class MyApp:
                 print "Resume"
             for i in range(5):
                 self.sv[i].set_sample_fs(self.sample_fs)
+            self.dongle.set_sample_fs(self.sample_fs)
             # start data logger
             self.dongle.logger_start(self.sample_fs)
             # dongle enter dumper mode
@@ -119,6 +119,8 @@ class MyApp:
             self.dongle.exit_dumper()
             # stop data logger
             self.dongle.logger_stop()
+            for i in range(5):
+                self.sv[i].off()
 
             text.set("Start")
             self.started = False
