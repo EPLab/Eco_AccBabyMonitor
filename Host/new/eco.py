@@ -391,7 +391,7 @@ class USBTransceiver(threading.Thread):
         except Exception as e:
             print e
 
-        # setnd packet
+        # send packet
         cmd = OP_transceiver + EPL_RUN_SENDER + USRS_PLOAD
         try:
             self.connection.sendCmd(cmd)
