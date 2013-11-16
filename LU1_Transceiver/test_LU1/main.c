@@ -25,8 +25,8 @@
 #define PLOAD_LEN 32
 
 #define LED_Toggle()	do{P0 ^= 0x30;} while (0)
-#define LED_On()		do{P0 &= ~(0x30);} while (0)
-#define LED_Off()		do{P0 |= 0x30;} while (0)
+#define LED0_Toggle()	do{P0 ^= 0x10;} while (0)
+#define LED1_Toggle()	do{P0 ^= 0x20;} while (0)
 #define LED_Blink(ms)	do{ \
 	P0 ^= 0x30;		\
 	mdelay(ms);		\
@@ -99,7 +99,6 @@ void main(void) {
 		switch (ubuf[1]) {
 
 		case EPL_SENDER_MODE:
-			LED_Off();
 			customized_plen = 0;
 			for (i = 0; i < PLOAD_LEN; i++)
 				packet[i] = i + 9;
@@ -111,7 +110,7 @@ void main(void) {
 			break;
 
 		case EPL_DUMPER_MODE:
-			LED_Off();
+
 			hal_nrf_close_pipe(HAL_NRF_PIPE1);
 			hal_nrf_close_pipe(HAL_NRF_PIPE2);
 			hal_nrf_close_pipe(HAL_NRF_PIPE3);
@@ -302,28 +301,26 @@ void main(void) {
 			break;
 		/**/
 		case EPL_RUN_SENDER:
-			LED_Toggle();
 			epl_rf_en_enter_tx_mode();
 			// clear Tx irq
 			hal_nrf_clear_irq_flag(HAL_NRF_TX_DS);
 			hal_nrf_clear_irq_flag(HAL_NRF_MAX_RT);
 
 			if (ubuf[2] == AUTO_PLOAD) {
-//				epl_uart_putstr("\nauto pload\r\n");
+				epl_uart_putstr("\nauto pload\r\n");
 				packet[0] = total_pkt_count++;
 				epl_rf_en_send(packet, data_length);
 
 			} else {
-//				epl_uart_putstr("\nusrs pload\r\n");
+				epl_uart_putstr("\nusrs pload\r\n");
 				epl_rf_en_send(packet, customized_plen);
 			}
-//			LED_Blink(10);
+			LED_Blink(10);
 
 			array_cp(temp_buf, ACKbuf, 3);
 			temp_buf[3] = hal_nrf_read_reg(OBSERVE_TX) & 0x0F;
 			usb_send_packet(temp_buf, 4);
 			epl_rf_en_enter_rx_mode();
-			LED_Toggle();
 			break;
 
 		case EPL_RUN_DUMPER:
@@ -331,12 +328,11 @@ void main(void) {
 			hal_nrf_flush_rx();
 			epl_rf_en_enter_rx_mode();
 			while (1) {
-				LED_Off();
-				if (ubuf[1] == EPL_EXIT_DUMPER) { // Host wants to terminate
-//					epl_uart_putstr("Terminate !\r\n");
+				if (ubuf[1] == 0xf5) { // Host wants to terminate
+					epl_uart_putstr("Terminate !\r\n");
 					break;
 				}else if (hal_nrf_rx_fifo_empty() == 0) { // Rx_fifo is not empty
-					LED_Toggle();
+					LED0_Toggle();
 					pipe_source = hal_nrf_get_rx_data_source();
 					hal_nrf_read_rx_pload(temp_buf);
 
@@ -354,11 +350,9 @@ void main(void) {
 					if((hal_nrf_read_reg(STATUS))&0x10){
 						hal_nrf_write_reg(FLUSH_TX, 0);
 					}
-					LED_Toggle();
-//					LED_Blink(10);
+					LED0_Toggle();
 				}
 			}
-			LED_Off();
 			break;
 
 		case EPL_SHOW_CONFIG:
@@ -422,7 +416,7 @@ void main(void) {
 		default:
 			break;
 		}// end switch case
-		mdelay(1);
+		mdelay(5);
 
 
 	}// end while
